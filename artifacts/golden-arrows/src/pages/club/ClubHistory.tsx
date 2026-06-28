@@ -128,6 +128,140 @@ const TIMELINE = [
   },
 ];
 
+function ConfettiCelebration({ active }: { active: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef = useRef<number>(0);
+  const firedRef = useRef(false);
+
+  useEffect(() => {
+    if (!active || firedRef.current) return;
+    firedRef.current = true;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext("2d")!;
+
+    const COLORS = ["#FFD700","#FFC200","#FFFDE7","#1B5E20","#4CAF50","#F9A825","#ffffff","#76FF03"];
+    const SHAPES = ["rect","circle","star"] as const;
+
+    type Particle = {
+      x: number; y: number;
+      vx: number; vy: number;
+      color: string; shape: typeof SHAPES[number];
+      w: number; h: number;
+      rotation: number; rotSpeed: number;
+      life: number; maxLife: number;
+      wave: number; waveAmp: number;
+    };
+
+    const particles: Particle[] = [];
+    const BURST_COUNT = 220;
+
+    // launch from several points across the screen bottom
+    const launchPoints = [
+      window.innerWidth * 0.2,
+      window.innerWidth * 0.4,
+      window.innerWidth * 0.5,
+      window.innerWidth * 0.6,
+      window.innerWidth * 0.8,
+    ];
+
+    for (let i = 0; i < BURST_COUNT; i++) {
+      const lx = launchPoints[Math.floor(Math.random() * launchPoints.length)];
+      const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.1; // fan upward
+      const speed = 6 + Math.random() * 14;
+      const maxLife = 140 + Math.random() * 80;
+      particles.push({
+        x: lx + (Math.random() - 0.5) * 60,
+        y: window.innerHeight,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        shape: SHAPES[Math.floor(Math.random() * SHAPES.length)],
+        w: 6 + Math.random() * 10,
+        h: 4 + Math.random() * 6,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.25,
+        life: maxLife,
+        maxLife,
+        wave: Math.random() * Math.PI * 2,
+        waveAmp: 0.5 + Math.random() * 1.5,
+      });
+    }
+
+    function drawStar(ctx: CanvasRenderingContext2D, r: number) {
+      const spikes = 5, inner = r * 0.45;
+      ctx.beginPath();
+      for (let s = 0; s < spikes * 2; s++) {
+        const radius = s % 2 === 0 ? r : inner;
+        const a = (s * Math.PI) / spikes - Math.PI / 2;
+        s === 0 ? ctx.moveTo(Math.cos(a) * radius, Math.sin(a) * radius)
+                : ctx.lineTo(Math.cos(a) * radius, Math.sin(a) * radius);
+      }
+      ctx.closePath();
+    }
+
+    let frame = 0;
+    function tick() {
+      frame++;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let alive = false;
+      for (const p of particles) {
+        if (p.life <= 0) continue;
+        alive = true;
+        p.life--;
+        p.vy += 0.32; // gravity
+        p.vx *= 0.99; // air drag
+        p.wave += 0.07;
+        p.x += p.vx + Math.sin(p.wave) * p.waveAmp;
+        p.y += p.vy;
+        p.rotation += p.rotSpeed;
+
+        const alpha = Math.min(1, p.life / 30);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 4;
+
+        if (p.shape === "rect") {
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        } else if (p.shape === "circle") {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          drawStar(ctx, p.w / 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      if (alive) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [active]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none"
+      style={{ zIndex: 60 }}
+    />
+  );
+}
+
 function FootballProgress({ scrollProgress }: { scrollProgress: MotionValue<number> }) {
   const [pct, setPct] = useState(0);
   // fillY goes from 100 (ball empty) → 4 (ball full) as scroll goes 0→1
@@ -369,6 +503,9 @@ export default function ClubHistory() {
 
       {/* Football progress widget */}
       <FootballProgress scrollProgress={scrollYProgress} />
+
+      {/* Confetti burst at 100% */}
+      <ConfettiCelebration active={scrollPct >= 100} />
 
       {/* Header */}
       <div className="bg-card py-3 border-b border-white/5">
