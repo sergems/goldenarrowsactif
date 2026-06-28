@@ -637,6 +637,8 @@ function ClubStats({ results, players }: {
   results: { homeScore: number; awayScore: number; homeTeam: string; awayTeam: string }[];
   players: { appearances: number; goals: number; assists: number }[];
 }) {
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+
   const wins = results.filter(r => {
     const gaHome = r.homeTeam.toLowerCase().includes("golden arrows");
     const gaAway = r.awayTeam.toLowerCase().includes("golden arrows");
@@ -646,47 +648,119 @@ function ClubStats({ results, players }: {
   const apps = players.reduce((s, p) => s + (p.appearances || 0), 0);
 
   const stats = [
-    { icon: Trophy, label: "Trophies Won", value: 7, suffix: "" },
-    { icon: Zap, label: "Season Wins", value: wins || 12, suffix: "" },
-    { icon: Target, label: "Goals Scored", value: goals || 234, suffix: "+" },
-    { icon: Users, label: "Squad Members", value: players.length || 28, suffix: "" },
-    { icon: Star, label: "Appearances", value: apps || 1840, suffix: "+" },
-    { icon: ChevronRight, label: "Years in PSL", value: 26, suffix: "" },
+    { icon: Trophy,  label: "Trophies Won",   value: 7,                  suffix: "",  detail: "NSL Championship, Nedbank Cup, MTN8 & more" },
+    { icon: Zap,     label: "Season Wins",     value: wins || 12,         suffix: "",  detail: "Victories in the current PSL season" },
+    { icon: Target,  label: "Goals Scored",    value: goals || 82,        suffix: "+", detail: "Combined goals across all competitions" },
+    { icon: Users,   label: "Squad Members",   value: players.length || 21, suffix: "", detail: "Players registered in the senior squad" },
+    { icon: Star,    label: "Appearances",     value: apps || 246,        suffix: "+", detail: "Total appearances by squad this season" },
+    { icon: Trophy,  label: "Years in PSL",    value: 26,                 suffix: "",  detail: "Consecutive seasons in the top flight" },
   ];
 
   return (
-    <section className="py-12 sm:py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 via-transparent to-secondary/20 pointer-events-none" />
-      <div className="container mx-auto px-4 relative">
-        <div className="text-center mb-10">
-          <p className="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-3">By The Numbers</p>
-          <h2 className="font-display text-3xl sm:text-5xl uppercase" style={{ letterSpacing: "0.06em" }}>
-            Club <span className="text-primary">Statistics</span>
-          </h2>
+    <section className="relative overflow-hidden">
+      {/* Dark scoreboard panel */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+      <div className="container mx-auto px-4 relative py-5 sm:py-7">
+        {/* Header row */}
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
+              <span className="w-3 h-px bg-primary inline-block" />
+              By The Numbers
+            </p>
+            <h2 className="font-display text-xl sm:text-3xl uppercase text-white" style={{ letterSpacing: "0.06em" }}>
+              Club <span className="text-primary">Statistics</span>
+            </h2>
+          </div>
+          <div className="hidden sm:flex items-center gap-1.5 text-[9px] text-white/25 uppercase tracking-widest font-bold">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
+            </span>
+            Hover to explore
+          </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+
+        {/* Stats grid — dark cells with gold dividers */}
+        <div className="grid grid-cols-3 lg:grid-cols-6 rounded-xl overflow-hidden border border-white/10 divide-x divide-white/8">
           {stats.map((s, i) => (
-            <motion.div
+            <motion.button
               key={s.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              whileHover={{ scale: 1.05, y: -4 }}
-              className="bg-card border border-white/8 rounded-xl p-5 text-center group hover:border-primary/30 transition-all duration-300"
+              onHoverStart={() => setActiveIdx(i)}
+              onHoverEnd={() => setActiveIdx(null)}
+              onClick={() => setActiveIdx(activeIdx === i ? null : i)}
+              whileTap={{ scale: 0.97 }}
+              className="relative flex flex-col items-center justify-center py-5 px-2 sm:px-4 text-center focus:outline-none group cursor-pointer overflow-hidden"
+              style={{ background: "rgba(0,0,0,0.35)" }}
             >
-              <div className="flex justify-center mb-3">
-                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <s.icon className="h-5 w-5 text-primary" />
-                </div>
-              </div>
-              <div className="font-display text-3xl sm:text-4xl text-white mb-1" style={{ letterSpacing: "0.04em" }}>
+              {/* Hover fill */}
+              <motion.div
+                className="absolute inset-0 bg-primary/10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: activeIdx === i ? 1 : 0 }}
+                transition={{ duration: 0.2 }}
+              />
+              {/* Gold bottom bar on active */}
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary origin-left"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: activeIdx === i ? 1 : 0 }}
+                transition={{ duration: 0.25 }}
+              />
+
+              {/* Icon */}
+              <motion.div
+                animate={{ scale: activeIdx === i ? 1.25 : 1, color: activeIdx === i ? "hsl(52 100% 49%)" : "rgba(255,255,255,0.35)" }}
+                transition={{ duration: 0.2 }}
+                className="mb-2"
+              >
+                <s.icon className="h-4 w-4" />
+              </motion.div>
+
+              {/* Number */}
+              <motion.div
+                animate={{ scale: activeIdx === i ? 1.08 : 1 }}
+                transition={{ duration: 0.2 }}
+                className="font-display text-2xl sm:text-4xl text-white leading-none mb-1 relative z-10 stat-glow"
+                style={{ letterSpacing: "0.04em" }}
+              >
                 <AnimatedCounter target={s.value} suffix={s.suffix} />
+              </motion.div>
+
+              {/* Label */}
+              <div className="text-[8px] sm:text-[9px] text-white/35 uppercase tracking-widest font-bold relative z-10 leading-tight">
+                {s.label}
               </div>
-              <div className="text-[10px] text-white/40 uppercase tracking-widest font-bold">{s.label}</div>
-            </motion.div>
+            </motion.button>
           ))}
         </div>
+
+        {/* Detail tooltip bar */}
+        <AnimatePresence>
+          {activeIdx !== null && (
+            <motion.div
+              key={activeIdx}
+              initial={{ opacity: 0, y: -4, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: "auto" }}
+              exit={{ opacity: 0, y: -4, height: 0 }}
+              transition={{ duration: 0.18 }}
+              className="overflow-hidden"
+            >
+              <div className="mt-2 flex items-center gap-3 px-4 py-2.5 rounded-lg bg-black/40 border border-primary/20">
+                <span className="text-primary flex-shrink-0">
+                  {(() => { const Icon = stats[activeIdx].icon; return <Icon className="h-3.5 w-3.5" />; })()}
+                </span>
+                <span className="text-xs text-white/60 font-medium">{stats[activeIdx].detail}</span>
+                <span className="ml-auto font-display text-lg text-primary stat-glow" style={{ letterSpacing: "0.06em" }}>
+                  {stats[activeIdx].value.toLocaleString()}{stats[activeIdx].suffix}
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
@@ -734,8 +808,8 @@ function FixturesCarousel({ fixtures }: { fixtures: Fixture[] }) {
   if (!upcoming.length) return null;
 
   return (
-    <section className="py-10 sm:py-16 bg-card border-y border-white/5 overflow-hidden">
-      <div className="container mx-auto px-4 mb-6 flex justify-between items-center">
+    <section className="py-4 sm:py-7 bg-card border-y border-white/5 overflow-hidden">
+      <div className="container mx-auto px-4 mb-4 flex justify-between items-center">
         <div>
           <p className="text-primary font-bold uppercase tracking-[0.25em] text-xs mb-1">Coming Up</p>
           <h2 className="font-display text-2xl sm:text-4xl uppercase" style={{ letterSpacing: "0.06em" }}>
@@ -889,13 +963,13 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
   if (!news.length) return null;
 
   return (
-    <section className="py-10 sm:py-16 relative overflow-hidden">
+    <section className="py-5 sm:py-9 relative overflow-hidden">
       {/* Gold accent line top */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
 
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
           <div>
             <p className="text-primary font-bold uppercase tracking-[0.3em] text-[10px] mb-1.5 flex items-center gap-2">
               <span className="inline-block w-4 h-px bg-primary" />
@@ -1181,9 +1255,9 @@ export default function Home() {
       <LatestNewsSection news={news ?? []} />
 
       {/* ── Results + Table ───────────────────────── */}
-      <section className="bg-card py-8 sm:py-20 border-y border-white/5">
+      <section className="bg-card py-5 sm:py-10 border-y border-white/5">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 items-stretch">
 
             {/* Recent Results */}
             <div className="lg:col-span-3 flex flex-col">
@@ -1310,14 +1384,14 @@ export default function Home() {
       </section>
 
       {/* ── Player Spotlight ──────────────────────── */}
-      <section className="py-10 sm:py-20 container mx-auto px-4 relative overflow-hidden">
-        <div className="text-center mb-8 sm:mb-14">
-          <p className="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-3">The Eleven</p>
-          <h2 className="font-display text-3xl sm:text-5xl uppercase" style={{ letterSpacing: "0.06em" }}>
+      <section className="py-5 sm:py-10 container mx-auto px-4 relative overflow-hidden">
+        <div className="text-center mb-4 sm:mb-7">
+          <p className="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-1">The Eleven</p>
+          <h2 className="font-display text-2xl sm:text-4xl uppercase" style={{ letterSpacing: "0.06em" }}>
             Player <span className="text-primary">Spotlight</span>
           </h2>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {players?.slice(0, 4).map((player, i) => (
             <motion.div
               key={player.id}
@@ -1360,11 +1434,11 @@ export default function Home() {
             </motion.div>
           ))}
         </div>
-        <div className="text-center mt-10">
+        <div className="text-center mt-5">
           <Link href="/squad">
             <motion.span
               whileHover={{ scale: 1.03 }}
-              className="inline-block border border-primary text-primary px-10 py-3.5 rounded uppercase tracking-wider font-bold hover:bg-primary hover:text-black transition-all duration-300"
+              className="inline-block border border-primary text-primary px-8 py-3 rounded uppercase tracking-wider text-sm font-bold hover:bg-primary hover:text-black transition-all duration-300"
             >
               View Full Squad
             </motion.span>
@@ -1373,16 +1447,16 @@ export default function Home() {
       </section>
 
       {/* ── Trophy Cabinet ────────────────────────── */}
-      <section className="bg-card border-y border-white/5 py-10 sm:py-20 overflow-hidden">
+      <section className="bg-card border-y border-white/5 py-5 sm:py-10 overflow-hidden">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-6 sm:mb-14">
-            <p className="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-2 sm:mb-3">A Legacy of Success</p>
+          <div className="text-center mb-4 sm:mb-8">
+            <p className="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-1">A Legacy of Success</p>
             <h2 className="font-display text-2xl sm:text-4xl uppercase" style={{ letterSpacing: "0.08em" }}>
               Club <span className="text-primary">Honours</span>
             </h2>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+          <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
             <motion.div
               className="trophy-shimmer relative flex-1 flex justify-center"
               initial={{ opacity: 0, scale: 0.95 }}

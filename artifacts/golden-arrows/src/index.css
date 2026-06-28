@@ -68,35 +68,35 @@
   --background: 139 60% 31%;        /* #207F3E */
   --foreground: 0 0% 97%;
 
-  --border: 139 55% 38%;            /* lighter green for contrast */
+  --border: 139 45% 20%;            /* dark border, visible against bg */
 
-  /* Cards sit darker than the green bg */
-  --card: 139 60% 24%;              /* ~#196833 */
+  /* Cards: very dark near-black green — high contrast against bg */
+  --card: 139 70% 10%;              /* ~#0D2914 */
   --card-foreground: 0 0% 97%;
-  --card-border: 139 55% 36%;
+  --card-border: 139 40% 20%;
 
-  --popover: 139 60% 24%;
+  --popover: 139 70% 10%;
   --popover-foreground: 0 0% 97%;
-  --popover-border: 139 55% 36%;
+  --popover-border: 139 40% 20%;
 
   /* Gold — exact #FCDA00 */
   --primary: 52 100% 49%;
   --primary-foreground: 0 0% 0%;
 
-  /* Deep green for strong surfaces */
-  --secondary: 139 60% 18%;         /* very dark green */
+  /* Deep near-black green for strong surfaces */
+  --secondary: 139 70% 7%;          /* near black */
   --secondary-foreground: 0 0% 98%;
 
-  --muted: 139 55% 20%;
-  --muted-foreground: 139 20% 72%;
+  --muted: 139 60% 8%;
+  --muted-foreground: 139 20% 65%;
 
-  --accent: 139 60% 38%;            /* lighter accent green */
+  --accent: 139 55% 40%;            /* brighter green accent */
   --accent-foreground: 0 0% 98%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
 
-  --input: 139 55% 27%;
+  --input: 139 60% 13%;
   --ring: 52 100% 49%;
 
   --sidebar: 139 60% 20%;
