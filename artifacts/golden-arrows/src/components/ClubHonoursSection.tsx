@@ -197,13 +197,17 @@ export function ClubHonoursSection() {
                   const angle = i * ANGLE_PER;
                   const isActive = i === activeIdx;
                   return (
-                    <motion.div
+                    <div
                       key={`${honour.title}-${i}`}
+                      className="absolute inset-0"
+                      style={{
+                        transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
+                        backfaceVisibility: "hidden",
+                      }}
+                    >
+                    <motion.div
                       className="absolute inset-0 rounded-2xl overflow-hidden border cursor-pointer"
                       style={{
-                        rotateY: angle,
-                        z: RADIUS,
-                        backfaceVisibility: "hidden",
                         borderColor: isActive
                           ? "rgba(255,215,0,0.6)"
                           : "rgba(255,255,255,0.07)",
@@ -215,7 +219,6 @@ export function ClubHonoursSection() {
                       }}
                       whileHover={{
                         scale: 1.12,
-                        z: RADIUS + 28,
                         boxShadow: "0 0 52px rgba(255,215,0,0.45), inset 0 0 28px rgba(255,215,0,0.12)",
                       }}
                       transition={{ type: "spring", stiffness: 300, damping: 22 }}
@@ -280,6 +283,7 @@ export function ClubHonoursSection() {
                         </div>
                       </div>
                     </motion.div>
+                    </div>
                   );
                 })}
               </motion.div>
