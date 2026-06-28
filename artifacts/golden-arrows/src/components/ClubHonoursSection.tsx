@@ -323,7 +323,15 @@ export function ClubHonoursSection() {
                 }}
               >
                 <div style={{ perspective: "650px" }}>
-                  <motion.div style={{ rotateY: logoRotateY }}>
+                  <motion.div
+                    style={{ rotateY: logoRotateY }}
+                    whileHover={{
+                      scale: 1.55,
+                      filter: "drop-shadow(0 0 32px rgba(255,215,0,0.85)) drop-shadow(0 0 12px rgba(255,215,0,0.5))",
+                    }}
+                    transition={{ type: "spring", stiffness: 320, damping: 18 }}
+                    className="cursor-pointer"
+                  >
                     <img
                       src={logo}
                       alt="Golden Arrows"
