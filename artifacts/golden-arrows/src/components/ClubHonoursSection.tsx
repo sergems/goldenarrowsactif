@@ -37,7 +37,7 @@ const HONOURS = [
       "A historic cup run that silenced critics and ended with Abafana Bes'thende lifting one of South Africa's most prestigious knockout trophies.",
     image: nedbankImg,
     imgPosition: "center center",
-    objectFit: "contain" as const,
+    objectFit: "cover" as const,
   },
   {
     title: "NSL Championship",
@@ -103,7 +103,7 @@ const HONOURS = [
 
 const N = HONOURS.length;
 const ANGLE_PER = 360 / N;
-const RADIUS = 280;
+const RADIUS = 378;
 
 export function ClubHonoursSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -146,39 +146,6 @@ export function ClubHonoursSection() {
 
         {/* ── Main content row ── */}
         <div className="flex-1 flex items-center gap-4 lg:gap-8 px-4 container mx-auto min-h-0 py-6">
-
-          {/* ── Logo — scroll-driven entry: flies in from squad section ── */}
-          <motion.div
-            className="hidden lg:flex flex-col items-center gap-4 flex-shrink-0 w-40"
-            style={{
-              y: logoEntryY,
-              x: logoEntryX,
-              scale: logoEntryScale,
-              opacity: logoEntryOpacity,
-            }}
-          >
-            <div style={{ perspective: "650px" }}>
-              <motion.div style={{ rotateY: logoRotateY }}>
-                <img
-                  src={logo}
-                  alt="Golden Arrows"
-                  className="w-32 h-32 object-contain"
-                  style={{
-                    filter: "drop-shadow(0 0 28px rgba(255,215,0,0.45))",
-                  }}
-                />
-              </motion.div>
-            </div>
-            <div className="text-center">
-              <p className="font-display text-[9px] uppercase tracking-[0.25em] text-white/30">
-                Lamontville
-              </p>
-              <p className="font-display text-xs uppercase tracking-widest text-primary font-bold">
-                Golden Arrows FC
-              </p>
-              <p className="text-[9px] text-white/20 mt-1 tracking-wider">Est. 1943</p>
-            </div>
-          </motion.div>
 
           {/* ── Right column: header + carousel + info ── */}
           <div className="flex-1 flex flex-col gap-3 min-w-0">
@@ -344,6 +311,32 @@ export function ClubHonoursSection() {
                   </p>
                 </motion.div>
               </AnimatePresence>
+
+              {/* Rotating logo below description */}
+              <motion.div
+                className="flex flex-col items-center gap-2 mt-4"
+                style={{
+                  y: logoEntryY,
+                  scale: logoEntryScale,
+                  opacity: logoEntryOpacity,
+                }}
+              >
+                <div style={{ perspective: "650px" }}>
+                  <motion.div style={{ rotateY: logoRotateY }}>
+                    <img
+                      src={logo}
+                      alt="Golden Arrows"
+                      className="w-14 h-14 object-contain"
+                      style={{ filter: "drop-shadow(0 0 18px rgba(255,215,0,0.45))" }}
+                    />
+                  </motion.div>
+                </div>
+                <div className="text-center">
+                  <p className="font-display text-[8px] uppercase tracking-[0.25em] text-white/30">Lamontville</p>
+                  <p className="font-display text-[9px] uppercase tracking-widest text-primary font-bold">Golden Arrows FC</p>
+                  <p className="text-[8px] text-white/20 tracking-wider">Est. 1943</p>
+                </div>
+              </motion.div>
             </div>
 
             {/* Progress dots */}
