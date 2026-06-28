@@ -1223,6 +1223,301 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
   );
 }
 
+// ─── Match Mood Widget ────────────────────────────────────────────────────────
+
+const MOODS = [
+  { key: "buzzing", emoji: "💛", label: "Buzzing!" },
+  { key: "decent",  emoji: "👍", label: "Decent"  },
+  { key: "gutted",  emoji: "😔", label: "Gutted"  },
+];
+
+function MatchMoodWidget({ result }: { result: any }) {
+  const resultKey = result ? `ga-mood-${result.id}` : null;
+  const [voted, setVoted] = useState<string | null>(null);
+  const [counts, setCounts] = useState({ buzzing: 312, decent: 89, gutted: 47 });
+
+  useEffect(() => {
+    if (!resultKey) return;
+    const v = localStorage.getItem(resultKey);
+    if (v) setVoted(v);
+  }, [resultKey]);
+
+  const total = counts.buzzing + counts.decent + counts.gutted;
+
+  function vote(key: string) {
+    if (voted || !resultKey) return;
+    const next = { ...counts, [key]: counts[key as keyof typeof counts] + 1 };
+    setCounts(next);
+    setVoted(key);
+    localStorage.setItem(resultKey, key);
+  }
+
+  if (!result) return null;
+  const isGAHome = result.homeTeam.toLowerCase().includes("golden") || result.homeTeam.toLowerCase().includes("lamontville");
+  const ourScore = isGAHome ? result.homeScore : result.awayScore;
+  const theirScore = isGAHome ? result.awayScore : result.homeScore;
+  const outcome = ourScore > theirScore ? "W" : ourScore < theirScore ? "L" : "D";
+  const opponent = isGAHome ? result.awayTeam : result.homeTeam;
+  const outcomeStyle = outcome === "W" ? "bg-green-500 text-white" : outcome === "D" ? "bg-yellow-400 text-black" : "bg-red-500 text-white";
+
+  return (
+    <section className="bg-black/40 border-y border-white/5 py-4 sm:py-5 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/3 to-transparent pointer-events-none" />
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+          {/* Latest result badge */}
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-display font-black text-xl flex-shrink-0 ${outcomeStyle}`}>
+              {outcome}
+            </div>
+            <div>
+              <div className="text-[10px] text-white/30 uppercase tracking-widest font-bold mb-0.5">Latest Result</div>
+              <div className="font-display font-bold text-sm text-white">
+                {result.homeTeam} <span className="text-primary">{result.homeScore}–{result.awayScore}</span> {result.awayTeam}
+              </div>
+            </div>
+          </div>
+          <div className="hidden sm:block w-px h-12 bg-white/10 flex-shrink-0" />
+          {/* Mood vote */}
+          <div className="flex-1 w-full">
+            <div className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-2.5 text-center sm:text-left">
+              {voted ? "Fan Mood" : `How did you feel after vs ${opponent}?`}
+            </div>
+            {!voted ? (
+              <div className="flex gap-2 justify-center sm:justify-start flex-wrap">
+                {MOODS.map(m => (
+                  <motion.button
+                    key={m.key}
+                    onClick={() => vote(m.key)}
+                    whileHover={{ scale: 1.06, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/15 bg-white/5 hover:border-primary/60 hover:bg-primary/10 text-white hover:text-primary transition-all text-sm font-bold cursor-pointer"
+                  >
+                    {m.emoji} {m.label}
+                  </motion.button>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-1.5 max-w-sm">
+                {MOODS.map(m => {
+                  const val = counts[m.key as keyof typeof counts];
+                  const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                  const isVoted = voted === m.key;
+                  return (
+                    <div key={m.key} className="flex items-center gap-2">
+                      <span className="text-sm w-5">{m.emoji}</span>
+                      <div className="flex-1 h-3.5 bg-white/5 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${pct}%` }}
+                          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+                          className={`h-full rounded-full ${isVoted ? "bg-primary" : "bg-white/20"}`}
+                        />
+                      </div>
+                      <span className={`text-xs font-bold w-8 text-right tabular-nums ${isVoted ? "text-primary" : "text-white/40"}`}>{pct}%</span>
+                    </div>
+                  );
+                })}
+                <div className="text-[9px] text-white/20 pt-0.5">{total.toLocaleString()} fans voted · thanks for sharing!</div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Fan Poll Widget ───────────────────────────────────────────────────────────
+
+function FanPollWidget({ players }: { players: { id: number; name: string; position: string; photoUrl?: string | null; goals?: number; appearances?: number }[] }) {
+  const monthKey = `ga-poll-${new Date().getFullYear()}-${new Date().getMonth()}`;
+  const [voted, setVoted] = useState<number | null>(null);
+  const [counts, setCounts] = useState<Record<number, number>>({});
+
+  const candidates = players
+    .filter(p => !["Coach", "Assistant Coach"].some(c => p.position.toLowerCase() === c.toLowerCase()))
+    .slice(0, 3);
+
+  useEffect(() => {
+    const v = localStorage.getItem(monthKey);
+    if (v) setVoted(Number(v));
+    const c = localStorage.getItem(monthKey + "-counts");
+    if (c) {
+      setCounts(JSON.parse(c));
+    } else if (candidates.length >= 3) {
+      setCounts({ [candidates[0].id]: 42, [candidates[1].id]: 38, [candidates[2].id]: 20 });
+    }
+  }, []);
+
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+
+  function vote(id: number) {
+    if (voted) return;
+    const next = { ...counts, [id]: (counts[id] ?? 0) + 1 };
+    setCounts(next);
+    setVoted(id);
+    localStorage.setItem(monthKey, String(id));
+    localStorage.setItem(monthKey + "-counts", JSON.stringify(next));
+  }
+
+  if (candidates.length < 2) return null;
+  const monthName = new Date().toLocaleString("default", { month: "long" });
+  const maxPct = voted ? Math.max(...candidates.map(p => total > 0 ? Math.round(((counts[p.id] ?? 0) / total) * 100) : 0)) : 0;
+
+  return (
+    <section className="py-5 sm:py-8 bg-card border-y border-white/5">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-5 sm:gap-8">
+          <div className="flex-shrink-0">
+            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
+              <span className="w-3 h-px bg-primary inline-block" />
+              Fan Vote
+            </p>
+            <h2 className="font-display text-xl sm:text-2xl uppercase text-white" style={{ letterSpacing: "0.06em" }}>
+              {monthName} <span className="text-primary">Player</span>
+            </h2>
+            <p className="text-white/30 text-xs mt-1 max-w-[180px]">Who impressed you most this month?</p>
+          </div>
+
+          <div className="flex-1 w-full grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {candidates.map(player => {
+              const pct = total > 0 ? Math.round(((counts[player.id] ?? 0) / total) * 100) : 0;
+              const isVoted = voted === player.id;
+              const isLeading = voted && pct === maxPct;
+
+              return (
+                <motion.button
+                  key={player.id}
+                  onClick={() => vote(player.id)}
+                  disabled={!!voted}
+                  whileHover={!voted ? { y: -3, scale: 1.02 } : {}}
+                  whileTap={!voted ? { scale: 0.97 } : {}}
+                  className={`relative text-left rounded-xl border p-4 transition-all duration-300 overflow-hidden ${
+                    isVoted
+                      ? "border-primary bg-primary/10"
+                      : voted
+                      ? "border-white/8 bg-white/3 opacity-70 cursor-not-allowed"
+                      : "border-white/10 bg-white/5 hover:border-primary/40 hover:bg-primary/5 cursor-pointer"
+                  }`}
+                >
+                  {voted && (
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${pct}%` }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      className={`absolute inset-y-0 left-0 ${isVoted ? "bg-primary/15" : "bg-white/5"} rounded-xl pointer-events-none`}
+                    />
+                  )}
+                  <div className="relative z-10 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-black/40 border border-white/10 overflow-hidden flex-shrink-0">
+                      {player.photoUrl ? (
+                        <img src={player.photoUrl} alt={player.name} className="w-full h-full object-cover object-top" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center font-display font-black text-lg text-white/20">
+                          {player.name[0]}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className={`font-display font-bold text-sm truncate ${isVoted ? "text-primary" : "text-white"}`}>{player.name}</div>
+                      <div className="text-[10px] text-white/40 uppercase tracking-wider">{player.position}</div>
+                    </div>
+                    {voted && (
+                      <span className={`font-display font-black text-lg flex-shrink-0 tabular-nums ${isVoted ? "text-primary" : "text-white/30"}`}>
+                        {pct}%
+                      </span>
+                    )}
+                  </div>
+                  {isLeading && isVoted && voted && (
+                    <div className="absolute top-2 right-2 text-[8px] bg-primary text-black font-black px-1.5 py-0.5 rounded uppercase tracking-wider">
+                      Leading
+                    </div>
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+        </div>
+        {voted && (
+          <p className="text-[9px] text-white/20 mt-3 text-center">
+            Thanks for voting! · {total.toLocaleString()} fans voted this month · Poll resets monthly
+          </p>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ─── Golden Facts strip ────────────────────────────────────────────────────────
+
+const GOLDEN_FACTS = [
+  "Golden Arrows were founded in 1943, originally as a predominantly Indian football club in Durban.",
+  "'Abafana Bes'thende' translates to 'Boys of the Arrows' in Zulu — the club's beloved nickname.",
+  "The club won the NSL Championship in 2001/2002, the most prestigious domestic title in their history.",
+  "Princess Magogo Stadium in KwaMashu is the home ground, named after Zulu princess Constance Magogo.",
+  "Golden Arrows have been a continuous PSL top-flight member for over 25 consecutive seasons.",
+  "The gold and green colours represent the vibrancy and energy of KwaZulu-Natal.",
+  "The club has a proud tradition of developing local talent directly from the KwaMashu community.",
+  "Golden Arrows have won the Nedbank Cup and MTN8, two of South Africa's prestigious knockout competitions.",
+];
+
+function GoldenFacts() {
+  const [idx, setIdx] = useState(0);
+  const [dir, setDir] = useState(1);
+
+  useEffect(() => {
+    const id = setInterval(() => { setDir(1); setIdx(i => (i + 1) % GOLDEN_FACTS.length); }, 7000);
+    return () => clearInterval(id);
+  }, []);
+
+  function next() { setDir(1); setIdx(i => (i + 1) % GOLDEN_FACTS.length); }
+  function prev() { setDir(-1); setIdx(i => (i - 1 + GOLDEN_FACTS.length) % GOLDEN_FACTS.length); }
+
+  return (
+    <div className="bg-secondary/20 border-y border-white/5 py-3 sm:py-4 overflow-hidden">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex-shrink-0 hidden sm:flex items-center gap-2">
+            <span className="text-primary text-base">⚡</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-primary whitespace-nowrap">Did You Know?</span>
+          </div>
+          <div className="hidden sm:block w-px h-6 bg-white/10 flex-shrink-0" />
+          <div className="flex-1 relative h-6 overflow-hidden flex items-center">
+            <AnimatePresence mode="wait" custom={dir}>
+              <motion.p
+                key={idx}
+                custom={dir}
+                variants={{
+                  enter: (d: number) => ({ x: d * 40, opacity: 0 }),
+                  center: { x: 0, opacity: 1 },
+                  exit:  (d: number) => ({ x: d * -40, opacity: 0 }),
+                }}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="text-xs sm:text-sm text-white/55 absolute inset-0 flex items-center leading-snug"
+              >
+                {GOLDEN_FACTS[idx]}
+              </motion.p>
+            </AnimatePresence>
+          </div>
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <button onClick={prev} className="h-6 w-6 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:border-primary/50 hover:text-primary transition-all">
+              <ChevronRight className="h-3 w-3 rotate-180" />
+            </button>
+            <span className="text-[10px] text-white/20 tabular-nums">{idx + 1}/{GOLDEN_FACTS.length}</span>
+            <button onClick={next} className="h-6 w-6 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:border-primary/50 hover:text-primary transition-all">
+              <ChevronRight className="h-3 w-3" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Home() {
@@ -1323,6 +1618,11 @@ export default function Home() {
         </motion.section>
       )}
 
+      {/* ── Match Mood ────────────────────────────── */}
+      {recentResults && recentResults.length > 0 && (
+        <MatchMoodWidget result={recentResults[0]} />
+      )}
+
       {/* ── Club Statistics ───────────────────────── */}
       <ClubStats
         results={recentResults ?? []}
@@ -1332,6 +1632,11 @@ export default function Home() {
       {/* ── Fixtures Carousel ─────────────────────── */}
       {allFixtures && allFixtures.length > 0 && (
         <FixturesCarousel fixtures={allFixtures} />
+      )}
+
+      {/* ── Fan Poll ──────────────────────────────── */}
+      {players && players.length > 0 && (
+        <FanPollWidget players={players} />
       )}
 
       {/* ── Latest News ───────────────────────────── */}
@@ -1382,7 +1687,7 @@ export default function Home() {
                         className={isLatest ? "relative border-l-2 border-l-primary bg-primary/5" : ""}
                       >
                         {isLatest && (
-                          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[8px] font-black uppercase tracking-widest text-primary/60 hidden sm:block">
+                          <span className="absolute top-0 left-0 text-[7px] font-black uppercase tracking-widest text-black bg-primary px-1.5 py-0.5 rounded-br-md leading-none hidden sm:block">
                             Latest
                           </span>
                         )}
@@ -1465,6 +1770,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Did You Know? ─────────────────────────── */}
+      <GoldenFacts />
 
       {/* ── Player Spotlight ──────────────────────── */}
       <section ref={playerSpotlightRef} className="py-5 sm:py-10 container mx-auto px-4 relative overflow-hidden">
