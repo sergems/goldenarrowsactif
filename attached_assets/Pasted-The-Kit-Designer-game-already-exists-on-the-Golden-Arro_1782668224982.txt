@@ -1,0 +1,547 @@
+The Kit Designer game already exists on the Golden Arrows website. Do NOT rebuild it from scratch. Instead, completely redesign and modernize the existing Kit Designer into a premium professional football jersey design studio similar to the attached reference.
+
+Objective
+
+Transform the current cartoonish kit designer into a realistic 3D football jersey customization studio worthy of a professional football club.
+
+The experience should feel similar to designing kits on Nike, Adidas, FIFA, Football Kit Creator or PES/eFootball.
+
+The page must feel premium, interactive and modern.
+
+General Design
+
+Use a dark luxury interface.
+
+Colors:
+
+Golden Arrows Green (#006B3F)
+Gold (#FFD700)
+Black (#111111)
+Dark Gray (#1A1A1A)
+
+The page should have a premium stadium atmosphere with soft lighting and subtle background blur.
+
+Everything should use glassmorphism cards with smooth animations.
+
+Rounded corners.
+
+Soft shadows.
+
+Professional typography.
+
+No cartoon graphics anywhere.
+
+Jersey Rendering
+
+This is the biggest upgrade.
+
+Replace the flat/cartoon jersey with an ultra-realistic football shirt.
+
+Requirements:
+
+realistic fabric
+cloth wrinkles
+fabric texture
+stitched seams
+ribbed collar
+sleeve cuffs
+realistic lighting
+ambient shadows
+depth
+subtle reflections
+
+The jersey should look like an Umbro-quality professional football shirt.
+
+Use physically based materials where possible.
+
+3D Preview
+
+Instead of a flat image:
+
+Display
+
+Front View
+
+Back View
+
+Side View
+
+3D Rotation
+
+Users should be able to
+
+drag to rotate
+zoom
+reset view
+auto rotate
+
+The jersey should animate smoothly.
+
+Layout
+
+Use a two-column professional studio layout.
+
+LEFT
+
+Large live jersey preview.
+
+Front/back toggle.
+
+Rotate button.
+
+Zoom button.
+
+Recent designs carousel.
+
+Saved kits section.
+
+Stadium background.
+
+RIGHT
+
+Customization panel.
+
+Tabbed interface.
+
+Tabs:
+
+Colours
+
+Patterns
+
+Collar
+
+Sleeves
+
+Logos
+
+Sponsors
+
+Player Name
+
+Player Number
+
+Shorts
+
+Socks
+
+Accessories
+
+Options
+
+Save
+
+Each tab opens instantly without page reload.
+
+Colour Studio
+
+Allow changing
+
+Primary colour
+
+Secondary colour
+
+Sleeve colour
+
+Collar colour
+
+Trim colour
+
+Number colour
+
+Name colour
+
+Outline colour
+
+Goalkeeper colours
+
+Use:
+
+Color picker
+
+HEX input
+
+RGB input
+
+Recent colours
+
+Club colour presets
+
+Popular combinations
+
+Pattern Library
+
+Users can choose premium football patterns.
+
+Examples:
+
+Diagonal
+
+Chevron
+
+Gradient
+
+Brush strokes
+
+Digital camo
+
+Tiger stripes
+
+Lightning
+
+Hexagon
+
+Geometric
+
+Fade
+
+Split colour
+
+Half and half
+
+Vertical stripe
+
+Horizontal stripe
+
+Pinstripe
+
+Abstract
+
+Diamond
+
+Wave
+
+Minimal
+
+Modern
+
+Allow
+
+Pattern opacity
+
+Pattern size
+
+Pattern rotation
+
+Pattern colour
+
+Pattern placement
+
+Collar Designer
+
+Support multiple collar styles:
+
+Crew neck
+
+V-neck
+
+Modern V
+
+Polo
+
+Button collar
+
+Rib collar
+
+Tournament collar
+
+Round collar
+
+Each should render realistically.
+
+Sleeve Options
+
+Short sleeve
+
+Long sleeve
+
+Elastic cuffs
+
+Contrast cuffs
+
+Different sleeve colours
+
+Separate sleeve patterns
+
+Club Branding
+
+Allow adding:
+
+Golden Arrows badge
+
+Umbro logo
+
+League badge
+
+Cup badge
+
+Foundation logo
+
+Sleeve sponsor
+
+Chest sponsor
+
+Back sponsor
+
+Lower back sponsor
+
+Each logo should:
+
+scale
+
+move
+
+align
+
+snap into official football positions
+
+Sponsor Placement
+
+Allow sponsor logos to be:
+
+center chest
+
+upper chest
+
+back
+
+lower back
+
+sleeve
+
+shorts
+
+Users can upload sponsor logos.
+
+PNG transparency supported.
+
+Name and Number
+
+Editable:
+
+Player Name
+
+Number
+
+Captain badge
+
+Font selection
+
+Official football fonts
+
+Outline
+
+Shadow
+
+Curve
+
+Size
+
+Spacing
+
+Alignment
+
+Live preview.
+
+Shorts Designer
+
+Users should design shorts too.
+
+Primary colour
+
+Side stripe
+
+Sponsor
+
+Number
+
+Trim
+
+Pattern
+
+Socks Designer
+
+Primary colour
+
+Secondary colour
+
+Band colour
+
+Logo placement
+
+Pattern
+
+Kit Variants
+
+Allow switching between
+
+Home
+
+Away
+
+Third
+
+Goalkeeper
+
+Training
+
+Retro
+
+Special Edition
+
+Each with separate saved designs.
+
+Fit
+
+Choose
+
+Player Fit
+
+Fan Fit
+
+Women's Fit
+
+Youth
+
+Long sleeve
+
+Short sleeve
+
+Compression
+
+Real-Time Preview
+
+Every change updates instantly.
+
+No refresh.
+
+Animations should be smooth.
+
+Saved Designs
+
+Allow users to:
+
+Save Kit
+
+Duplicate Kit
+
+Rename Kit
+
+Delete Kit
+
+Share Kit
+
+Download Image
+
+Generate Share Link
+
+Random Kit Generator
+
+Keep existing feature but improve it.
+
+Generate professional combinations only.
+
+Avoid ugly colour clashes.
+
+AI Suggestions
+
+Add a button:
+
+"Inspire Me"
+
+AI generates:
+
+Modern kit
+
+Retro kit
+
+Champions edition
+
+Cup edition
+
+African-inspired edition
+
+Minimal edition
+
+Premium edition
+
+Export
+
+Users can download
+
+Front PNG
+
+Back PNG
+
+Full Presentation
+
+3D Render
+
+Wallpaper
+
+Social Media Card
+
+Performance
+
+Do not use heavy rendering libraries.
+
+Use React Three Fiber if needed.
+
+Lazy load assets.
+
+60 FPS where possible.
+
+Mobile optimized.
+
+Animations
+
+Use Framer Motion.
+
+Smooth transitions.
+
+Hover effects.
+
+Micro interactions.
+
+Button animations.
+
+Tab transitions.
+
+Jersey rotation easing.
+
+Mobile Version
+
+Convert layout into stacked panels.
+
+Preview first.
+
+Customization below.
+
+Sticky action buttons.
+
+Accessibility
+
+Keyboard navigation.
+
+High contrast.
+
+Screen reader labels.
+
+Responsive typography.
+
+Keep Existing Features
+
+Do NOT remove:
+
+Existing game logic
+Saved kits
+User accounts
+Database
+Leaderboards
+Sharing functionality
+
+Only replace the UI and rendering engine.
+
+Overall Goal
+
+The finished page should feel like an official Golden Arrows FC Kit Design Studio, not a casual game. Visitors should feel as though they are designing a real Umbro football jersey for the club. The interface should be polished enough that fans want to spend time creating, saving, and sharing their designs, while maintaining the existing backend functionality and data
