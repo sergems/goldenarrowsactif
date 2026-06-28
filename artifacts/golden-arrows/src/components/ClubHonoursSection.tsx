@@ -142,10 +142,10 @@ export function ClubHonoursSection() {
       style={{ height: `${(N + 2) * 100}vh`, position: "relative" }}
     >
       {/* ── Sticky viewport ── */}
-      <div className="sticky top-0 h-screen flex flex-col select-none">
+      <div className="sticky top-0 h-screen flex flex-col select-none overflow-visible">
 
         {/* ── Main content row ── */}
-        <div className="flex-1 flex items-center gap-4 lg:gap-8 px-4 container mx-auto min-h-0 py-6">
+        <div className="flex-1 flex items-center gap-4 lg:gap-8 px-4 container mx-auto min-h-0 py-2">
 
           {/* ── Right column: header + carousel + info ── */}
           <div className="flex-1 flex flex-col gap-3 min-w-0">
@@ -168,9 +168,10 @@ export function ClubHonoursSection() {
             <div
               className="relative w-full"
               style={{
-                height: "300px",
-                perspective: "1200px",
+                height: "340px",
+                perspective: "1400px",
                 perspectiveOrigin: "50% 50%",
+                overflow: "visible",
               }}
             >
               {/* Ambient glow */}
