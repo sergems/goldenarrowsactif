@@ -1,0 +1,26 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "v30RZx7Ry3UQnIgI2-Pr_"
+uri = "file://artifacts/golden-arrows/src/assets/hero-stadium.png"
+type = "image"
+title = "stadium hero background"
+
+[[generated]]
+id = "ta_VUxnZchWzOYaKVSUt-"
+uri = "file://artifacts/golden-arrows/src/assets/player-placeholder.png"
+type = "image"
+title = "player silhouette placeholder"
+
+[[generated]]
+id = "i6yFSBNA6A39KxqFrPVsn"
+uri = "file://artifacts/golden-arrows/src/assets/gallery-training.png"
+type = "image"
+title = "training session"
+
+[[generated]]
+id = "epFq96FHzx2lNIvNqrryS"
+uri = "file://artifacts/golden-arrows/src/assets/gallery-stadium.png"
+type = "image"
+title = "stadium exterior"

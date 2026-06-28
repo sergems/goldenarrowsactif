@@ -1,0 +1,1 @@
+- [Replit port support](replit-port-support.md) — Replit workflow health checker only monitors specific ports; arbitrary ports like 23253 are never detected as open.

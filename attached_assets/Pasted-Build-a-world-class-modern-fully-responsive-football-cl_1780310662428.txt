@@ -1,0 +1,455 @@
+Build a world-class, modern, fully responsive football club website for Lamontville Golden Arrows FC, a professional football club based in Durban, KwaZulu-Natal, South Africa, competing in the South African Premier Soccer League (PSL).
+
+Use the uploaded Lamontville Golden Arrows logo as the primary branding source and extract the official club colors from the logo. The website design must feel comparable to elite football club websites such as:
+
+Orlando Pirates (https://www.orlandopiratesfc.com)
+
+The website must be visually stunning, highly interactive, image-rich, fast-loading, mobile-first, SEO optimized, and production-ready.
+
+TECH STACK
+
+Use:
+
+Next.js 15
+TypeScript
+Tailwind CSS
+Framer Motion
+Shadcn/UI
+PostgreSQL
+Prisma ORM
+NextAuth Authentication
+Cloudinary for image storage
+ScoreAxis API integration
+Vercel compatible deployment
+Responsive Design
+BRANDING
+
+Extract colors from the uploaded logo.
+
+Primary Colors:
+
+Golden Yellow
+Green
+White
+Black
+
+Design Style:
+
+Modern football club
+Premier League quality
+Large hero banners
+Full-screen videos
+Dynamic animations
+Stadium-inspired sections
+Professional sports photography
+WEBSITE PAGES
+HOME PAGE
+
+Create an immersive homepage featuring:
+
+Hero Section
+Fullscreen football stadium video/image slider
+Animated club slogan
+CTA buttons:
+Buy Tickets
+Latest News
+View Fixtures
+Live Club Statistics
+
+Display:
+
+League Position
+Matches Played
+Wins
+Draws
+Losses
+Goals Scored
+
+Pulled automatically from ScoreAxis.
+
+Latest News
+
+Dynamic news cards with featured images.
+
+Upcoming Fixtures
+
+Automatically updated from ScoreAxis.
+
+Recent Results
+
+Automatically updated.
+
+Match Highlights
+
+Embedded videos section.
+
+Player Spotlight
+
+Featured player carousel.
+
+Sponsors Section
+
+Animated sponsor logos.
+
+Social Media Feed
+
+Live integration:
+
+Facebook
+Instagram
+X/Twitter
+TikTok
+YouTube
+Newsletter Subscription
+
+Email signup.
+
+CLUB PAGE
+About The Club
+
+History of Lamontville Golden Arrows.
+
+Sections
+Club History
+Achievements
+Vision
+Mission
+Ownership
+Stadium Information
+FIRST TEAM PAGE
+
+Professional squad page.
+
+Display:
+
+Player Photo
+Name
+Position
+Nationality
+Number
+Age
+Statistics
+
+Categories:
+
+Goalkeepers
+Defenders
+Midfielders
+Forwards
+
+Player profile pages must exist.
+
+TECHNICAL TEAM PAGE
+
+Display:
+
+Coach
+Assistant Coaches
+Fitness Staff
+Medical Staff
+Analysts
+
+With photos and biographies.
+
+FIXTURES PAGE
+
+Automatically synchronized with ScoreAxis.
+
+Display:
+
+Date
+Time
+Venue
+Opponent
+Competition
+
+Include:
+
+Upcoming Matches
+Completed Matches
+
+Search and filtering.
+
+RESULTS PAGE
+
+Automatic ScoreAxis synchronization.
+
+Display:
+
+Match Result
+Goalscorers
+Match Statistics
+Match Reports
+PSL LEAGUE TABLE PAGE
+
+IMPORTANT:
+
+Only display PSL standings.
+
+Use live data from:
+
+https://www.scoreaxis.com
+
+Update automatically every hour.
+
+Display:
+
+Position
+Team
+Played
+Won
+Drawn
+Lost
+Goals For
+Goals Against
+Goal Difference
+Points
+
+Highlight Lamontville Golden Arrows row.
+
+NEWS PAGE
+
+Complete CMS-powered news system.
+
+Features:
+
+Categories
+Featured Articles
+Search
+Tags
+Related Posts
+Social Sharing
+GALLERY PAGE
+
+Large modern media center.
+
+Sections:
+
+Photos
+Matches
+Training
+Community
+Events
+Videos
+Highlights
+Interviews
+Press Conferences
+
+Lightbox support.
+
+TICKETS PAGE
+
+Display:
+
+Match Tickets
+Pricing
+Seating Information
+Purchase Links
+SHOP PAGE
+
+Club merchandise store.
+
+Products:
+
+Jerseys
+Training Kits
+Caps
+Scarves
+Accessories
+
+Features:
+
+Shopping Cart
+Checkout
+Product Variations
+Wishlist
+COMMUNITY PAGE
+
+Display:
+
+Youth Development
+Community Projects
+CSR Initiatives
+Football Clinics
+CONTACT PAGE
+
+Interactive contact page.
+
+Features:
+
+Contact Form
+Google Maps
+Club Location
+Email
+Phone
+Social Media Links
+MATCH CENTER
+
+Professional match center similar to major international clubs.
+
+Display:
+
+Live Match Information
+Lineups
+Match Statistics
+Timeline
+Possession
+Cards
+Substitutions
+
+Data from ScoreAxis.
+
+SEARCH
+
+Global site search.
+
+Search:
+
+Players
+News
+Fixtures
+Results
+ADMIN PANEL
+
+Create a secure Admin Dashboard.
+
+Login protected.
+
+Roles:
+
+Super Admin
+
+Full access.
+
+Editor
+
+Limited access.
+
+Media Manager
+
+Gallery only.
+
+ADMIN FEATURES
+Dashboard
+
+Show:
+
+Website Visitors
+News Count
+Players Count
+Gallery Count
+News Management
+
+Create/Edit/Delete News.
+
+Rich text editor.
+
+Gallery Management
+
+Upload:
+
+Images
+Videos
+
+Drag and drop uploader.
+
+Cloudinary integration.
+
+Homepage Management
+
+Allow changing:
+
+Hero Images
+Hero Videos
+Headlines
+Featured Sections
+
+Without coding.
+
+Team Management
+
+Add/Edit:
+
+Players
+Coaches
+Staff
+Sponsor Management
+
+Manage sponsors.
+
+Upload logos.
+
+Match Highlights
+
+Upload YouTube links.
+
+SEO MANAGEMENT
+
+Control:
+
+Meta Titles
+Descriptions
+Open Graph Data
+AUTOMATIC DATA INTEGRATION
+
+Use ScoreAxis API.
+
+Automatically update:
+
+PSL Table
+Fixtures
+Results
+Match Statistics
+
+Create scheduled jobs that refresh data every hour.
+
+Cache results for performance.
+
+PERFORMANCE
+
+Requirements:
+
+Lighthouse score above 90
+Lazy loading
+Image optimization
+SEO optimized
+Schema markup
+Fast page loads
+ACCESSIBILITY
+
+Must comply with WCAG standards.
+
+EXTRA FEATURES
+Dark Mode
+Light Mode
+Match Countdown Timer
+Fan Polls
+Fan of the Month
+Push Notifications
+Progressive Web App (PWA)
+Multi-language Support
+
+Languages:
+
+English
+isiZulu
+DESIGN REQUIREMENTS
+
+Create a premium football experience.
+
+Use:
+
+Large stadium imagery
+Dynamic player showcases
+Modern cards
+Glassmorphism effects
+Smooth scrolling
+Framer Motion animations
+Video backgrounds
+Interactive statistics
+Hover effects
+Professional typography
+
+The website must feel like the official website of a top international football club while representing the identity of Lamontville Golden Arrows FC and the culture of Durban and KwaZulu-Natal.
+
+Generate all pages, database schema, API integrations, admin panel, authentication, CMS functionality, and deployment configuration.

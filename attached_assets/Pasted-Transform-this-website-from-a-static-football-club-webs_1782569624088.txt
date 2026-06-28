@@ -1,0 +1,491 @@
+Transform this website from a static football club website into an immersive, interactive supporter platform that feels like a modern football ecosystem.
+The website must feel alive every single day, not only on match days.
+The design should use smooth animations, micro-interactions, real-time updates, dynamic backgrounds, modern transitions and engaging user experiences without sacrificing speed.
+Every page should have something that encourages visitors to interact rather than simply read information.
+
+HOME PAGE
+Create an animated homepage.
+
+Features:
+
+Hero section with an auto-playing cinematic slider.
+Floating particles using club colours.
+Animated stadium lights.
+Live countdown to the next match.
+Dynamic weather for match day.
+Interactive fixtures carousel.
+Latest results automatically highlighted.
+News ticker.
+Live social media wall.
+Animated player cards.
+Club statistics counters.
+Trophy cabinet animation.
+Sponsor carousel.
+Interactive scrolling effects.
+Floating footballs and subtle hover animations.
+SUPPORTER HUB
+
+Instead of simply showing content, build an area supporters can use every day.
+
+Include:
+
+Daily Football Quiz
+Different questions every day.
+Leaderboard.
+Earn supporter points.
+Predict The Score
+
+Supporters predict:
+
+Final score
+First goal scorer
+Possession
+Man of the Match
+
+Award points.
+Season leaderboard.
+Fantasy Golden Arrow
+Supporters build their own Golden Arrow squad.
+Weekly scoring.
+Transfer market.
+Captain bonus.
+League tables.
+Fan Polls
+
+Every week:
+Who should start?
+Who was Man of the Match?
+Rate player performances.
+Rate referee.
+Vote for Goal of the Month.
+Display results with animated charts.
+
+Match Centre
+On match day create an immersive experience.
+
+Timeline.
+Live commentary.
+Lineups.
+Substitutions.
+Cards.
+Possession charts.
+Heat maps.
+Player ratings.
+Interactive pitch.
+Momentum graph.
+statistics comparison.
+
+Interactive League Table
+Animated table.
+
+Club logos.
+
+Recent form.
+
+Hover over clubs.
+
+See detailed statistics.
+
+PLAYER PROFILES
+
+Each player page should include:
+
+Animated profile.
+
+Statistics.
+
+Radar chart.
+
+Heat map.
+
+Goals.
+
+Assists.
+
+Appearances.
+
+Biography.
+
+Career timeline.
+
+Social links.
+
+Gallery.
+
+Videos.
+
+Fan rating.
+
+Comments.
+
+Vote for Player of the Month.
+
+FAN ACHIEVEMENTS
+
+Gamify the website.
+
+Supporters earn badges:
+
+Visited website 7 days.
+
+Made predictions.
+
+Completed quizzes.
+
+Shared content.
+
+Attended matches.
+
+Purchased merchandise.
+
+Earn XP.
+
+Levels.
+
+Gold supporters.
+
+Diamond supporters.
+
+Hall of Fame.
+
+DIGITAL STADIUM
+
+Create a virtual stadium.
+
+Visitors can:
+
+Walk around.
+
+Click stands.
+
+View trophies.
+
+Visit dressing room.
+
+See historical moments.
+
+Click hotspots.
+
+HISTORY SECTION
+
+Interactive timeline.
+
+Animated milestones.
+
+Historic matches.
+
+Historic kits.
+
+Historic managers.
+
+Historic captains.
+
+Interactive trophy cabinet.
+
+MEDIA CENTRE
+
+Video gallery.
+
+Photo gallery.
+
+360° stadium tour.
+
+Match highlights.
+
+Training videos.
+
+Player interviews.
+
+Search filters.
+
+SHOP
+
+Interactive product viewer.
+
+360° rotation.
+
+Colour selector.
+
+Size guide.
+
+Wishlist.
+
+Recently viewed.
+
+Recommended products.
+
+TICKET CENTRE
+
+Seat selection.
+
+Interactive stadium map.
+
+Available seats.
+
+Pricing.
+
+QR tickets.
+
+Calendar integration.
+
+YOUTH ACADEMY
+
+Interactive player pathways.
+
+Success stories.
+
+Academy fixtures.
+
+Player progress.
+
+Training schedule.
+
+COMMUNITY
+
+Community projects.
+
+Volunteer registration.
+
+Events calendar.
+
+Donation tracker.
+
+Interactive maps.
+
+MATCH DAY EXPERIENCE
+
+Build a dedicated Match Day page.
+
+Countdown.
+
+Live weather.
+
+Travel information.
+
+Parking.
+
+Food stalls.
+
+Lineups.
+
+Live statistics.
+
+Fan chat.
+
+Photo uploads.
+
+Match selfies.
+
+FAN WALL
+
+Supporters upload:
+
+Photos.
+
+Videos.
+
+Celebrations.
+
+Messages.
+
+Birthday wishes.
+
+Moderated by admin.
+
+SUPPORTER PROFILE
+
+Each supporter has:
+
+Avatar.
+
+Points.
+
+Badges.
+
+Prediction history.
+
+Favourite player.
+
+Favourite moments.
+
+Statistics.
+
+Achievements.
+
+AI FEATURES
+
+Integrate AI throughout the website.
+
+Examples:
+
+Ask Arrow AI
+
+"What formation should we play?"
+
+"Tell me about Player X."
+
+"When is the next match?"
+
+"Who has scored most goals?"
+
+AI Match Predictor.
+
+AI News Summary.
+
+AI Search.
+
+ADMIN DASHBOARD
+
+Admin should manage everything.
+
+Fixtures.
+
+Players.
+
+News.
+
+Videos.
+
+Polls.
+
+Quizzes.
+
+Predictions.
+
+Leaderboards.
+
+Fan uploads.
+
+Sponsors.
+
+Tickets.
+
+Academy.
+
+History.
+
+Merchandise.
+
+Users.
+
+Roles.
+
+Analytics.
+
+Notifications.
+
+REAL-TIME FEATURES
+
+Use WebSockets where possible.
+
+Live notifications.
+
+Live scores.
+
+Live comments.
+
+Live polls.
+
+Live league tables.
+
+Live statistics.
+
+Live supporter count.
+
+MOBILE EXPERIENCE
+
+The mobile experience should feel like a native app.
+
+Bottom navigation.
+
+Swipe gestures.
+
+Pull to refresh.
+
+Offline mode.
+
+Push notifications.
+
+Install as PWA.
+
+ANIMATIONS
+
+Use Framer Motion extensively.
+
+Smooth page transitions.
+
+Parallax scrolling.
+
+Animated counters.
+
+Card flips.
+
+Loading skeletons.
+
+Hover effects.
+
+3D effects.
+
+Glassmorphism.
+
+Neumorphism where appropriate.
+
+PERFORMANCE
+
+Use lazy loading.
+
+Image optimization.
+
+Code splitting.
+
+Caching.
+
+Server-side rendering where beneficial.
+
+SEO optimization.
+
+Accessibility.
+
+TECHNOLOGY STACK
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+Framer Motion
+
+TanStack Query
+
+Socket.io
+
+Node.js
+
+Express
+
+PostgreSQL
+
+Prisma
+
+Redis
+
+Cloudinary
+
+JWT Authentication
+
+PWA support
+
+Dark Mode
+
+Light Mode
+
+DESIGN STYLE
+
+The website should feel like a mix of:
+
+Modern football club websites.
+The polished interactions of premium sports apps.
+The engagement mechanics of fantasy sports platforms and social communities.
+
+The visual identity should remain true to Golden Arrows' branding, using the club's colours throughout, while delivering a fast, premium, highly interactive experience that encourages supporters to return daily.

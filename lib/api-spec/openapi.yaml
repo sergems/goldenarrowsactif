@@ -1,0 +1,1021 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Lamontville Golden Arrows FC API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: news
+    description: News articles
+  - name: players
+    description: Squad players
+  - name: staff
+    description: Technical staff
+  - name: fixtures
+    description: Match fixtures
+  - name: results
+    description: Match results
+  - name: league
+    description: PSL league table
+  - name: gallery
+    description: Photo and video gallery
+  - name: sponsors
+    description: Club sponsors
+  - name: stats
+    description: Club statistics summary
+  - name: enquiries
+    description: Contact form enquiries
+  - name: sync
+    description: Live data sync from Football API
+  - name: ads
+    description: Ad banner slots for Fixtures, Results, and League Table pages
+
+paths:
+  # ── ADS ───────────────────────────────────────────────────────────────────
+  /ads:
+    get:
+      operationId: listAds
+      tags: [ads]
+      summary: List all ad slots
+      responses:
+        "200":
+          description: All ad slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ad"
+
+  /ads/{slot}:
+    get:
+      operationId: getAd
+      tags: [ads]
+      summary: Get a single ad slot
+      parameters:
+        - in: path
+          name: slot
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Ad slot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ad"
+        "404":
+          description: Not found
+    put:
+      operationId: updateAd
+      tags: [ads]
+      summary: Update an ad slot (admin)
+      parameters:
+        - in: path
+          name: slot
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdUpdate"
+      responses:
+        "200":
+          description: Updated ad slot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ad"
+
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  # ── SLIDES ────────────────────────────────────────────────────────────────
+  /slides:
+    get:
+      operationId: listSlides
+      tags: [slides]
+      summary: List hero slides
+      responses:
+        "200":
+          description: Slides list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Slide"
+    post:
+      operationId: createSlide
+      tags: [slides]
+      summary: Create a hero slide (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SlideInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Slide"
+
+  /slides/{id}:
+    patch:
+      operationId: updateSlide
+      tags: [slides]
+      summary: Update a slide (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SlideUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Slide"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteSlide
+      tags: [slides]
+      summary: Delete a slide (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+
+  # ── ENQUIRIES ─────────────────────────────────────────────────────────────
+  /enquiries:
+    post:
+      operationId: createEnquiry
+      tags: [enquiries]
+      summary: Submit a contact enquiry (public)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnquiryInput"
+      responses:
+        "201":
+          description: Enquiry created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Enquiry"
+    get:
+      operationId: listEnquiries
+      tags: [enquiries]
+      summary: List all enquiries (admin)
+      parameters:
+        - in: query
+          name: status
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer }
+        - in: query
+          name: offset
+          schema: { type: integer }
+      responses:
+        "200":
+          description: List of enquiries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Enquiry"
+
+  /enquiries/{id}:
+    patch:
+      operationId: updateEnquiry
+      tags: [enquiries]
+      summary: Update enquiry status (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnquiryUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Enquiry"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteEnquiry
+      tags: [enquiries]
+      summary: Delete an enquiry (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+
+  # ── NEWS ──────────────────────────────────────────────────────────────────
+  /news:
+    get:
+      operationId: listNews
+      tags: [news]
+      summary: List news articles
+      parameters:
+        - in: query
+          name: category
+          schema: { type: string }
+        - in: query
+          name: featured
+          schema: { type: boolean }
+        - in: query
+          name: limit
+          schema: { type: integer }
+        - in: query
+          name: offset
+          schema: { type: integer }
+      responses:
+        "200":
+          description: List of articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsArticle"
+    post:
+      operationId: createNews
+      tags: [news]
+      summary: Create news article (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsArticle"
+
+  /news/{id}:
+    get:
+      operationId: getNewsArticle
+      tags: [news]
+      summary: Get single news article
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Article
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsArticle"
+        "404":
+          description: Not found
+    put:
+      operationId: updateNews
+      tags: [news]
+      summary: Update news article (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsArticle"
+    delete:
+      operationId: deleteNews
+      tags: [news]
+      summary: Delete news article (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+
+  # ── PLAYERS ───────────────────────────────────────────────────────────────
+  /players:
+    get:
+      operationId: listPlayers
+      tags: [players]
+      summary: List squad players
+      parameters:
+        - in: query
+          name: position
+          schema: { type: string }
+      responses:
+        "200":
+          description: Players list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Player"
+    post:
+      operationId: createPlayer
+      tags: [players]
+      summary: Create player (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlayerInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+
+  /players/{id}:
+    get:
+      operationId: getPlayer
+      tags: [players]
+      summary: Get player profile
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Player
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+        "404":
+          description: Not found
+    put:
+      operationId: updatePlayer
+      tags: [players]
+      summary: Update player (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlayerInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+    delete:
+      operationId: deletePlayer
+      tags: [players]
+      summary: Delete player (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+
+  # ── STAFF ─────────────────────────────────────────────────────────────────
+  /staff:
+    get:
+      operationId: listStaff
+      tags: [staff]
+      summary: List technical staff
+      responses:
+        "200":
+          description: Staff list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StaffMember"
+    post:
+      operationId: createStaff
+      tags: [staff]
+      summary: Create staff member (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StaffInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StaffMember"
+
+  # ── FIXTURES ──────────────────────────────────────────────────────────────
+  /fixtures:
+    get:
+      operationId: listFixtures
+      tags: [fixtures]
+      summary: List upcoming fixtures
+      parameters:
+        - in: query
+          name: competition
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Fixtures list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Fixture"
+
+  /fixtures/next:
+    get:
+      operationId: getNextFixture
+      tags: [fixtures]
+      summary: Get the very next upcoming fixture
+      responses:
+        "200":
+          description: Next fixture
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Fixture"
+
+  # ── RESULTS ───────────────────────────────────────────────────────────────
+  /results:
+    post:
+      operationId: createResult
+      tags: [results]
+      summary: Create a match result (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchResultInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatchResult"
+    get:
+      operationId: listResults
+      tags: [results]
+      summary: List recent match results
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Results list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MatchResult"
+
+  /results/{id}:
+    get:
+      operationId: getResult
+      tags: [results]
+      summary: Get match result details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Match result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatchResult"
+
+  # ── LEAGUE TABLE ──────────────────────────────────────────────────────────
+  /league/table:
+    get:
+      operationId: getLeagueTable
+      tags: [league]
+      summary: Get current PSL league standings
+      responses:
+        "200":
+          description: League table with season
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeagueTableResponse"
+
+  # ── GALLERY ───────────────────────────────────────────────────────────────
+  /gallery:
+    get:
+      operationId: listGallery
+      tags: [gallery]
+      summary: List gallery items
+      parameters:
+        - in: query
+          name: category
+          schema: { type: string }
+        - in: query
+          name: type
+          schema: { type: string, enum: [photo, video] }
+        - in: query
+          name: limit
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Gallery items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GalleryItem"
+    post:
+      operationId: createGalleryItem
+      tags: [gallery]
+      summary: Upload gallery item (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GalleryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GalleryItem"
+
+  /gallery/{id}:
+    delete:
+      operationId: deleteGalleryItem
+      tags: [gallery]
+      summary: Delete gallery item (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "204":
+          description: Deleted
+
+  # ── SPONSORS ──────────────────────────────────────────────────────────────
+  /sponsors:
+    get:
+      operationId: listSponsors
+      tags: [sponsors]
+      summary: List club sponsors
+      responses:
+        "200":
+          description: Sponsors list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Sponsor"
+
+  # ── STATS SUMMARY (wow endpoint) ──────────────────────────────────────────
+  /stats/summary:
+    get:
+      operationId: getStatsSummary
+      tags: [stats]
+      summary: Get club season statistics summary
+      responses:
+        "200":
+          description: Stats summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsSummary"
+
+  # ── SYNC ──────────────────────────────────────────────────────────────────
+  /sync/table:
+    post:
+      operationId: syncTable
+      tags: [sync]
+      summary: Pull PSL standings from Football API
+      responses:
+        "200":
+          description: Sync result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncResult"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string }
+
+    # ── NEWS ──────────────────────────────────────────────────────────────
+    NewsArticle:
+      type: object
+      required: [id, title, slug, category, publishedAt, imageUrl, excerpt]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        slug: { type: string }
+        excerpt: { type: string }
+        content: { type: ["string", "null"] }
+        category: { type: string }
+        imageUrl: { type: string }
+        featured: { type: boolean }
+        author: { type: string }
+        tags: { type: array, items: { type: string } }
+        publishedAt: { type: string }
+
+    NewsInput:
+      type: object
+      required: [title, slug, category, imageUrl, excerpt]
+      properties:
+        title: { type: string }
+        slug: { type: string }
+        excerpt: { type: string }
+        content: { type: string }
+        category: { type: string }
+        imageUrl: { type: string }
+        featured: { type: boolean }
+        author: { type: string }
+        tags: { type: array, items: { type: string } }
+
+    # ── PLAYERS ───────────────────────────────────────────────────────────
+    Player:
+      type: object
+      required: [id, name, position, number, nationality]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        position: { type: string }
+        number: { type: integer }
+        nationality: { type: string }
+        age: { type: ["integer", "null"] }
+        photoUrl: { type: ["string", "null"] }
+        bio: { type: ["string", "null"] }
+        appearances: { type: integer }
+        goals: { type: integer }
+        assists: { type: integer }
+        instagram: { type: ["string", "null"] }
+        facebook: { type: ["string", "null"] }
+        twitter: { type: ["string", "null"] }
+
+    PlayerInput:
+      type: object
+      required: [name, position, number, nationality]
+      properties:
+        name: { type: string }
+        position: { type: string }
+        number: { type: integer }
+        nationality: { type: string }
+        age: { type: integer }
+        photoUrl: { type: string }
+        bio: { type: string }
+        appearances: { type: integer }
+        goals: { type: integer }
+        assists: { type: integer }
+        instagram: { type: string }
+        facebook: { type: string }
+        twitter: { type: string }
+
+    # ── STAFF ─────────────────────────────────────────────────────────────
+    StaffMember:
+      type: object
+      required: [id, name, role]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        role: { type: string }
+        photoUrl: { type: ["string", "null"] }
+        bio: { type: ["string", "null"] }
+        nationality: { type: ["string", "null"] }
+        instagram: { type: ["string", "null"] }
+        facebook: { type: ["string", "null"] }
+        twitter: { type: ["string", "null"] }
+
+    StaffInput:
+      type: object
+      required: [name, role]
+      properties:
+        name: { type: string }
+        role: { type: string }
+        photoUrl: { type: string }
+        bio: { type: string }
+        nationality: { type: string }
+        instagram: { type: string }
+        facebook: { type: string }
+        twitter: { type: string }
+
+    # ── FIXTURES ──────────────────────────────────────────────────────────
+    Fixture:
+      type: object
+      required: [id, date, homeTeam, awayTeam, competition, venue]
+      properties:
+        id: { type: integer }
+        date: { type: string }
+        time: { type: ["string", "null"] }
+        homeTeam: { type: string }
+        awayTeam: { type: string }
+        competition: { type: string }
+        venue: { type: string }
+        ticketUrl: { type: ["string", "null"] }
+
+    # ── RESULTS ───────────────────────────────────────────────────────────
+    MatchResult:
+      type: object
+      required: [id, date, homeTeam, awayTeam, homeScore, awayScore, competition]
+      properties:
+        id: { type: integer }
+        date: { type: string }
+        homeTeam: { type: string }
+        awayTeam: { type: string }
+        homeScore: { type: integer }
+        awayScore: { type: integer }
+        competition: { type: string }
+        venue: { type: ["string", "null"] }
+        scorers: { type: array, items: { type: string } }
+        matchReport: { type: ["string", "null"] }
+        highlightUrl: { type: ["string", "null"] }
+
+    # ── LEAGUE TABLE ──────────────────────────────────────────────────────
+    LeagueTableResponse:
+      type: object
+      required: [season, entries]
+      properties:
+        season: { type: integer }
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/LeagueTableEntry"
+
+    LeagueTableEntry:
+      type: object
+      required: [position, team, played, won, drawn, lost, goalsFor, goalsAgainst, goalDifference, points]
+      properties:
+        season: { type: integer }
+        position: { type: integer }
+        team: { type: string }
+        logoUrl: { type: ["string", "null"] }
+        played: { type: integer }
+        won: { type: integer }
+        drawn: { type: integer }
+        lost: { type: integer }
+        goalsFor: { type: integer }
+        goalsAgainst: { type: integer }
+        goalDifference: { type: integer }
+        points: { type: integer }
+        isGoldenArrows: { type: boolean }
+
+    # ── GALLERY ───────────────────────────────────────────────────────────
+    GalleryItem:
+      type: object
+      required: [id, title, type, url, category]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        type: { type: string, enum: [photo, video] }
+        url: { type: string }
+        thumbnailUrl: { type: ["string", "null"] }
+        category: { type: string }
+        caption: { type: ["string", "null"] }
+        publishedAt: { type: string }
+
+    GalleryInput:
+      type: object
+      required: [title, type, url, category]
+      properties:
+        title: { type: string }
+        type: { type: string, enum: [photo, video] }
+        url: { type: string }
+        thumbnailUrl: { type: string }
+        category: { type: string }
+        caption: { type: string }
+
+    # ── SPONSORS ──────────────────────────────────────────────────────────
+    Sponsor:
+      type: object
+      required: [id, name, logoUrl, tier]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        logoUrl: { type: string }
+        websiteUrl: { type: ["string", "null"] }
+        tier: { type: string }
+
+    # ── SLIDES ────────────────────────────────────────────────────────────
+    Slide:
+      type: object
+      required: [id, title, imageUrl, sortOrder, active, createdAt]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        imageUrl: { type: string }
+        subtitle: { type: ["string", "null"] }
+        link: { type: ["string", "null"] }
+        linkLabel: { type: ["string", "null"] }
+        sortOrder: { type: integer }
+        active: { type: boolean }
+        createdAt: { type: string }
+
+    SlideInput:
+      type: object
+      required: [title, imageUrl]
+      properties:
+        title: { type: string }
+        imageUrl: { type: string }
+        subtitle: { type: string }
+        link: { type: string }
+        linkLabel: { type: string }
+        sortOrder: { type: integer }
+        active: { type: boolean }
+
+    SlideUpdate:
+      type: object
+      properties:
+        title: { type: string }
+        imageUrl: { type: string }
+        subtitle: { type: string }
+        link: { type: string }
+        linkLabel: { type: string }
+        sortOrder: { type: integer }
+        active: { type: boolean }
+
+    # ── RESULTS (write) ───────────────────────────────────────────────────
+    MatchResultInput:
+      type: object
+      required: [date, homeTeam, awayTeam, homeScore, awayScore, competition]
+      properties:
+        date: { type: string }
+        homeTeam: { type: string }
+        awayTeam: { type: string }
+        homeScore: { type: integer }
+        awayScore: { type: integer }
+        competition: { type: string }
+        venue: { type: string }
+        scorers: { type: array, items: { type: string } }
+        matchReport: { type: string }
+        highlightUrl: { type: string }
+
+    # ── ENQUIRIES ─────────────────────────────────────────────────────────
+    Enquiry:
+      type: object
+      required: [id, firstName, lastName, email, subject, message, status, createdAt]
+      properties:
+        id: { type: integer }
+        firstName: { type: string }
+        lastName: { type: string }
+        email: { type: string }
+        subject: { type: string }
+        message: { type: string }
+        status: { type: string, enum: [unread, read, resolved] }
+        createdAt: { type: string }
+
+    EnquiryInput:
+      type: object
+      required: [firstName, lastName, email, subject, message]
+      properties:
+        firstName: { type: string }
+        lastName: { type: string }
+        email: { type: string }
+        subject: { type: string }
+        message: { type: string }
+
+    EnquiryUpdate:
+      type: object
+      properties:
+        status: { type: string, enum: [unread, read, resolved] }
+
+    # ── SYNC ──────────────────────────────────────────────────────────────
+    SyncResult:
+      type: object
+      required: [synced, total, season]
+      properties:
+        synced: { type: integer }
+        total: { type: integer }
+        season: { type: integer }
+        note: { type: string }
+
+    # ── STATS ─────────────────────────────────────────────────────────────
+    StatsSummary:
+      type: object
+      required: [leaguePosition, played, won, drawn, lost, goalsScored, goalsConceded, points, topScorer, cleanSheets]
+      properties:
+        leaguePosition: { type: integer }
+        played: { type: integer }
+        won: { type: integer }
+        drawn: { type: integer }
+        lost: { type: integer }
+        goalsScored: { type: integer }
+        goalsConceded: { type: integer }
+        points: { type: integer }
+        topScorer: { type: string }
+        topScorerGoals: { type: integer }
+        cleanSheets: { type: integer }
+        winRate: { type: number }
+
+    # ── ADS ───────────────────────────────────────────────────────────────
+    Ad:
+      type: object
+      required: [id, slot, updatedAt]
+      properties:
+        id: { type: integer }
+        slot: { type: string }
+        imageUrl: { type: string, nullable: true }
+        linkUrl: { type: string, nullable: true }
+        altText: { type: string, nullable: true }
+        updatedAt: { type: string }
+
+    AdUpdate:
+      type: object
+      properties:
+        imageUrl: { type: string, nullable: true }
+        linkUrl: { type: string, nullable: true }
+        altText: { type: string, nullable: true }
