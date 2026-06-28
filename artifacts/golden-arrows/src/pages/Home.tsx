@@ -658,21 +658,24 @@ function ClubStats({ results, players }: {
 
   return (
     <section className="relative overflow-hidden">
-      {/* ── Section banner ── */}
-      <div className="border-b border-white/8 py-4 sm:py-5 relative overflow-hidden" style={{ background: "hsl(139 55% 18%)" }}>
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%)", backgroundSize: "8px 8px" }} />
-        <div className="max-w-[1330px] mx-auto px-4 relative flex items-center justify-between gap-4">
+      {/* Dark scoreboard panel */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+      <div className="container mx-auto px-4 relative py-5 sm:py-7">
+        {/* Header row */}
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-1.5 flex items-center gap-2">
-              <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
+            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
+              <span className="w-3 h-px bg-primary inline-block" />
               By The Numbers
-              <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
             </p>
-            <h2 className="font-display text-2xl sm:text-4xl uppercase font-black" style={{ letterSpacing: "0.06em" }}>
+            <h2 className="font-display text-xl sm:text-3xl uppercase text-white" style={{ letterSpacing: "0.06em" }}>
               Club <span className="text-primary">Statistics</span>
             </h2>
           </div>
-          <div className="hidden sm:flex items-center gap-1.5 text-[9px] text-white/40 uppercase tracking-widest font-bold flex-shrink-0">
+          <div className="hidden sm:flex items-center gap-1.5 text-[9px] text-white/25 uppercase tracking-widest font-bold">
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
@@ -680,13 +683,7 @@ function ClubStats({ results, players }: {
             Hover to explore
           </div>
         </div>
-      </div>
 
-      {/* Dark scoreboard panel */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60" />
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-
-      <div className="container mx-auto px-4 relative py-5 sm:py-7">
         {/* Stats grid — dark cells with gold dividers */}
         <div className="grid grid-cols-3 lg:grid-cols-6 rounded-xl overflow-hidden border border-white/10 divide-x divide-white/8">
           {stats.map((s, i) => (
@@ -811,46 +808,39 @@ function FixturesCarousel({ fixtures }: { fixtures: Fixture[] }) {
   if (!upcoming.length) return null;
 
   return (
-    <section className="bg-card border-y border-white/5 overflow-hidden">
-      {/* ── Section banner ── */}
-      <div className="border-b border-white/8 py-4 sm:py-5 relative overflow-hidden" style={{ background: "hsl(139 55% 18%)" }}>
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%)", backgroundSize: "8px 8px" }} />
-        <div className="max-w-[1330px] mx-auto px-4 relative flex items-center justify-between gap-4">
-          <div>
-            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-1.5 flex items-center gap-2">
-              <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
-              Coming Up
-              <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
-            </p>
-            <h2 className="font-display text-2xl sm:text-4xl uppercase font-black" style={{ letterSpacing: "0.06em" }}>
-              Upcoming <span className="text-primary">Fixtures</span>
-            </h2>
-          </div>
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <button
-              onClick={() => scrollTo(activeIdx - 1)}
-              disabled={activeIdx === 0}
-              className="h-8 w-8 rounded-full border border-white/25 flex items-center justify-center text-white/50 hover:border-primary hover:text-primary disabled:opacity-20 disabled:cursor-not-allowed transition-all"
-              aria-label="Previous fixture"
-            >
-              <ChevronRight className="h-4 w-4 rotate-180" />
-            </button>
-            <button
-              onClick={() => scrollTo(activeIdx + 1)}
-              disabled={activeIdx >= upcoming.length - 1}
-              className="h-8 w-8 rounded-full border border-white/25 flex items-center justify-center text-white/50 hover:border-primary hover:text-primary disabled:opacity-20 disabled:cursor-not-allowed transition-all"
-              aria-label="Next fixture"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-            <Link href="/fixtures" className="text-white/50 hover:text-primary transition-colors font-bold uppercase tracking-wider text-xs flex items-center gap-1 ml-1">
-              All <ChevronRight className="h-3 w-3" />
-            </Link>
-          </div>
+    <section className="py-4 sm:py-7 bg-card border-y border-white/5 overflow-hidden">
+      <div className="container mx-auto px-4 mb-4 flex justify-between items-center">
+        <div>
+          <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
+            <span className="w-3 h-px bg-primary inline-block" />
+            Coming Up
+          </p>
+          <h2 className="font-display text-xl sm:text-3xl uppercase text-white" style={{ letterSpacing: "0.06em" }}>
+            Upcoming <span className="text-primary">Fixtures</span>
+          </h2>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => scrollTo(activeIdx - 1)}
+            disabled={activeIdx === 0}
+            className="h-8 w-8 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:border-primary hover:text-primary disabled:opacity-20 disabled:cursor-not-allowed transition-all"
+            aria-label="Previous fixture"
+          >
+            <ChevronRight className="h-4 w-4 rotate-180" />
+          </button>
+          <button
+            onClick={() => scrollTo(activeIdx + 1)}
+            disabled={activeIdx >= upcoming.length - 1}
+            className="h-8 w-8 rounded-full border border-white/15 flex items-center justify-center text-white/40 hover:border-primary hover:text-primary disabled:opacity-20 disabled:cursor-not-allowed transition-all"
+            aria-label="Next fixture"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+          <Link href="/fixtures" className="text-white/50 hover:text-primary transition-colors font-bold uppercase tracking-wider text-xs flex items-center gap-1 ml-2">
+            All <ChevronRight className="h-3 w-3" />
+          </Link>
         </div>
       </div>
-
-      <div className="py-4 sm:py-6 overflow-hidden">
 
       <div className="relative">
         <div
@@ -938,7 +928,6 @@ function FixturesCarousel({ fixtures }: { fixtures: Fixture[] }) {
           />
         ))}
       </div>
-      </div>
     </section>
   );
 }
@@ -976,26 +965,25 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
   if (!news.length) return null;
 
   return (
-    <section className="relative overflow-hidden">
-      {/* ── Section banner ── */}
-      <div className="border-b border-white/8 py-4 sm:py-5 relative overflow-hidden" style={{ background: "hsl(139 55% 18%)" }}>
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%)", backgroundSize: "8px 8px" }} />
-        <div className="max-w-[1330px] mx-auto px-4 relative">
-          <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-1.5 flex items-center gap-2">
-            <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
-            From The Club
-            <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
-          </p>
-          <h2 className="font-display text-2xl sm:text-4xl uppercase font-black" style={{ letterSpacing: "0.06em" }}>
-            Latest <span className="text-primary">News</span>
-          </h2>
-        </div>
-      </div>
+    <section className="py-5 sm:py-9 relative overflow-hidden">
+      {/* Gold accent line top */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
 
-      <div className="py-5 sm:py-9">
       <div className="container mx-auto px-4">
-        {/* Category pills */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        {/* Header + pills row */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
+          <div>
+            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
+              <span className="w-3 h-px bg-primary inline-block" />
+              From The Club
+            </p>
+            <h2 className="font-display text-xl sm:text-3xl uppercase text-white" style={{ letterSpacing: "0.06em" }}>
+              Latest <span className="text-primary">News</span>
+            </h2>
+          </div>
+
+          {/* Category pills */}
+          <div className="flex flex-wrap gap-1.5">
             {categories.map(cat => (
               <button
                 key={cat}
@@ -1016,6 +1004,7 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
               All <ChevronRight className="h-2.5 w-2.5" />
             </Link>
           </div>
+        </div>
 
         {/* Grid layout */}
         <AnimatePresence mode="wait">
@@ -1156,7 +1145,6 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
             </div>
           </motion.div>
         </AnimatePresence>
-      </div>
       </div>
     </section>
   );
@@ -1461,23 +1449,17 @@ export default function Home() {
       </section>
 
       {/* ── Trophy Cabinet ────────────────────────── */}
-      <section className="bg-card border-y border-white/5 overflow-hidden">
-        {/* ── Section banner ── */}
-        <div className="border-b border-white/8 py-4 sm:py-5 relative overflow-hidden" style={{ background: "hsl(139 55% 18%)" }}>
-          <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%)", backgroundSize: "8px 8px" }} />
-          <div className="max-w-[1330px] mx-auto px-4 relative">
-            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-1.5 flex items-center gap-2">
-              <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
+      <section className="bg-card border-y border-white/5 py-5 sm:py-10 overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-4 sm:mb-8">
+            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center justify-center gap-1.5">
+              <span className="w-3 h-px bg-primary inline-block" />
               A Legacy of Success
-              <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
             </p>
-            <h2 className="font-display text-2xl sm:text-4xl uppercase font-black" style={{ letterSpacing: "0.06em" }}>
+            <h2 className="font-display text-xl sm:text-3xl uppercase text-white" style={{ letterSpacing: "0.08em" }}>
               Club <span className="text-primary">Honours</span>
             </h2>
           </div>
-        </div>
-
-        <div className="container mx-auto px-4 py-5 sm:py-10">
           <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
             <motion.div
               className="trophy-shimmer relative flex-1 flex justify-center"
