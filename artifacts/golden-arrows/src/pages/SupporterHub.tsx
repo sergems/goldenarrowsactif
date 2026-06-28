@@ -21,6 +21,7 @@ import FanBadgeCreator from "./fan-zone/FanBadgeCreator";
 import ChantMixer from "./fan-zone/ChantMixer";
 import Achievements from "./fan-zone/Achievements";
 import FanProfile from "./fan-zone/FanProfile";
+import FanOfTheMonth from "./fan-zone/FanOfTheMonth";
 
 // ─── Quiz questions pool ──────────────────────────────────────────────────────
 
@@ -379,6 +380,7 @@ const FEATURES: Feature[] = [
   { id: "chant", title: "Chant Mixer", emoji: "🎵", description: "Mix crowd chants and drums to create your own match day atmosphere", color: "#234E52", tag: "SOUND", component: ChantMixer },
   { id: "achievements", title: "Achievements", emoji: "🏆", description: "View your unlocked badges and track your fan journey", color: "#B7791F", tag: "PROFILE", component: Achievements },
   { id: "profile", title: "Fan Profile", emoji: "👑", description: "Your fan stats, rank, points and overall progress", color: "#1B5E20", tag: "PROFILE", component: FanProfile },
+  { id: "fotm", title: "Fan of the Month", emoji: "🗳️", description: "Nominate & vote for the most dedicated Golden Arrows supporter each month", color: "#B7791F", tag: "VOTE", component: FanOfTheMonth },
 ];
 
 // ─── Hub Tabs ─────────────────────────────────────────────────────────────────
@@ -398,6 +400,7 @@ const TAG_COLORS: Record<string, string> = {
   SPIN: "bg-primary/15 text-primary border-primary/25",
   SOUND: "bg-teal-500/15 text-teal-400 border-teal-500/25",
   PROFILE: "bg-pink-500/15 text-pink-400 border-pink-500/25",
+  VOTE: "bg-amber-500/15 text-amber-400 border-amber-500/25",
 };
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
