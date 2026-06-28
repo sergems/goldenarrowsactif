@@ -1048,6 +1048,7 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-3 items-stretch">
 
           {/* ── Featured panel ── */}
+          <div className="h-full">
           <AnimatePresence mode="wait">
             {featured && (
               <motion.div
@@ -1059,7 +1060,7 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 <Link href={`/news/${featured.id}`} className="block h-full">
-                  <div className="relative rounded-xl overflow-hidden h-full min-h-[260px] sm:min-h-[330px] bg-card border border-white/8 group cursor-pointer">
+                  <div className="relative rounded-xl overflow-hidden h-full bg-card border border-white/8 group cursor-pointer">
                     <motion.img
                       key={featured.imageUrl}
                       src={featured.imageUrl}
@@ -1142,6 +1143,7 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
               </motion.div>
             )}
           </AnimatePresence>
+          </div>
 
           {/* ── Side list ── */}
           <div className="flex flex-col gap-1.5">
