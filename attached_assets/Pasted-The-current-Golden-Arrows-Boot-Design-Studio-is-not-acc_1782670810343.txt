@@ -1,0 +1,536 @@
+The current Golden Arrows Boot Design Studio is not acceptable. The football boot models are cartoonish, unrealistic, low quality, and do not resemble professional football boots.
+
+I do not want the current designer to be improved.
+
+I want it to be completely removed and replaced with an entirely new Boot Design Studio built from the ground up.
+
+The existing UI, components, rendering engine, boot models, textures, and styling should all be discarded.
+
+Only preserve:
+
+user authentication
+saved designs database
+APIs
+backend functionality
+sharing functionality
+
+Everything else should be rebuilt.
+
+Overall Goal
+
+Create a premium Boot Design Studio that looks like it belongs on the official website of a professional football club.
+
+The experience should feel comparable to:
+
+Nike By You
+Adidas Custom Boots
+Puma Custom Studio
+EA Sports FC equipment editor
+PES / eFootball editor
+
+Nothing should look like a game or cartoon.
+
+Completely Replace the Boot Models
+
+Do NOT reuse the current boot assets.
+
+Create entirely new football boot models with realistic proportions.
+
+Each boot must include:
+
+anatomically correct football boot shape
+narrow football toe box
+realistic heel counter
+authentic football soleplate
+molded studs
+lace system
+stitched panels
+mesh areas
+knitted textures where applicable
+realistic tongue
+ankle collar for high-cut models
+proper curvature
+realistic thickness
+
+The boots must immediately be recognizable as elite football boots.
+
+No oversized soles.
+
+No sneaker proportions.
+
+No cartoon shapes.
+
+Build New High-Quality 3D Assets
+
+Every boot should use:
+
+PBR materials
+realistic lighting
+ambient occlusion
+normal maps
+roughness maps
+metallic maps
+cloth textures
+leather textures
+synthetic textures
+
+Lighting should resemble a professional sports product photoshoot.
+
+Completely New User Interface
+
+Delete the existing interface.
+
+Create an entirely new studio using a premium dark theme.
+
+Colour palette:
+
+Golden Arrows Green (#006B3F)
+Gold (#FFD700)
+Black (#111111)
+Dark Grey (#1A1A1A)
+
+Use:
+
+glassmorphism
+smooth shadows
+premium typography
+subtle stadium background
+animated panels
+elegant spacing
+modern icons
+
+Everything should feel luxurious.
+
+New Layout
+
+Create a three-panel workspace.
+
+LEFT PANEL
+
+Boot model selector
+
+Saved designs
+
+Recent designs
+
+Quick presets
+
+CENTER
+
+Large interactive 3D viewer
+
+Rotate
+
+Zoom
+
+360°
+
+Flip
+
+Multiple viewing angles
+
+Stadium background
+
+BOTTOM
+
+Thumbnail camera views
+
+Left
+
+Right
+
+Front
+
+Back
+
+Top
+
+Sole
+
+Pair
+
+RIGHT PANEL
+
+Tabbed customization studio
+
+Colours
+
+Patterns
+
+Materials
+
+Details
+
+Soleplate
+
+Studs
+
+Laces
+
+Logos
+
+Personalisation
+
+Finish
+
+Export
+
+Real-Time Rendering
+
+Every change must update instantly.
+
+No page refresh.
+
+No loading between edits.
+
+Smooth animation between every modification.
+
+Multiple Boot Models
+
+Include professional football boot categories:
+
+Speed
+
+Power
+
+Control
+
+Classic Leather
+
+Goalkeeper
+
+Training
+
+Futsal
+
+Artificial Grass
+
+Soft Ground
+
+Firm Ground
+
+High Cut
+
+Low Cut
+
+Elite Match
+
+Youth
+
+Each category should use its own unique 3D geometry.
+
+Colour Designer
+
+Allow independent colours for:
+
+Upper
+
+Heel
+
+Toe
+
+Tongue
+
+Laces
+
+Soleplate
+
+Studs
+
+Inner lining
+
+Heel tab
+
+Logos
+
+Stitching
+
+Trim
+
+Accent graphics
+
+Include:
+
+HEX input
+
+RGB picker
+
+Colour wheel
+
+Recent colours
+
+Golden Arrows presets
+
+Popular combinations
+
+Pattern Designer
+
+Provide premium football graphics:
+
+Lightning
+
+Gradient
+
+Speed Lines
+
+Carbon
+
+Hexagon
+
+Digital Camo
+
+Brush Stroke
+
+Diagonal
+
+Geometric
+
+Wave
+
+Mesh
+
+Minimal
+
+Retro
+
+Paint Splash
+
+Tiger
+
+Abstract
+
+Allow:
+
+Opacity
+
+Scale
+
+Rotation
+
+Placement
+
+Pattern colour
+
+Material Designer
+
+Users can switch materials instantly.
+
+Include:
+
+Synthetic
+
+Microfibre
+
+Leather
+
+Kangaroo Leather
+
+Knit
+
+Mesh
+
+Carbon Fibre
+
+Gloss
+
+Matte
+
+Metallic
+
+Rubber
+
+Textured
+
+Reflective
+
+Each material must visibly change the model.
+
+Soleplate Studio
+
+Allow customization of:
+
+Plate colour
+
+Stud colour
+
+Heel plate
+
+Carbon insert
+
+Stud configuration
+
+Stud type
+
+FG
+
+AG
+
+SG
+
+TF
+
+IC
+
+HG
+
+Lace Studio
+
+Options:
+
+Flat
+
+Round
+
+Ribbed
+
+No Laces
+
+Elastic Knit
+
+Contrast
+
+Gradient
+
+Reflective
+
+Logo Placement
+
+Users can place:
+
+Golden Arrows logo
+
+Umbro logo
+
+Sponsor logo
+
+Custom logo
+
+Player initials
+
+Player signature
+
+Numbers
+
+Flags
+
+Positions:
+
+Heel
+
+Side
+
+Tongue
+
+Toe
+
+Sole
+
+Personalisation
+
+Allow:
+
+Player Name
+
+Nickname
+
+Initials
+
+Squad Number
+
+Country Flag
+
+Signature
+
+Choose:
+
+Font
+
+Colour
+
+Shadow
+
+Outline
+
+Position
+
+Preview Mode
+
+Include:
+
+Walking animation
+
+Running animation
+
+Ball strike animation
+
+Close-up spin
+
+360° showcase
+
+Slow-motion rotation
+
+AI Design Generator
+
+Button:
+
+"Inspire Me"
+
+Generate:
+
+Champions Edition
+
+African Heritage
+
+Gold Edition
+
+Retro
+
+Future
+
+Minimal
+
+Supporters Edition
+
+Elite Match
+
+Limited Edition
+
+Training
+
+Stealth Black
+
+Export
+
+Allow exporting:
+
+PNG
+
+Transparent PNG
+
+Wallpaper
+
+Presentation Card
+
+Instagram Story
+
+Poster
+
+Social Share
+
+Performance
+
+Use React Three Fiber with Three.js.
+
+Target 60 FPS.
+
+Optimize textures.
+
+Lazy load models.
+
+Responsive on desktop, tablet, and mobile.
+
+Final Quality Standard
+
+The completed Boot Design Studio should look like a premium commercial football boot configurator that could be used by Umbro and Golden Arrows FC to let supporters design boots for professional players.
+
+There must be no traces of the previous implementation. Treat this as a full replacement project, not an update. The result should be visually stunning, highly interactive, and photorealistic, with football boots that look ready for manufacture rather than cartoon illustrations.
