@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, useScroll, useSpring, useInView, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useSpring, useInView, AnimatePresence, useTransform, type MotionValue } from "framer-motion";
 import { Link } from "wouter";
 import { ChevronRight, Trophy, Star, TrendingUp, Shield, Zap, ChevronDown } from "lucide-react";
 import mtn8Img from "@assets/MTN_8_LOGO_1782640838208.jpg";
@@ -127,6 +127,112 @@ const TIMELINE = [
     highlight: "Betway Premiership",
   },
 ];
+
+function FootballProgress({ scrollProgress }: { scrollProgress: MotionValue<number> }) {
+  const [pct, setPct] = useState(0);
+  // fillY goes from 100 (ball empty) → 4 (ball full) as scroll goes 0→1
+  const fillY = useTransform(scrollProgress, [0, 1], [100, 4]);
+
+  useEffect(() => {
+    const unsub = scrollProgress.on("change", (v) => setPct(Math.round(v * 100)));
+    return unsub;
+  }, [scrollProgress]);
+
+  const isComplete = pct >= 100;
+
+  return (
+    <div className="fixed bottom-6 right-5 z-50 flex flex-col items-center gap-1.5 pointer-events-none select-none">
+      {/* Percentage label above ball */}
+      <motion.div
+        animate={{ scale: isComplete ? [1, 1.15, 1] : 1 }}
+        transition={{ duration: 0.4 }}
+        className="relative"
+      >
+        {/* Glow ring when full */}
+        {isComplete && (
+          <motion.div
+            animate={{ scale: [1, 1.5, 1], opacity: [0.6, 0, 0.6] }}
+            transition={{ duration: 1.8, repeat: Infinity }}
+            className="absolute inset-0 rounded-full bg-primary/40 blur-sm"
+          />
+        )}
+
+        {/* Football SVG */}
+        <svg viewBox="0 0 100 100" width="72" height="72" className="drop-shadow-2xl" style={{ filter: "drop-shadow(0 4px 16px rgba(0,0,0,0.7))" }}>
+          <defs>
+            <clipPath id="hist-ball-clip">
+              <circle cx="50" cy="50" r="46" />
+            </clipPath>
+            <radialGradient id="hist-ball-shine" cx="40%" cy="35%" r="55%">
+              <stop offset="0%" stopColor="rgba(255,255,255,0.18)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+            </radialGradient>
+          </defs>
+
+          {/* Clipped group — everything inside the ball circle */}
+          <g clipPath="url(#hist-ball-clip)">
+            {/* Dark background (unfilled) */}
+            <rect x="0" y="0" width="100" height="100" fill="hsl(140 10% 6%)" />
+
+            {/* Golden fill rising from bottom */}
+            <motion.rect x="0" y={fillY} width="100" height="100" fill="#FFD700" />
+
+            {/* Subtle wave edge on fill top — decorative rect with slight transparency */}
+            <motion.rect x="0" y={fillY} width="100" height="3" fill="#FFF176" opacity={0.5} />
+
+            {/* ── Football pentagon patches ── */}
+            {/* Center pentagon */}
+            <polygon points="50,37 62,45 57,57 43,57 38,45" fill="rgba(10,20,10,0.55)" stroke="rgba(10,20,10,0.3)" strokeWidth="0.5" />
+            {/* Top pentagon */}
+            <polygon points="50,8 61,19 55,31 45,31 39,19" fill="rgba(10,20,10,0.55)" stroke="rgba(10,20,10,0.3)" strokeWidth="0.5" />
+            {/* Top-right pentagon */}
+            <polygon points="72,17 80,30 71,39 60,34 61,21" fill="rgba(10,20,10,0.55)" stroke="rgba(10,20,10,0.3)" strokeWidth="0.5" />
+            {/* Right pentagon */}
+            <polygon points="87,46 86,59 75,64 66,55 70,43" fill="rgba(10,20,10,0.55)" stroke="rgba(10,20,10,0.3)" strokeWidth="0.5" />
+            {/* Bottom-right pentagon */}
+            <polygon points="73,74 63,84 51,80 49,68 61,62" fill="rgba(10,20,10,0.55)" stroke="rgba(10,20,10,0.3)" strokeWidth="0.5" />
+            {/* Bottom-left pentagon */}
+            <polygon points="27,74 39,62 51,68 49,80 37,84" fill="rgba(10,20,10,0.55)" stroke="rgba(10,20,10,0.3)" strokeWidth="0.5" />
+            {/* Left pentagon */}
+            <polygon points="13,46 30,43 34,55 25,64 14,59" fill="rgba(10,20,10,0.55)" stroke="rgba(10,20,10,0.3)" strokeWidth="0.5" />
+            {/* Top-left pentagon */}
+            <polygon points="28,17 39,21 40,34 29,39 20,30" fill="rgba(10,20,10,0.55)" stroke="rgba(10,20,10,0.3)" strokeWidth="0.5" />
+
+            {/* Shine overlay */}
+            <circle cx="50" cy="50" r="46" fill="url(#hist-ball-shine)" />
+          </g>
+
+          {/* Outer ring — golden border */}
+          <circle
+            cx="50" cy="50" r="46"
+            fill="none"
+            stroke={pct > 5 ? "#FFD700" : "rgba(255,215,0,0.3)"}
+            strokeWidth="2.5"
+            style={{ transition: "stroke 0.4s" }}
+          />
+
+          {/* Percentage text inside ball */}
+          <text
+            x="50" y="54"
+            textAnchor="middle"
+            fontSize="22"
+            fontWeight="900"
+            fontFamily="sans-serif"
+            fill={pct > 45 ? "hsl(140 10% 6%)" : "#FFD700"}
+            style={{ transition: "fill 0.3s", letterSpacing: "-1px" }}
+          >
+            {pct}%
+          </text>
+        </svg>
+      </motion.div>
+
+      {/* Label below */}
+      <div className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/50">
+        {isComplete ? "Complete!" : "Explored"}
+      </div>
+    </div>
+  );
+}
 
 function TimelineNode({ item, index, isLeft }: { item: typeof TIMELINE[0]; index: number; isLeft: boolean }) {
   const [expanded, setExpanded] = useState(false);
@@ -260,6 +366,9 @@ export default function ClubHistory() {
         className="fixed top-0 left-0 right-0 h-1 bg-primary origin-left z-50"
         style={{ scaleX: scaleY }}
       />
+
+      {/* Football progress widget */}
+      <FootballProgress scrollProgress={scrollYProgress} />
 
       {/* Header */}
       <div className="bg-card py-3 border-b border-white/5">
