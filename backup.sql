@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict R4NpGf2Rwv8MdEgzBvKuypgwRDXgYjokbehkDMANaKjp3A9UHZzyKejL5hHmAfx
+\restrict ANx3iOXgD7Nv1vAR9QRTvdbcHcZ6SJPd32Xj3ZnZHkq9hrbftCN4OzMV9ewTFhC
 
 -- Dumped from database version 16.10
 -- Dumped by pg_dump version 16.10
@@ -758,22 +758,22 @@ COPY public.gallery (id, title, type, url, thumbnail_url, category, caption, pub
 --
 
 COPY public.league_table (id, "position", team, logo_url, played, won, drawn, lost, goals_for, goals_against, goal_difference, points, is_golden_arrows, updated_at, season) FROM stdin;
-353	1	Orlando Pirates	https://statistic-cdn.scoreaxis.com/team/2fab2dc66865b76fd0ac6175e3d600c4675008a17633fd464ef3ab3d3b59febe-60-60.png	30	21	6	3	58	12	46	69	f	2026-06-27 18:30:05.231231+00	2025
-354	2	Mamelodi Sundowns FC	https://statistic-cdn.scoreaxis.com/team/c48a1afce57edd50429551cdfae010d1de9a9ea75b0bbbc80e13b4aac9ca4402-60-60.png	30	20	8	2	57	21	36	68	f	2026-06-27 18:30:05.231231+00	2025
-355	3	Kaizer Chiefs	https://statistic-cdn.scoreaxis.com/team/4b5d40da4b020975e1d698092b3f3efae333a8ae288502bd096fc82919ea60c0-60-60.png	30	15	9	6	33	19	14	54	f	2026-06-27 18:30:05.231231+00	2025
-356	4	AmaZulu FC	https://statistic-cdn.scoreaxis.com/team/e4ba801bbc79e0c1e10d0934487259ec48192610cff5410c490a70743ae97ea1-60-60.png	30	13	8	9	32	28	4	47	f	2026-06-27 18:30:05.231231+00	2025
-357	5	Sekhukhune United	https://statistic-cdn.scoreaxis.com/team/23a95c375f61eb68e87fc64602064b00924a06fb011c71a95156ba5268db9cba-60-60.png	30	11	11	8	32	27	5	44	f	2026-06-27 18:30:05.231231+00	2025
-358	6	Lamontville Golden Arrows	https://statistic-cdn.scoreaxis.com/team/a0e358cec51e88c27636ce1663e629fc7333df96d02a42a2028a4f3a586dd8ea-60-60.png	30	11	8	11	34	33	1	41	t	2026-06-27 18:30:05.231231+00	2025
-359	7	Polokwane City	https://statistic-cdn.scoreaxis.com/team/1465d378ff733531f62ea9a3e96ca47b04d455d1a0533f5abc8948d475e1eac6-60-60.png	30	9	13	8	21	21	0	40	f	2026-06-27 18:30:05.231231+00	2025
-360	8	Durban City	https://statistic-cdn.scoreaxis.com/team/2261d63e689c53444b403371c315d8f72d7f787a86aa45326fc4440a7225c32b-60-60.png	30	10	9	11	25	26	-1	39	f	2026-06-27 18:30:05.231231+00	2025
-361	9	Stellenbosch	https://statistic-cdn.scoreaxis.com/team/52e98272013fafe28577b7aad6ad794e46545cd5bf4d03e8e952558648bb9003-60-60.png	30	9	10	11	26	30	-4	37	f	2026-06-27 18:30:05.231231+00	2025
-362	10	Siwelele	https://statistic-cdn.scoreaxis.com/team/121008f1718d0f984de69f978c1af2c0503b0b5d67679f41ba9eddb1fc2d9468-60-60.png	30	8	13	9	24	28	-4	37	f	2026-06-27 18:30:05.231231+00	2025
-363	11	Richards Bay	https://statistic-cdn.scoreaxis.com/team/f984a3169ae7af557b696e94999853948b643b5bfbaa164c58a7b428c4817e7a-60-60.png	30	7	13	10	23	30	-7	34	f	2026-06-27 18:30:05.231231+00	2025
-364	12	TS Galaxy	https://statistic-cdn.scoreaxis.com/team/81c8bf024a9ecf13b27c7eecf02b870f68047ef51406df757e8f684d5aa6f422-60-60.png	30	8	8	14	30	38	-8	32	f	2026-06-27 18:30:05.231231+00	2025
-365	13	Chippa United	https://statistic-cdn.scoreaxis.com/team/65723c4e7b466bc9410c608ea0f306af62b1e3e7799c517769ab5b78520db3b1-60-60.png	30	6	10	14	24	44	-20	28	f	2026-06-27 18:30:05.231231+00	2025
-366	14	Marumo Gallants	https://statistic-cdn.scoreaxis.com/team/67c0a7bccaf8d3c63d4ee350e59e17030028b889ae4adb1a85b39856545240da-60-60.png	30	4	13	13	21	38	-17	25	f	2026-06-27 18:30:05.231231+00	2025
-367	15	Magesi FC	https://statistic-cdn.scoreaxis.com/team/fd00a7b8a82022e844718b8cceabcb78c8c31bb287ab6554662183a01ee4575d-60-60.png	30	5	9	16	24	43	-19	24	f	2026-06-27 18:30:05.231231+00	2025
-368	16	Orbit College	https://statistic-cdn.scoreaxis.com/team/48f643d08636f5ddb00b3388b06340804d5ccc7267f053407bdb6e8a575f9296-60-60.png	30	6	6	18	21	47	-26	24	f	2026-06-27 18:30:05.231231+00	2025
+369	1	Orlando Pirates	https://statistic-cdn.scoreaxis.com/team/2fab2dc66865b76fd0ac6175e3d600c4675008a17633fd464ef3ab3d3b59febe-60-60.png	30	21	6	3	58	12	46	69	f	2026-06-28 10:00:29.448478+00	2025
+370	2	Mamelodi Sundowns FC	https://statistic-cdn.scoreaxis.com/team/c48a1afce57edd50429551cdfae010d1de9a9ea75b0bbbc80e13b4aac9ca4402-60-60.png	30	20	8	2	57	21	36	68	f	2026-06-28 10:00:29.448478+00	2025
+371	3	Kaizer Chiefs	https://statistic-cdn.scoreaxis.com/team/4b5d40da4b020975e1d698092b3f3efae333a8ae288502bd096fc82919ea60c0-60-60.png	30	15	9	6	33	19	14	54	f	2026-06-28 10:00:29.448478+00	2025
+372	4	AmaZulu FC	https://statistic-cdn.scoreaxis.com/team/e4ba801bbc79e0c1e10d0934487259ec48192610cff5410c490a70743ae97ea1-60-60.png	30	13	8	9	32	28	4	47	f	2026-06-28 10:00:29.448478+00	2025
+373	5	Sekhukhune United	https://statistic-cdn.scoreaxis.com/team/23a95c375f61eb68e87fc64602064b00924a06fb011c71a95156ba5268db9cba-60-60.png	30	11	11	8	32	27	5	44	f	2026-06-28 10:00:29.448478+00	2025
+374	6	Lamontville Golden Arrows	https://statistic-cdn.scoreaxis.com/team/a0e358cec51e88c27636ce1663e629fc7333df96d02a42a2028a4f3a586dd8ea-60-60.png	30	11	8	11	34	33	1	41	t	2026-06-28 10:00:29.448478+00	2025
+375	7	Polokwane City	https://statistic-cdn.scoreaxis.com/team/1465d378ff733531f62ea9a3e96ca47b04d455d1a0533f5abc8948d475e1eac6-60-60.png	30	9	13	8	21	21	0	40	f	2026-06-28 10:00:29.448478+00	2025
+376	8	Durban City	https://statistic-cdn.scoreaxis.com/team/2261d63e689c53444b403371c315d8f72d7f787a86aa45326fc4440a7225c32b-60-60.png	30	10	9	11	25	26	-1	39	f	2026-06-28 10:00:29.448478+00	2025
+377	9	Stellenbosch	https://statistic-cdn.scoreaxis.com/team/52e98272013fafe28577b7aad6ad794e46545cd5bf4d03e8e952558648bb9003-60-60.png	30	9	10	11	26	30	-4	37	f	2026-06-28 10:00:29.448478+00	2025
+378	10	Siwelele	https://statistic-cdn.scoreaxis.com/team/121008f1718d0f984de69f978c1af2c0503b0b5d67679f41ba9eddb1fc2d9468-60-60.png	30	8	13	9	24	28	-4	37	f	2026-06-28 10:00:29.448478+00	2025
+379	11	Richards Bay	https://statistic-cdn.scoreaxis.com/team/f984a3169ae7af557b696e94999853948b643b5bfbaa164c58a7b428c4817e7a-60-60.png	30	7	13	10	23	30	-7	34	f	2026-06-28 10:00:29.448478+00	2025
+380	12	TS Galaxy	https://statistic-cdn.scoreaxis.com/team/81c8bf024a9ecf13b27c7eecf02b870f68047ef51406df757e8f684d5aa6f422-60-60.png	30	8	8	14	30	38	-8	32	f	2026-06-28 10:00:29.448478+00	2025
+381	13	Chippa United	https://statistic-cdn.scoreaxis.com/team/65723c4e7b466bc9410c608ea0f306af62b1e3e7799c517769ab5b78520db3b1-60-60.png	30	6	10	14	24	44	-20	28	f	2026-06-28 10:00:29.448478+00	2025
+382	14	Marumo Gallants	https://statistic-cdn.scoreaxis.com/team/67c0a7bccaf8d3c63d4ee350e59e17030028b889ae4adb1a85b39856545240da-60-60.png	30	4	13	13	21	38	-17	25	f	2026-06-28 10:00:29.448478+00	2025
+383	15	Magesi FC	https://statistic-cdn.scoreaxis.com/team/fd00a7b8a82022e844718b8cceabcb78c8c31bb287ab6554662183a01ee4575d-60-60.png	30	5	9	16	24	43	-19	24	f	2026-06-28 10:00:29.448478+00	2025
+384	16	Orbit College	https://statistic-cdn.scoreaxis.com/team/48f643d08636f5ddb00b3388b06340804d5ccc7267f053407bdb6e8a575f9296-60-60.png	30	6	6	18	21	47	-26	24	f	2026-06-28 10:00:29.448478+00	2025
 \.
 
 
@@ -928,7 +928,7 @@ COPY public.teams (id, name, crest_url, active, created_at) FROM stdin;
 -- Name: ads_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.ads_id_seq', 5549, true);
+SELECT pg_catalog.setval('public.ads_id_seq', 5999, true);
 
 
 --
@@ -956,7 +956,7 @@ SELECT pg_catalog.setval('public.gallery_id_seq', 1, false);
 -- Name: league_table_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.league_table_id_seq', 368, true);
+SELECT pg_catalog.setval('public.league_table_id_seq', 384, true);
 
 
 --
@@ -1163,5 +1163,5 @@ GRANT CREATE ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict R4NpGf2Rwv8MdEgzBvKuypgwRDXgYjokbehkDMANaKjp3A9UHZzyKejL5hHmAfx
+\unrestrict ANx3iOXgD7Nv1vAR9QRTvdbcHcZ6SJPd32Xj3ZnZHkq9hrbftCN4OzMV9ewTFhC
 
