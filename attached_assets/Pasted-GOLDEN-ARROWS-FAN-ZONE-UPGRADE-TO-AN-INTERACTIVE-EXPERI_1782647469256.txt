@@ -1,0 +1,491 @@
+GOLDEN ARROWS FAN ZONE - UPGRADE TO AN INTERACTIVE EXPERIENCE
+
+Transform the existing Fan Zone page into a modern, highly interactive football entertainment hub while keeping the current Trivia section.
+
+Do NOT replace the existing content.
+Instead, redesign the page into multiple interactive sections with animated cards.
+
+The design must match the Golden Arrows branding:
+
+Gold (#FFD700)
+Green (#006B3F)
+Black
+Modern football aesthetic
+Smooth animations
+Mobile responsive
+Built using React
+No page reloads
+Everything happens inside the page.
+FEATURE 1
+Golden Arrows Kit Designer
+
+Create a professional football jersey designer.
+
+The user should see:
+
+A realistic 3D-style jersey preview
+Front View
+Back View
+Rotate button
+Zoom
+
+The user can customize:
+
+Primary colour
+
+Secondary colour
+
+Sleeve colour
+
+Collar style
+
+Neck style
+
+Shirt pattern:
+
+Stripes
+Hoops
+Gradient
+Lightning
+Geometric
+Camouflage
+Classic
+Solid
+
+Club badge position
+
+Sponsor position
+
+Add optional sleeve sponsor
+
+Number font
+
+Player name
+
+Player number
+
+Captain armband
+
+Goalkeeper version
+
+Long sleeve / Short sleeve
+
+The preview updates LIVE while editing.
+
+Include:
+
+Random Kit Generator
+
+Reset
+
+Save Design
+
+Download PNG
+
+Share Design
+
+When a design is saved it appears inside:
+
+"My Kit Collection"
+
+Users can save multiple kits.
+
+Store everything in local storage.
+
+FEATURE 2
+Golden Arrows Boot Designer
+
+Create a football boot designer.
+
+Display a realistic football boot.
+
+Allow users to customize:
+
+Main colour
+
+Secondary colour
+
+Stud colour
+
+Sole colour
+
+Laces colour
+
+Nike-style speed pattern
+
+Adidas-style stripes
+
+Puma-style curves
+
+Metallic finish
+
+Gloss finish
+
+Matte finish
+
+Carbon fibre finish
+
+Custom player initials
+
+Choose boot model:
+
+Speed
+
+Power
+
+Control
+
+Classic
+
+Goalkeeper
+
+Preview updates instantly.
+
+Include:
+
+Random Boot Generator
+
+Save Boot
+
+Download PNG
+
+My Boot Collection
+
+Store in local storage.
+
+FEATURE 3
+Build Your Dream XI
+
+Interactive formation builder.
+
+Drag players onto the field.
+
+Choose formations:
+
+4-4-2
+
+4-3-3
+
+3-5-2
+
+5-3-2
+
+4-2-3-1
+
+Display a football pitch.
+
+Allow:
+
+Drag players
+
+Name players
+
+Captain
+
+Vice Captain
+
+Save lineup
+
+Share lineup
+
+Download image
+
+FEATURE 4
+Penalty Shootout Mini Game
+
+Arcade style.
+
+User shoots penalties.
+
+Goalkeeper dives randomly.
+
+5 penalties.
+
+Difficulty:
+
+Easy
+
+Medium
+
+Hard
+
+Leaderboard stored locally.
+
+Sound effects.
+
+Crowd celebrations.
+
+Confetti when winning.
+
+FEATURE 5
+Crossbar Challenge
+
+Simple physics game.
+
+Player clicks to kick.
+
+Need to hit crossbar.
+
+5 attempts.
+
+Score multiplier.
+
+Power meter.
+
+Wind effect.
+
+FEATURE 6
+Football Jersey Memory Game
+
+Flip cards.
+
+Match jersey pairs.
+
+Timer.
+
+Moves counter.
+
+Difficulty:
+
+Easy
+
+Medium
+
+Hard
+
+High score.
+
+FEATURE 7
+Golden Arrows Word Search
+
+Football-themed words.
+
+Generate random puzzles.
+
+Timer.
+
+Hint button.
+
+FEATURE 8
+Guess The Player
+
+Blurred player photos.
+
+Reveal gradually.
+
+Hints:
+
+Nationality
+
+Position
+
+Squad number
+
+Appearances
+
+Points awarded based on speed.
+
+FEATURE 9
+Match Prediction Challenge
+
+Fans predict:
+
+Score
+
+First scorer
+
+Possession
+
+Cards
+
+Man of the Match
+
+Store predictions locally.
+
+Display prediction history.
+
+FEATURE 10
+Fan Art Studio
+
+Simple online editor.
+
+Users can:
+
+Add stickers
+
+Club logos
+
+Player cutouts
+
+Backgrounds
+
+Text
+
+Frames
+
+Filters
+
+Export image.
+
+FEATURE 11
+Fan Badge Creator
+
+Allow fans to create a supporter badge.
+
+Choose:
+
+Shield shape
+
+Colours
+
+Icons
+
+Stars
+
+Text
+
+Year
+
+Save badge
+
+Download PNG
+
+FEATURE 12
+Chant Mixer
+
+Interactive soundboard.
+
+Buttons for:
+
+Crowd chants
+
+Drums
+
+Whistles
+
+Applause
+
+Users combine sounds to make their own stadium atmosphere.
+
+FEATURE 13
+Wheel of Fortune
+
+Spin to win digital rewards:
+
+Wallpaper
+
+Desktop backgrounds
+
+Player wallpapers
+
+Club facts
+
+Trivia bonus
+
+Discount coupons (placeholder)
+
+Exclusive wallpapers
+
+Animated spinning wheel.
+
+FEATURE 14
+Fan Zone Achievements
+
+Users earn achievements.
+
+Examples:
+
+✔ Designed first kit
+
+✔ Created 5 kits
+
+✔ Played Penalty Shootout
+
+✔ Completed Memory Game
+
+✔ Created Dream XI
+
+✔ Won Crossbar Challenge
+
+✔ Answered 50 Trivia Questions
+
+Animated badges unlock.
+
+FEATURE 15
+Fan Profile
+
+Track:
+
+Games played
+
+Kits created
+
+Boots created
+
+Achievements
+
+Highest scores
+
+Prediction accuracy
+
+Favourite player
+
+All stored locally.
+
+USER EXPERIENCE
+
+Everything should have:
+
+Smooth transitions
+
+Hover animations
+
+Confetti celebrations
+
+Sound effects (toggle on/off)
+
+Responsive design
+
+Dark mode styling
+
+Glassmorphism cards
+
+Football-inspired backgrounds
+
+Loading animations
+
+Micro interactions
+
+Modern icons
+
+TECHNICAL REQUIREMENTS
+
+Use:
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+Framer Motion
+
+React DnD (for Dream XI)
+
+Canvas API where appropriate
+
+Local Storage
+
+No backend required.
+
+No external editors.
+
+Everything runs directly inside the Fan Zone page.
+
+The Fan Zone should feel like an interactive football gaming portal rather than a static webpage.
+
+One feature I'd add that most clubs don't have
+
+A "Design of the Week" competition.
+
+Fans create their own Golden Arrows kit or boots, click Submit, and (when you later add a backend) designs are uploaded to the club. Other fans can browse a gallery and vote with one vote per account. Each week, the winning design is featured on the homepage, creating a strong reason for fans to return regularly and engage with the club. This could become one of the platform's standout features.
