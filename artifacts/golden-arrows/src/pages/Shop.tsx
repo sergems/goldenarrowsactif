@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { ShoppingCart, Heart } from "lucide-react";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 
 const PRODUCTS = [
   { name: "Home Jersey 2024/25", price: "R599", category: "Jerseys", description: "Official Lamontville Golden Arrows home kit in striking golden yellow and forest green." },
@@ -15,18 +17,14 @@ const PRODUCTS = [
 export default function Shop() {
   return (
     <div className="min-h-screen">
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            Club <span className="text-primary">Shop</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">
-            Show your support with official Lamontville Golden Arrows merchandise.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Official Merchandise"
+        title="Club"
+        highlight="Shop"
+        description="Show your support with official Lamontville Golden Arrows merchandise."
+      />
 
-      <div className="container mx-auto px-4 py-16">
+      <PageWrapper page="shop">
         <div className="bg-primary/10 border border-primary/20 rounded-xl p-6 mb-10 flex items-center gap-4">
           <div className="text-primary text-2xl font-display font-bold">!</div>
           <p className="text-sm text-muted-foreground">
@@ -64,7 +62,7 @@ export default function Shop() {
             </motion.div>
           ))}
         </div>
-      </div>
+      </PageWrapper>
     </div>
   );
 }

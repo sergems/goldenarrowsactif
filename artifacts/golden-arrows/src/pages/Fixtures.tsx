@@ -5,31 +5,22 @@ import { Link } from "wouter";
 import { Calendar, MapPin, Ticket } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { TeamCrest } from "@/components/TeamCrest";
-import { AdColumn } from "@/components/AdBanner";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 
 export default function Fixtures() {
   const { data: fixtures, isLoading } = useListFixtures();
 
   return (
     <div className="min-h-screen">
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            Upcoming <span className="text-primary">Fixtures</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">
-            All upcoming DStv Premiership and cup matches for Abafana Bes'thende.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="DStv Premiership"
+        title="Upcoming"
+        highlight="Fixtures"
+        description="All upcoming DStv Premiership and cup matches for Abafana Bes'thende."
+      />
 
-      <div className="max-w-5xl mx-auto px-4 py-10 sm:py-16">
-        <div className="flex gap-6 items-start">
-          <div className="hidden xl:block w-40 flex-shrink-0">
-            <AdColumn page="fixtures" side="left" />
-          </div>
-
-          <div className="flex-1 min-w-0">
+      <PageWrapper page="fixtures">
             {isLoading && (
               <div className="text-center text-muted-foreground py-20">Loading fixtures...</div>
             )}
@@ -107,13 +98,7 @@ export default function Fixtures() {
                 View Past Results &rarr;
               </Link>
             </div>
-          </div>
-
-          <div className="hidden xl:block w-40 flex-shrink-0">
-            <AdColumn page="fixtures" side="right" />
-          </div>
-        </div>
-      </div>
+      </PageWrapper>
     </div>
   );
 }

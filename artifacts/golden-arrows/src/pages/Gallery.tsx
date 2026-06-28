@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useListGallery } from "@workspace/api-client-react";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Play, Instagram, Facebook, ExternalLink } from "lucide-react";
 
@@ -38,21 +40,14 @@ export default function Gallery() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            Fan <span className="text-primary">Zone</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">
-            Photos, videos, and social highlights from Abafana Bes'thende.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Media"
+        title="Club"
+        highlight="Gallery"
+        description="Photos, videos, and social highlights from Abafana Bes'thende."
+      />
 
-
-      {/* Gallery Grid */}
-      <div className="max-w-5xl mx-auto px-4 py-6 sm:py-12">
+      <PageWrapper page="gallery">
         {isLoading && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (

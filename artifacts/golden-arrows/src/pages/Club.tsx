@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 import { Trophy, Target, Eye, Building } from "lucide-react";
 
 const TIMELINE = [
@@ -13,18 +15,15 @@ const TIMELINE = [
 export default function Club() {
   return (
     <div className="min-h-screen">
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            About The <span className="text-primary">Club</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">
-            Passion, community, and the love of the beautiful game in KwaZulu-Natal.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Established 1943"
+        title="About The"
+        highlight="Club"
+        description="Passion, community, and the love of the beautiful game in KwaZulu-Natal."
+      />
 
-      <div className="container mx-auto px-4 py-16 max-w-5xl space-y-16">
+      <PageWrapper page="club">
+        <div className="space-y-16">
         {/* Mission/Vision */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
@@ -88,7 +87,8 @@ export default function Club() {
             <div className="text-sm text-muted-foreground">KwaMashu, Durban, KwaZulu-Natal, South Africa</div>
           </div>
         </div>
-      </div>
+        </div>
+      </PageWrapper>
     </div>
   );
 }

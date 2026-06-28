@@ -1,9 +1,10 @@
 import { useListResults } from "@workspace/api-client-react";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { Link } from "wouter";
 import { TeamCrest } from "@/components/TeamCrest";
-import { AdColumn } from "@/components/AdBanner";
 
 function getOutcome(result: { homeTeam: string; homeScore: number; awayScore: number }) {
   const isHome = result.homeTeam.toLowerCase().includes("arrows") || result.homeTeam.toLowerCase().includes("golden");
@@ -19,24 +20,14 @@ export default function Results() {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            Match <span className="text-primary">Results</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">
-            All recent results for Abafana Bes'thende across all competitions.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="2024/25 Season"
+        title="Match"
+        highlight="Results"
+        description="All recent results for Abafana Bes'thende across all competitions."
+      />
 
-      <div className="max-w-5xl mx-auto px-4 py-10 sm:py-16">
-        <div className="flex gap-6 items-start">
-          <div className="hidden xl:block w-40 flex-shrink-0">
-            <AdColumn page="results" side="left" />
-          </div>
-
-          <div className="flex-1 min-w-0">
+      <PageWrapper page="results">
             {isLoading && <div className="text-center text-muted-foreground py-20">Loading results...</div>}
             <div className="space-y-3">
               {results?.map((result, i) => {
@@ -112,11 +103,7 @@ export default function Results() {
             )}
           </div>
 
-          <div className="hidden xl:block w-40 flex-shrink-0">
-            <AdColumn page="results" side="right" />
-          </div>
-        </div>
-      </div>
+      </PageWrapper>
     </div>
   );
 }

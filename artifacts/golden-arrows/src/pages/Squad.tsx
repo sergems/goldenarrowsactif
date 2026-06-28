@@ -1,4 +1,6 @@
 import { useListPlayers } from "@workspace/api-client-react";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 import { Link } from "wouter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
@@ -25,14 +27,14 @@ export default function Squad() {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">First <span className="text-primary">Team</span></h1>
-          <p className="text-muted-foreground text-xs mt-0.5">Meet the players and coaching staff representing Abafana Bes'thende in the current season.</p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="2024/25 Season"
+        title="First"
+        highlight="Team"
+        description="Meet the players and coaching staff representing Abafana Bes'thende in the current season."
+      />
 
-      <div className="container mx-auto px-4 py-8">
+      <PageWrapper page="squad">
         <Tabs defaultValue="Goalkeepers" className="w-full">
           <div className="mb-8 overflow-x-auto scrollbar-none -mx-4 px-4">
             <TabsList className="bg-card border border-white/10 h-auto p-1 gap-1 inline-flex min-w-max w-full sm:w-auto sm:mx-auto sm:flex sm:justify-center">
@@ -121,7 +123,7 @@ export default function Squad() {
             </TabsContent>
           ))}
         </Tabs>
-      </div>
+      </PageWrapper>
     </div>
   );
 }

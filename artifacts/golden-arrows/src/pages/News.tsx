@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useListNews } from "@workspace/api-client-react";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { Link } from "wouter";
@@ -22,16 +24,14 @@ export default function News() {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            Latest <span className="text-primary">News</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">Stay up to date with everything happening at Golden Arrows FC.</p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="From The Club"
+        title="Latest"
+        highlight="News"
+        description="Stay up to date with everything happening at Golden Arrows FC."
+      />
 
-      <div className="max-w-5xl mx-auto px-4 py-6 sm:py-12">
+      <PageWrapper page="news">
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-3 items-center justify-between mb-5 sm:mb-10">
           <div className="hidden md:flex gap-2 flex-wrap">
@@ -121,7 +121,7 @@ export default function News() {
         {!isLoading && (!filtered || filtered.length === 0) && (
           <div className="text-center text-muted-foreground py-20">No articles found.</div>
         )}
-      </div>
+      </PageWrapper>
     </div>
   );
 }

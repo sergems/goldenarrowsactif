@@ -1,5 +1,7 @@
 import { useListStaff } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 
 function SocialIcon({ platform }: { platform: "instagram" | "facebook" | "twitter" }) {
   if (platform === "instagram") return (
@@ -24,18 +26,14 @@ export default function TechnicalTeam() {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            Technical <span className="text-primary">Team</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">
-            The dedicated coaching and support staff behind Abafana Bes'thende's success.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Coaching Staff"
+        title="Technical"
+        highlight="Team"
+        description="The dedicated coaching and support staff behind Abafana Bes'thende's success."
+      />
 
-      <div className="container mx-auto px-4 py-16 max-w-5xl">
+      <PageWrapper page="technical-team">
         {isLoading && <div className="text-center text-muted-foreground py-20">Loading staff...</div>}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -101,7 +99,7 @@ export default function TechnicalTeam() {
             );
           })}
         </div>
-      </div>
+      </PageWrapper>
     </div>
   );
 }

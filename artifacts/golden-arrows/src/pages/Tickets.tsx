@@ -1,4 +1,6 @@
 import { useListFixtures } from "@workspace/api-client-react";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { Ticket, MapPin, Calendar } from "lucide-react";
@@ -15,18 +17,14 @@ export default function Tickets() {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            Match <span className="text-primary">Tickets</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">
-            Get your tickets for all upcoming Golden Arrows FC home matches at Princess Magogo Stadium, Durban.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Match Day"
+        title="Match"
+        highlight="Tickets"
+        description="Get your tickets for all upcoming Golden Arrows FC home matches at Princess Magogo Stadium, Durban."
+      />
 
-      <div className="container mx-auto px-4 py-16 max-w-5xl">
+      <PageWrapper page="tickets">
         {/* Stadium Info */}
         <div className="bg-card border border-white/5 rounded-xl p-8 mb-12 flex flex-col md:flex-row gap-8 items-start">
           <div className="flex-1">
@@ -90,7 +88,7 @@ export default function Tickets() {
             <p className="text-muted-foreground text-center py-10">Check back soon for upcoming home fixtures.</p>
           )}
         </div>
-      </div>
+      </PageWrapper>
     </div>
   );
 }

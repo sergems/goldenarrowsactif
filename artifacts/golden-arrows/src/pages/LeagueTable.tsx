@@ -1,7 +1,8 @@
 import { useGetLeagueTable } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
 import { TeamCrest } from "@/components/TeamCrest";
-import { AdColumn } from "@/components/AdBanner";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 
 export default function LeagueTable() {
   const { data, isLoading } = useGetLeagueTable();
@@ -9,24 +10,14 @@ export default function LeagueTable() {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            PSL <span className="text-primary">League Table</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">
-            DStv Premiership &bull; 2025/2026 Season
-          </p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="DStv Premiership"
+        title="PSL League"
+        highlight="Table"
+        description="DStv Premiership · 2025/2026 Season"
+      />
 
-      <div className="max-w-5xl mx-auto px-2 sm:px-4 py-10 sm:py-16">
-        <div className="flex gap-6 items-start">
-          <div className="hidden xl:block w-40 flex-shrink-0">
-            <AdColumn page="table" side="left" />
-          </div>
-
-          <div className="flex-1 min-w-0">
+      <PageWrapper page="table">
             {isLoading && <div className="text-center text-muted-foreground py-20">Loading table...</div>}
 
             {table && (
@@ -97,13 +88,7 @@ export default function LeagueTable() {
             {!isLoading && (!table || table.length === 0) && (
               <div className="text-center text-muted-foreground py-20">No standings data available.</div>
             )}
-          </div>
-
-          <div className="hidden xl:block w-40 flex-shrink-0">
-            <AdColumn page="table" side="right" />
-          </div>
-        </div>
-      </div>
+      </PageWrapper>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageWrapper } from "@/components/layout/PageWrapper";
 import { MapPin, Phone, Mail, Printer, Facebook, Instagram, Twitter, Youtube, CheckCircle, Loader2, MailOpen } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,19 +34,14 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <div className="bg-card py-3 border-b border-white/5">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight leading-tight">
-            Contact <span className="text-primary">Us</span>
-          </h1>
-          <p className="text-muted-foreground text-xs mt-0.5">
-            Reach out to Lamontville Golden Arrows FC — we'd love to hear from you.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        eyebrow="Get In Touch"
+        title="Contact"
+        highlight="Us"
+        description="Reach out to Lamontville Golden Arrows FC — we'd love to hear from you."
+      />
 
-      <div className="container mx-auto px-4 py-16 max-w-5xl">
+      <PageWrapper page="contact">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 
           {/* Contact Form */}
@@ -189,7 +186,7 @@ export default function Contact() {
             </div>
           </motion.div>
         </div>
-      </div>
+      </PageWrapper>
     </div>
   );
 }
