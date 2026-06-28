@@ -197,11 +197,12 @@ export function ClubHonoursSection() {
                   const angle = i * ANGLE_PER;
                   const isActive = i === activeIdx;
                   return (
-                    <div
+                    <motion.div
                       key={`${honour.title}-${i}`}
-                      className="absolute inset-0 rounded-2xl overflow-hidden border"
+                      className="absolute inset-0 rounded-2xl overflow-hidden border cursor-pointer"
                       style={{
-                        transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
+                        rotateY: angle,
+                        z: RADIUS,
                         backfaceVisibility: "hidden",
                         borderColor: isActive
                           ? "rgba(255,215,0,0.6)"
@@ -212,6 +213,12 @@ export function ClubHonoursSection() {
                         transition: "border-color 0.5s, box-shadow 0.5s",
                         backgroundColor: honour.objectFit === "contain" ? "hsl(140 10% 6%)" : undefined,
                       }}
+                      whileHover={{
+                        scale: 1.12,
+                        z: RADIUS + 28,
+                        boxShadow: "0 0 52px rgba(255,215,0,0.45), inset 0 0 28px rgba(255,215,0,0.12)",
+                      }}
+                      transition={{ type: "spring", stiffness: 300, damping: 22 }}
                     >
                       {/* Trophy image */}
                       <img
@@ -272,7 +279,7 @@ export function ClubHonoursSection() {
                           {honour.season}
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </motion.div>
