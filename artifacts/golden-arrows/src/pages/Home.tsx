@@ -15,7 +15,7 @@ import { format, differenceInSeconds } from "date-fns";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useMouse } from "@/hooks/useMouse";
 import { useWeather } from "@/hooks/useWeather";
-import { MapPin, Clock, ChevronRight, ChevronDown, Trophy, Users, Zap, Target, Star, Newspaper } from "lucide-react";
+import { MapPin, Clock, ChevronRight, ChevronDown, Trophy, Users, Zap, Target, Star } from "lucide-react";
 import { TeamCrest } from "@/components/TeamCrest";
 import { ClubHonoursSection } from "@/components/ClubHonoursSection";
 import heroStadium from "@/assets/hero-stadium.png";
@@ -152,7 +152,7 @@ function NewsTicker({ items }: { items: { id: number; title: string; category: s
     <div className="bg-primary text-black overflow-hidden relative z-30">
       <div className="flex items-stretch">
         <div className="flex-shrink-0 bg-black text-primary font-display font-bold uppercase tracking-[0.2em] text-xs px-4 flex items-center gap-2 z-10">
-          <Newspaper className="h-3 w-3" />
+          <img src={logo} alt="" className="h-4 w-4 object-contain" />
           Latest
         </div>
         <div className="overflow-hidden flex-1 py-2">
