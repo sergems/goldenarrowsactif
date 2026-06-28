@@ -542,20 +542,37 @@ export default function SupporterHub() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.04, type: "spring", stiffness: 220, damping: 22 }}
-                    whileHover={{ y: -3, boxShadow: `0 10px 30px ${feature.color}28` }}
+                    whileHover={{ y: -4, scale: 1.02, boxShadow: `0 16px 40px ${feature.color}55` }}
                     whileTap={{ scale: 0.96 }}
-                    className="relative text-left p-4 rounded-2xl border border-white/8 bg-white/3 hover:bg-white/6 transition-all group overflow-hidden"
+                    className="relative text-left p-4 rounded-2xl overflow-hidden transition-all group"
+                    style={{
+                      background: `linear-gradient(135deg, ${feature.color}30 0%, ${feature.color}18 60%, ${feature.color}08 100%)`,
+                      border: `1.5px solid ${feature.color}50`,
+                    }}
                   >
-                    <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl opacity-50 group-hover:opacity-100 transition-opacity" style={{ background: feature.color }} />
-                    <div className="flex items-start justify-between mb-3">
-                      <span className="text-2xl">{feature.emoji}</span>
+                    {/* Glow blob */}
+                    <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full opacity-20 blur-xl pointer-events-none" style={{ background: feature.color }} />
+
+                    {/* Top colour bar */}
+                    <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style={{ background: `linear-gradient(90deg, ${feature.color}, ${feature.color}80)` }} />
+
+                    <div className="flex items-start justify-between mb-3 mt-1">
+                      <motion.span
+                        className="text-2xl drop-shadow-lg"
+                        animate={{ scale: [1, 1.08, 1] }}
+                        transition={{ duration: 3, repeat: Infinity, delay: i * 0.15 }}
+                      >
+                        {feature.emoji}
+                      </motion.span>
                       <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${TAG_COLORS[feature.tag]}`}>{feature.tag}</span>
                     </div>
-                    <h3 className="font-display text-sm text-white mb-1 group-hover:text-primary transition-colors leading-tight" style={{ letterSpacing: "0.02em" }}>
+                    <h3 className="font-display text-sm text-white mb-1 group-hover:text-white transition-colors leading-tight font-black" style={{ letterSpacing: "0.03em" }}>
                       {feature.title}
                     </h3>
-                    <p className="text-white/35 text-[11px] leading-relaxed line-clamp-2">{feature.description}</p>
-                    <div className="mt-2.5 text-white/20 group-hover:text-primary/60 transition-colors text-[10px] font-bold">Open →</div>
+                    <p className="text-white/55 text-[11px] leading-relaxed line-clamp-2">{feature.description}</p>
+                    <div className="mt-2.5 text-xs font-bold transition-colors" style={{ color: `${feature.color}cc` }}>
+                      Open →
+                    </div>
                   </motion.button>
                 ))}
               </div>
