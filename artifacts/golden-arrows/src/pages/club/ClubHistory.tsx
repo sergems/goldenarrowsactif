@@ -2,6 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useSpring, useInView, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { ChevronRight, Trophy, Star, TrendingUp, Shield, Zap, ChevronDown } from "lucide-react";
+import mtn8Img from "@assets/MTN_8_LOGO_1782640838208.jpg";
+import nslImg from "@assets/National_Soccer_League_(South_Africa)_1782642949618.svg";
+import nfdImg from "@assets/ndf_logo_1782640838211.png";
+import premierCupImg from "@assets/premier_cup_1782642949619.jpg";
+import diskiChallengeImg from "@assets/MCSA-Diski-Challenge-Logo_1782640838206.png";
+import diskiShieldImg from "@assets/multichoice_diski_shield_1782640838209.jpg";
 
 const ERA_COLORS: Record<string, { bg: string; border: string; glow: string; label: string }> = {
   founding:   { bg: "from-amber-900/40 to-amber-800/20",  border: "border-amber-500/40",  glow: "shadow-amber-500/20",  label: "Founding Era" },
@@ -368,12 +374,12 @@ export default function ClubHistory() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { trophy: "MTN8 Cup", year: "2009/10", icon: "🏆" },
-              { trophy: "MTN First Division", year: "1999/2000", icon: "🥇" },
-              { trophy: "National First Division", year: "2014/15", icon: "🏆" },
-              { trophy: "KZN Premiers Cup", year: "2011", icon: "🏅" },
-              { trophy: "Diski Challenge", year: "2015/16 & 2017/18", icon: "⭐" },
-              { trophy: "Diski Shield", year: "2018/19", icon: "🛡️" },
+              { trophy: "MTN8 Cup", year: "2009/10", img: mtn8Img, contain: true },
+              { trophy: "MTN First Division", year: "1999/2000", img: nslImg, contain: true },
+              { trophy: "National First Division", year: "2014/15", img: nfdImg, contain: true },
+              { trophy: "KZN Premiers Cup", year: "2011", img: premierCupImg, contain: false },
+              { trophy: "Diski Challenge", year: "2015/16 & 2017/18", img: diskiChallengeImg, contain: true },
+              { trophy: "Diski Shield", year: "2018/19", img: diskiShieldImg, contain: false },
             ].map((t, i) => (
               <motion.div
                 key={t.trophy}
@@ -381,10 +387,17 @@ export default function ClubHistory() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.07 }}
-                whileHover={{ scale: 1.03, y: -3 }}
-                className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl p-5 text-center hover:border-primary/40 transition-colors shadow-sm"
+                whileHover={{ scale: 1.03, y: -4 }}
+                className="bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl p-5 text-center hover:border-primary/40 transition-colors shadow-sm group"
               >
-                <div className="text-3xl mb-2">{t.icon}</div>
+                <div className="h-20 flex items-center justify-center mb-3 overflow-hidden">
+                  <img
+                    src={t.img}
+                    alt={t.trophy}
+                    className="max-h-full max-w-full transition-transform duration-300 group-hover:scale-110"
+                    style={{ objectFit: t.contain ? "contain" : "cover", maxHeight: "80px" }}
+                  />
+                </div>
                 <div className="font-display font-bold text-white text-sm uppercase tracking-wide">{t.trophy}</div>
                 <div className="text-primary/70 text-xs mt-1">{t.year}</div>
               </motion.div>
