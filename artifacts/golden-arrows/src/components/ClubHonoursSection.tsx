@@ -10,6 +10,9 @@ import {
 import { ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import logo from "@assets/Lamontville_Golden_Arrows_logo_1780312879951.svg";
+import mtn8Img from "@assets/MTN_8_LOGO_1782640838208.jpg";
+import diskiShieldImg from "@assets/multichoice_diski_shield_1782640838209.jpg";
+import nfdImg from "@assets/ndf_logo_1782640838211.png";
 import trophiesImg from "@assets/trophies-won_1780384913023.png";
 
 const HONOURS = [
@@ -19,6 +22,8 @@ const HONOURS = [
     subtitle: "MTN8 Winners",
     description:
       "The oldest knock-out competition in South African football — Golden Arrows claimed it in dramatic fashion, one of the greatest achievements in the PSL era.",
+    image: mtn8Img,
+    imgPosition: "center center",
   },
   {
     title: "Nedbank Cup",
@@ -26,6 +31,8 @@ const HONOURS = [
     subtitle: "Nedbank Cup Winners",
     description:
       "A historic cup run that silenced critics and ended with Abafana Bes'thende lifting one of South Africa's most prestigious knockout trophies.",
+    image: trophiesImg,
+    imgPosition: "center top",
   },
   {
     title: "NSL Championship",
@@ -33,6 +40,8 @@ const HONOURS = [
     subtitle: "League Champions",
     description:
       "Golden Arrows topped the NSL table in dominant fashion, cementing their status as one of South African football's elite clubs.",
+    image: trophiesImg,
+    imgPosition: "center center",
   },
   {
     title: "NSL Championship",
@@ -40,6 +49,8 @@ const HONOURS = [
     subtitle: "League Champions",
     description:
       "The 2012/13 title confirmed Arrows as one of the most consistent clubs of the era — a second NSL crown to add to the cabinet.",
+    image: trophiesImg,
+    imgPosition: "center bottom",
   },
   {
     title: "Telkom Knockout",
@@ -47,6 +58,8 @@ const HONOURS = [
     subtitle: "TKO Winners",
     description:
       "A statement of the modern era — Golden Arrows lifted the Telkom Knockout in a memorable campaign that showcased the club's cup-fighting spirit.",
+    image: trophiesImg,
+    imgPosition: "left center",
   },
   {
     title: "Diski Challenge",
@@ -54,6 +67,8 @@ const HONOURS = [
     subtitle: "MDC Champions",
     description:
       "Back-to-back Diski Challenge titles proved the depth of the Arrows academy, producing the next generation of Durban football talent.",
+    image: diskiShieldImg,
+    imgPosition: "center center",
   },
   {
     title: "National First Division",
@@ -61,6 +76,8 @@ const HONOURS = [
     subtitle: "NFD Champions",
     description:
       "Promotion back to the top flight in emphatic style — winning the NFD title without question and returning Arrows to where they belong.",
+    image: nfdImg,
+    imgPosition: "center center",
   },
 ];
 
@@ -72,21 +89,27 @@ export function ClubHonoursSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
 
+  // ── Entry phase: logo flies across from squad section ──────────────────────
+  const { scrollYProgress: entryProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "start 0.05"],
+  });
+  const entrySmooth = useSpring(entryProgress, { stiffness: 38, damping: 20, restDelta: 0.001 });
+
+  const logoEntryY = useTransform(entrySmooth, [0, 1], [280, 0]);
+  const logoEntryX = useTransform(entrySmooth, [0, 1], [140, 0]);
+  const logoEntryScale = useTransform(entrySmooth, [0, 1], [0.5, 1]);
+  const logoEntryOpacity = useTransform(entrySmooth, [0, 0.18, 1], [0, 0.35, 1]);
+
+  // ── Inner scroll: carousel rotation + logo spin ────────────────────────────
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
-
   const smooth = useSpring(scrollYProgress, { stiffness: 55, damping: 22, restDelta: 0.001 });
 
   const logoRotateY = useTransform(smooth, [0, 1], [0, 720]);
   const carouselRotate = useTransform(smooth, [0, 1], [0, -(N - 1) * ANGLE_PER]);
-
-  // Logo entry — animates in from below (where the squad section ended) as you scroll in
-  const logoEntryY = useTransform(smooth, [0, 0.18], [180, 0]);
-  const logoEntryX = useTransform(smooth, [0, 0.18], [80, 0]);
-  const logoEntryScale = useTransform(smooth, [0, 0.18], [0.5, 1]);
-  const logoEntryOpacity = useTransform(smooth, [0, 0.05, 0.18], [0, 0.5, 1]);
 
   useMotionValueEvent(smooth, "change", (p) => {
     setActiveIdx(Math.min(Math.round(p * (N - 1)), N - 1));
@@ -104,7 +127,7 @@ export function ClubHonoursSection() {
         {/* ── Main content row ── */}
         <div className="flex-1 flex items-center gap-4 lg:gap-8 px-4 container mx-auto min-h-0 py-6">
 
-          {/* ── Logo column — scroll-driven entry from squad section ── */}
+          {/* ── Logo — scroll-driven entry: flies in from squad section ── */}
           <motion.div
             className="hidden lg:flex flex-col items-center gap-4 flex-shrink-0 w-40"
             style={{
@@ -140,7 +163,7 @@ export function ClubHonoursSection() {
           {/* ── Right column: header + carousel + info ── */}
           <div className="flex-1 flex flex-col gap-3 min-w-0">
 
-            {/* Header — identical markup/style to Latest News */}
+            {/* Header */}
             <div>
               <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
                 <span className="w-3 h-px bg-primary inline-block" />
@@ -188,55 +211,59 @@ export function ClubHonoursSection() {
                   return (
                     <div
                       key={`${honour.title}-${i}`}
-                      className="absolute inset-0 rounded-2xl border overflow-hidden flex flex-col items-center justify-end"
+                      className="absolute inset-0 rounded-2xl overflow-hidden border"
                       style={{
                         transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
                         backfaceVisibility: "hidden",
                         borderColor: isActive
-                          ? "rgba(255,215,0,0.5)"
+                          ? "rgba(255,215,0,0.6)"
                           : "rgba(255,255,255,0.07)",
                         boxShadow: isActive
-                          ? "0 0 32px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.06)"
+                          ? "0 0 36px rgba(255,215,0,0.25), inset 0 0 24px rgba(255,215,0,0.07)"
                           : "none",
                         transition: "border-color 0.5s, box-shadow 0.5s",
                       }}
                     >
-                      {/* Trophy image background */}
+                      {/* Trophy image — fills entire card */}
                       <img
-                        src={trophiesImg}
-                        alt="Trophy"
+                        src={honour.image}
+                        alt={honour.title}
                         className="absolute inset-0 w-full h-full object-cover"
                         style={{
-                          opacity: isActive ? 0.55 : 0.2,
+                          objectPosition: honour.imgPosition,
+                          opacity: isActive ? 0.85 : 0.3,
                           transition: "opacity 0.5s",
-                          objectPosition: "center top",
                         }}
                       />
-                      {/* Dark gradient overlay */}
+
+                      {/* Gradient overlay for text readability */}
                       <div
                         className="absolute inset-0"
                         style={{
                           background: isActive
-                            ? "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.15) 100%)"
-                            : "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 50%, rgba(10,18,10,0.55) 100%)",
+                            ? "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.1) 100%)"
+                            : "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, rgba(5,15,5,0.6) 100%)",
                           transition: "background 0.5s",
                         }}
                       />
-                      {/* Gold top highlight for active */}
+
+                      {/* Gold shimmer top edge for active */}
                       {isActive && (
                         <div
                           className="absolute inset-0 pointer-events-none"
                           style={{
-                            background: "linear-gradient(to bottom, rgba(255,215,0,0.12) 0%, transparent 40%)",
+                            background:
+                              "linear-gradient(to bottom, rgba(255,215,0,0.18) 0%, transparent 35%)",
                           }}
                         />
                       )}
-                      {/* Text overlay */}
-                      <div className="relative z-10 text-center px-3 pb-4">
+
+                      {/* Text overlay at bottom */}
+                      <div className="absolute bottom-0 left-0 right-0 z-10 text-center px-3 pb-4">
                         <div
-                          className="font-display font-bold text-[11px] text-center leading-tight uppercase tracking-wide"
+                          className="font-display font-bold text-[10px] text-center leading-tight uppercase tracking-wide"
                           style={{
-                            color: isActive ? "#FFD700" : "rgba(255,255,255,0.45)",
+                            color: isActive ? "#FFD700" : "rgba(255,255,255,0.4)",
                             transition: "color 0.5s",
                           }}
                         >
@@ -245,7 +272,9 @@ export function ClubHonoursSection() {
                         <div
                           className="text-[9px] mt-1 font-bold tracking-wider"
                           style={{
-                            color: isActive ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.2)",
+                            color: isActive
+                              ? "rgba(255,255,255,0.8)"
+                              : "rgba(255,255,255,0.18)",
                             transition: "color 0.5s",
                           }}
                         >
@@ -294,7 +323,7 @@ export function ClubHonoursSection() {
               </AnimatePresence>
             </div>
 
-            {/* Progress dots — centered */}
+            {/* Progress dots */}
             <div className="flex items-center justify-center gap-2">
               {HONOURS.map((_, i) => (
                 <div
@@ -303,7 +332,8 @@ export function ClubHonoursSection() {
                   style={{
                     width: i === activeIdx ? 24 : 6,
                     height: 6,
-                    background: i === activeIdx ? "#FFD700" : "rgba(255,255,255,0.15)",
+                    background:
+                      i === activeIdx ? "#FFD700" : "rgba(255,255,255,0.15)",
                   }}
                 />
               ))}

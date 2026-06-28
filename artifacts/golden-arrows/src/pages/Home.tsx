@@ -10,7 +10,7 @@ import {
   type Fixture,
 } from "@workspace/api-client-react";
 import { Link } from "wouter";
-import { motion, AnimatePresence, useInView, useMotionValue, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
 import { format, differenceInSeconds } from "date-fns";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useMouse } from "@/hooks/useMouse";
@@ -1253,6 +1253,14 @@ export default function Home() {
     return base;
   }, [sponsors]);
 
+  // ── Squad logo journey: fades out as player spotlight scrolls away ──────────
+  const playerSpotlightRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: squadExitProgress } = useScroll({
+    target: playerSpotlightRef,
+    offset: ["end 0.8", "end 0"],
+  });
+  const squadLogoFade = useTransform(squadExitProgress, [0, 1], [1, 0]);
+
   return (
     <div className="flex flex-col w-full">
 
@@ -1459,7 +1467,7 @@ export default function Home() {
       </section>
 
       {/* ── Player Spotlight ──────────────────────── */}
-      <section className="py-5 sm:py-10 container mx-auto px-4 relative overflow-hidden">
+      <section ref={playerSpotlightRef} className="py-5 sm:py-10 container mx-auto px-4 relative overflow-hidden">
         <div className="text-center mb-4 sm:mb-7">
           <p className="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-1">The Eleven</p>
           <h2 className="font-display text-2xl sm:text-4xl uppercase" style={{ letterSpacing: "0.06em" }}>
@@ -1526,6 +1534,7 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4, duration: 0.7, type: "spring" }}
+          style={{ opacity: squadLogoFade }}
           className="flex flex-col items-center gap-3 mt-10 mb-2"
         >
           <div className="relative">
