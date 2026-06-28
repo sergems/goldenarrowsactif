@@ -1048,7 +1048,7 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-3 items-stretch">
 
           {/* ── Featured panel ── */}
-          <div className="h-full">
+          <div>
           <AnimatePresence mode="wait">
             {featured && (
               <motion.div
@@ -1065,7 +1065,7 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
                       key={featured.imageUrl}
                       src={featured.imageUrl}
                       alt={featured.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       style={{ objectPosition: "center 15%" }}
                       initial={{ scale: 1.05 }}
                       animate={{ scale: 1 }}
