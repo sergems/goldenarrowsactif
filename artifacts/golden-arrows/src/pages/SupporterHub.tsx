@@ -498,21 +498,20 @@ export default function SupporterHub() {
       </AnimatePresence>
 
       {/* ── Unified tab bar (sticky) ─────────────────────────── */}
-      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md border-b border-white/8">
-        <div className="max-w-[1330px] mx-auto px-4">
-          <div className="flex justify-start overflow-x-auto scrollbar-none">
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md border-b border-white/8 py-3">
+        <div className="max-w-[1330px] mx-auto px-4 flex justify-center">
+          <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 overflow-x-auto scrollbar-none">
             {HUB_TABS.map((t, idx) => (
               <motion.button key={t.id} onClick={() => setHubTab(t.id)}
-                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06 }}
+                initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`relative flex items-center gap-2 px-4 sm:px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider border-b-2 transition-all duration-200 flex-shrink-0 ${
-                  hubTab === t.id ? "border-primary text-primary" : "border-transparent text-white/40 hover:text-white/70 hover:border-white/20"
+                className={`relative flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-200 flex-shrink-0 ${
+                  hubTab === t.id
+                    ? "bg-primary text-black shadow-lg"
+                    : "text-white/50 hover:text-white hover:bg-white/8"
                 }`}>
-                <t.icon className={`h-4 w-4 transition-colors ${hubTab === t.id ? "text-primary" : t.color}`} />
+                <t.icon className={`h-3.5 w-3.5 flex-shrink-0 ${hubTab === t.id ? "text-black" : t.color}`} />
                 {t.label}
-                {hubTab === t.id && (
-                  <motion.span layoutId="activeHubTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
-                )}
               </motion.button>
             ))}
           </div>
