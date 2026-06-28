@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useGetNextFixture, useListPlayers } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import {
   Trophy, Star, Zap, CheckCircle, XCircle, Clock, Users,
-  Target, Award, ChevronRight, BarChart2, MessageSquare, Crown
+  Target, Award, BarChart2, Crown
 } from "lucide-react";
 
 // ─── Quiz questions pool ──────────────────────────────────────────────────────
@@ -25,20 +25,12 @@ const QUESTIONS = [
   { q: "Golden Arrows' club colours are often described as which combination?", options: ["Gold & Green", "Gold & Black", "Green & White", "Yellow & Blue"], a: 0 },
   { q: "Approximately how many seasons have Golden Arrows spent in the PSL top flight?", options: ["10+", "15+", "20+", "25+"], a: 3 },
   { q: "Which of these rivals is considered a major Durban derby opponent?", options: ["Kaizer Chiefs", "AmaZulu FC", "Orlando Pirates", "Mamelodi Sundowns"], a: 1 },
-  { q: "Which position does Golden Arrows traditionally play from — formation wise?", options: ["Ultra-defensive", "Counter-attacking", "High-pressing", "Tiki-taka"], a: 1 },
+  { q: "PSL stands for?", options: ["Premier Sports League", "Professional Soccer League", "Premier Soccer League", "Provincial Soccer League"], a: 2 },
   { q: "What does the arrow symbol on the club badge represent?", options: ["Speed & Direction", "Military heritage", "The Zulu nation", "Progress forward"], a: 0 },
-  { q: "Which year did Golden Arrows win the MTN8?", options: ["2009", "2011", "2013", "2015"], a: 1 },
   { q: "PSL stands for?", options: ["Premier Sports League", "Professional Soccer League", "Premier Soccer League", "Provincial Soccer League"], a: 2 },
   { q: "What colour is Golden Arrows' away kit typically?", options: ["White", "Black", "Gold/Yellow", "Red"], a: 2 },
-  { q: "Which broadcaster holds the South African PSL broadcasting rights?", options: ["SABC", "SuperSport", "eTV", "DStv"], a: 1 },
   { q: "How many teams compete in the DStv Premiership?", options: ["14", "16", "18", "20"], a: 1 },
   { q: "What is the maximum number of foreign players allowed in a PSL squad?", options: ["3", "4", "5", "6"], a: 3 },
-  { q: "Which region of Durban is Lamontville in?", options: ["North", "South", "West", "Central"], a: 1 },
-  { q: "Golden Arrows are also known by which abbreviation?", options: ["LAG", "LGA", "LGAFC", "GA"], a: 1 },
-  { q: "The DStv Premiership season runs approximately from?", options: ["Jan–Dec", "Aug–May", "Feb–Nov", "Jun–Mar"], a: 1 },
-  { q: "Which cup competition uses a two-leg knockout format?", options: ["MTN8", "Nedbank Cup", "Telkom KO", "PSL Cup"], a: 1 },
-  { q: "What is the prize for winning the DStv Premiership title?", options: ["R3m", "R6m", "R10m", "R15m"], a: 2 },
-  { q: "Which Golden Arrows season saw them finish in the top 4?", options: ["2009/10", "2012/13", "2017/18", "2019/20"], a: 1 },
   { q: "SAFA stands for?", options: ["South African Football Association", "Southern Africa FA", "SA Football Academy", "State Amateur FA"], a: 0 },
 ];
 
@@ -123,7 +115,6 @@ function DailyQuiz() {
       setSelected(null);
       setShowResult(false);
     } else {
-      const s = answers.filter((a, i) => a === questions[i].a).length + (selected === q.a ? 1 : 0);
       const finalScore = answers.slice(0, current).filter((a, i) => a === questions[i].a).length + (selected === q.a ? 1 : 0);
       setScore(finalScore);
       setFinished(true);
@@ -139,28 +130,40 @@ function DailyQuiz() {
     const pct = Math.round((score / 5) * 100);
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
         className="text-center py-8"
       >
-        <div className="text-6xl mb-4">{score >= 4 ? "🏆" : score >= 3 ? "⭐" : score >= 2 ? "👍" : "📚"}</div>
+        <motion.div
+          className="text-6xl mb-4"
+          animate={{ rotate: [0, -10, 10, -10, 10, 0] }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {score >= 4 ? "🏆" : score >= 3 ? "⭐" : score >= 2 ? "👍" : "📚"}
+        </motion.div>
         <h3 className="font-display text-3xl text-primary mb-2" style={{ letterSpacing: "0.04em" }}>
           {score}/5 Correct
         </h3>
-        <div className="w-full bg-white/10 rounded-full h-3 mb-2 overflow-hidden">
+        <div className="w-full bg-white/10 rounded-full h-3 mb-3 overflow-hidden">
           <motion.div
             className="h-full bg-primary rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
-            transition={{ duration: 1, delay: 0.3 }}
+            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
           />
         </div>
-        <p className="text-white/50 text-sm mb-4">
+        <p className="text-white/50 text-sm mb-5">
           {score === 5 ? "Perfect score! You're a true Arrow!" : score >= 3 ? "Great work, supporter!" : "Keep learning about your club!"}
         </p>
-        <div className="inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-2 text-primary text-sm font-bold">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-5 py-2.5 text-primary text-sm font-bold"
+        >
           <Zap className="h-4 w-4" />+{score * 20} Supporter Points earned
-        </div>
+        </motion.div>
         <p className="text-white/30 text-xs mt-4">Come back tomorrow for new questions!</p>
       </motion.div>
     );
@@ -168,20 +171,25 @@ function DailyQuiz() {
 
   return (
     <div>
-      {/* Progress */}
+      {/* Progress dots */}
       <div className="flex gap-1.5 mb-6">
         {questions.map((_, i) => (
-          <div key={i} className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${i < current ? "bg-primary" : i === current ? "bg-primary/60" : "bg-white/10"}`} />
+          <motion.div
+            key={i}
+            className={`flex-1 h-1.5 rounded-full transition-all duration-500 ${i < current ? "bg-primary" : i === current ? "bg-primary/60" : "bg-white/10"}`}
+            animate={i === current ? { opacity: [0.6, 1, 0.6] } : {}}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
         ))}
       </div>
 
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
-          initial={{ opacity: 0, x: 30 }}
+          initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -30 }}
-          transition={{ duration: 0.3 }}
+          exit={{ opacity: 0, x: -40 }}
+          transition={{ duration: 0.28, ease: "easeOut" }}
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs text-white/40 font-bold uppercase tracking-widest">Question {current + 1} of 5</span>
@@ -198,26 +206,29 @@ function DailyQuiz() {
                   key={i}
                   onClick={() => pick(i)}
                   disabled={isAnswered}
-                  whileHover={!isAnswered ? { scale: 1.02 } : {}}
-                  whileTap={!isAnswered ? { scale: 0.98 } : {}}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.07 }}
+                  whileHover={!isAnswered ? { scale: 1.02, x: 4 } : {}}
+                  whileTap={!isAnswered ? { scale: 0.97 } : {}}
                   className={`text-left px-4 py-3.5 rounded-xl border text-sm font-medium transition-all duration-200 flex items-center gap-3 ${cls}`}
                 >
                   <span className="flex-shrink-0 w-6 h-6 rounded-full border border-current flex items-center justify-center text-xs font-bold">
                     {String.fromCharCode(65 + i)}
                   </span>
                   {opt}
-                  {showResult && i === q.a && <CheckCircle className="h-4 w-4 ml-auto text-green-400" />}
-                  {showResult && i === selected && i !== q.a && <XCircle className="h-4 w-4 ml-auto text-red-400" />}
+                  {showResult && i === q.a && <CheckCircle className="h-4 w-4 ml-auto text-green-400 flex-shrink-0" />}
+                  {showResult && i === selected && i !== q.a && <XCircle className="h-4 w-4 ml-auto text-red-400 flex-shrink-0" />}
                 </motion.button>
               );
             })}
           </div>
           {showResult && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 text-center">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-5 text-center">
               <motion.button
                 onClick={advance}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
                 className="bg-primary text-black font-bold uppercase tracking-wider px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors"
               >
                 {current < 4 ? "Next Question →" : "Finish Quiz"}
@@ -259,14 +270,30 @@ function ScorePredictor() {
 
   if (submitted) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-6">
-        <div className="text-5xl mb-3">🎯</div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+        className="text-center py-6"
+      >
+        <motion.div
+          className="text-5xl mb-3"
+          animate={{ rotate: [0, -15, 15, -10, 10, 0] }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+        >
+          🎯
+        </motion.div>
         <h3 className="font-display text-2xl text-primary mb-1">Prediction Locked In!</h3>
         <p className="text-white/50 text-sm mb-4">You predicted: <strong className="text-white">{fixture.homeTeam} {home} – {away} {fixture.awayTeam}</strong></p>
         {scorer && <p className="text-white/40 text-sm">First scorer: <span className="text-primary font-bold">{scorer}</span></p>}
-        <div className="inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-2 text-primary text-sm font-bold mt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-2 text-primary text-sm font-bold mt-4"
+        >
           <Zap className="h-4 w-4" />+50 Points for predicting
-        </div>
+        </motion.div>
       </motion.div>
     );
   }
@@ -274,28 +301,60 @@ function ScorePredictor() {
   return (
     <div>
       <div className="text-center mb-6">
-        <p className="text-xs text-white/40 uppercase tracking-widest mb-2">{fixture.competition}</p>
+        <p className="text-xs text-white/40 uppercase tracking-widest mb-1">{fixture.competition}</p>
         <p className="text-white/60 text-sm">{format(new Date(fixture.date), "EEEE, MMMM d")}</p>
       </div>
 
       <div className="flex items-center justify-center gap-4 sm:gap-8 mb-8">
         <div className="text-center flex-1">
-          <div className="font-display text-lg sm:text-2xl text-white mb-3" style={{ letterSpacing: "0.04em" }}>{fixture.homeTeam}</div>
+          <div className="font-display text-base sm:text-xl text-white mb-3" style={{ letterSpacing: "0.04em" }}>{fixture.homeTeam}</div>
           <div className="flex items-center justify-center gap-2">
-            <button onClick={() => setHome(h => Math.max(0, h - 1))} className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors">−</button>
-            <span className="font-display text-4xl text-primary w-12 text-center">{home}</span>
-            <button onClick={() => setHome(h => Math.min(9, h + 1))} className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors">+</button>
+            <motion.button
+              onClick={() => setHome(h => Math.max(0, h - 1))}
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors"
+            >−</motion.button>
+            <motion.span
+              key={home}
+              initial={{ scale: 1.4, color: "hsl(51 100% 50%)" }}
+              animate={{ scale: 1, color: "hsl(51 100% 50%)" }}
+              transition={{ duration: 0.2 }}
+              className="font-display text-4xl text-primary w-12 text-center inline-block"
+            >{home}</motion.span>
+            <motion.button
+              onClick={() => setHome(h => Math.min(9, h + 1))}
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors"
+            >+</motion.button>
           </div>
         </div>
 
         <div className="text-white/20 font-display text-3xl flex-shrink-0">–</div>
 
         <div className="text-center flex-1">
-          <div className="font-display text-lg sm:text-2xl text-white mb-3" style={{ letterSpacing: "0.04em" }}>{fixture.awayTeam}</div>
+          <div className="font-display text-base sm:text-xl text-white mb-3" style={{ letterSpacing: "0.04em" }}>{fixture.awayTeam}</div>
           <div className="flex items-center justify-center gap-2">
-            <button onClick={() => setAway(a => Math.max(0, a - 1))} className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors">−</button>
-            <span className="font-display text-4xl text-primary w-12 text-center">{away}</span>
-            <button onClick={() => setAway(a => Math.min(9, a + 1))} className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors">+</button>
+            <motion.button
+              onClick={() => setAway(a => Math.max(0, a - 1))}
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors"
+            >−</motion.button>
+            <motion.span
+              key={away}
+              initial={{ scale: 1.4, color: "hsl(51 100% 50%)" }}
+              animate={{ scale: 1, color: "hsl(51 100% 50%)" }}
+              transition={{ duration: 0.2 }}
+              className="font-display text-4xl text-primary w-12 text-center inline-block"
+            >{away}</motion.span>
+            <motion.button
+              onClick={() => setAway(a => Math.min(9, a + 1))}
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors"
+            >+</motion.button>
           </div>
         </div>
       </div>
@@ -318,8 +377,8 @@ function ScorePredictor() {
 
       <motion.button
         onClick={submit}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: 1.02, boxShadow: "0 0 24px rgba(255,215,0,0.25)" }}
+        whileTap={{ scale: 0.97 }}
         className="w-full bg-primary text-black font-bold uppercase tracking-wider py-4 rounded-xl hover:bg-primary/90 transition-colors"
       >
         Lock In Prediction 🎯
@@ -362,11 +421,16 @@ function FanPolls() {
 
   return (
     <div className="space-y-8">
-      {POLLS.map(poll => {
+      {POLLS.map((poll, pollIdx) => {
         const voted = votes[poll.id];
         const total = poll.votes.reduce((a, b) => a + b, 0) + (voted !== undefined ? 1 : 0);
         return (
-          <div key={poll.id}>
+          <motion.div
+            key={poll.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: pollIdx * 0.1 }}
+          >
             <h3 className="font-display text-lg text-white mb-4" style={{ letterSpacing: "0.03em" }}>{poll.question}</h3>
             <div className="space-y-3">
               {poll.options.map((opt, i) => {
@@ -380,8 +444,9 @@ function FanPolls() {
                       <motion.button
                         onClick={() => vote(poll.id, i)}
                         disabled={hasVoted}
-                        whileHover={!hasVoted ? { x: 4 } : {}}
-                        className={`text-sm font-medium flex items-center gap-2 transition-colors ${isVoted ? "text-primary font-bold" : hasVoted ? "text-white/50" : "text-white/80 hover:text-white"}`}
+                        whileHover={!hasVoted ? { x: 5 } : {}}
+                        whileTap={!hasVoted ? { scale: 0.97 } : {}}
+                        className={`text-sm font-medium flex items-center gap-2 transition-colors ${isVoted ? "text-primary font-bold" : hasVoted ? "text-white/50" : "text-white/80 hover:text-white cursor-pointer"}`}
                       >
                         {isVoted && <CheckCircle className="h-3.5 w-3.5" />}
                         {opt}
@@ -392,8 +457,8 @@ function FanPolls() {
                     {!hasVoted && (
                       <motion.button
                         onClick={() => vote(poll.id, i)}
-                        whileHover={{ scaleX: 1.01 }}
-                        className="w-full h-2.5 bg-white/5 border border-white/8 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
+                        whileHover={{ scaleX: 1.01, backgroundColor: "rgba(255,255,255,0.08)" }}
+                        className="w-full h-2.5 bg-white/5 border border-white/8 rounded-full cursor-pointer transition-colors"
                       />
                     )}
                   </div>
@@ -403,7 +468,7 @@ function FanPolls() {
             {voted !== undefined && (
               <p className="text-xs text-white/25 mt-2">{total.toLocaleString()} votes total</p>
             )}
-          </div>
+          </motion.div>
         );
       })}
     </div>
@@ -423,9 +488,13 @@ function Leaderboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-5 flex items-center gap-3 bg-primary/15 border border-primary/30 rounded-xl p-3"
         >
-          <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+          <motion.div
+            className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0"
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
             <Star className="h-5 w-5 text-primary" />
-          </div>
+          </motion.div>
           <div>
             <div className="text-xs text-white/40 font-bold uppercase tracking-wide">Your Points</div>
             <div className="font-display text-2xl text-primary">{myPoints.toLocaleString()}</div>
@@ -437,11 +506,12 @@ function Leaderboard() {
         {LEADERBOARD.map((user, i) => (
           <motion.div
             key={user.name}
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.06 }}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${i === 0 ? "bg-primary/10 border-primary/30" : "bg-white/3 border-white/5 hover:border-white/15"}`}
+            transition={{ delay: i * 0.07, type: "spring", stiffness: 200, damping: 20 }}
+            whileHover={{ x: 4, transition: { duration: 0.15 } }}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all cursor-default ${i === 0 ? "bg-primary/10 border-primary/30" : "bg-white/3 border-white/5 hover:border-white/15"}`}
           >
             <div className={`font-display text-xl w-7 text-center flex-shrink-0 ${i === 0 ? "text-primary" : "text-white/25"}`}>
               {i + 1}
@@ -454,7 +524,7 @@ function Leaderboard() {
                 <Zap className="h-2.5 w-2.5" />{user.streak} day streak
               </div>
             </div>
-            <div className={`font-display text-lg font-black flex-shrink-0 ${i === 0 ? "text-primary stat-glow" : "text-white/70"}`}>
+            <div className={`font-display text-lg font-black flex-shrink-0 ${i === 0 ? "text-primary" : "text-white/70"}`}>
               {user.points.toLocaleString()}
             </div>
           </motion.div>
@@ -481,36 +551,57 @@ export default function SupporterHub() {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <div className="relative overflow-hidden bg-card border-b border-white/8">
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/40 via-transparent to-primary/5 pointer-events-none" />
 
-        {/* Floating decorative balls */}
-        <div className="absolute top-6 right-12 text-6xl opacity-5 ball-float" style={{ "--dur": "5s", "--delay": "0s" } as React.CSSProperties}>⚽</div>
-        <div className="absolute bottom-4 left-20 text-4xl opacity-5 ball-float" style={{ "--dur": "7s", "--delay": "2s" } as React.CSSProperties}>⚽</div>
+      {/* ── Compact Hero ───────────────────────────────── */}
+      <div
+        className="relative overflow-hidden border-b border-white/8 py-5 sm:py-7"
+        style={{ background: "hsl(139 55% 18%)" }}
+      >
+        {/* texture */}
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+          backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)",
+          backgroundSize: "8px 8px",
+        }} />
 
-        <div className="container mx-auto px-4 py-10 sm:py-16 relative">
+        {/* floating footballs */}
+        <motion.div
+          className="absolute top-3 right-16 text-5xl opacity-[0.06] select-none pointer-events-none"
+          animate={{ y: [0, -8, 0], rotate: [0, 20, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        >⚽</motion.div>
+        <motion.div
+          className="absolute bottom-2 left-24 text-3xl opacity-[0.06] select-none pointer-events-none"
+          animate={{ y: [0, 6, 0], rotate: [0, -15, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        >⚽</motion.div>
+
+        <div className="max-w-[1330px] mx-auto px-4 relative">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
             className="text-center"
           >
-            <p className="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-3">{today}</p>
-            <h1 className="font-display text-4xl sm:text-6xl uppercase mb-3" style={{ letterSpacing: "0.06em" }}>
+            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-1.5 flex items-center justify-center gap-2">
+              <span className="w-4 h-px bg-primary opacity-80 inline-block" />
+              {today}
+              <span className="w-4 h-px bg-primary opacity-80 inline-block" />
+            </p>
+            <h1 className="font-display text-3xl sm:text-5xl uppercase font-black mb-1.5" style={{ letterSpacing: "0.06em" }}>
               Supporter <span className="text-primary">Hub</span>
             </h1>
-            <p className="text-white/50 max-w-lg mx-auto text-sm">
+            <p className="text-white/50 text-xs">
               Your daily football fix — quiz, predict, vote and climb the leaderboard.
             </p>
 
             {myPoints > 0 && (
               <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
+                initial={{ scale: 0.7, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="inline-flex items-center gap-2 mt-4 bg-primary/15 border border-primary/25 rounded-full px-5 py-2 text-primary text-sm font-bold"
+                transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
+                className="inline-flex items-center gap-2 mt-3 bg-primary/15 border border-primary/25 rounded-full px-4 py-1.5 text-primary text-xs font-bold"
               >
-                <Star className="h-4 w-4" />
+                <Star className="h-3.5 w-3.5" />
                 {myPoints.toLocaleString()} Points
               </motion.div>
             )}
@@ -518,33 +609,48 @@ export default function SupporterHub() {
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* ── Centered Tab Nav ───────────────────────────── */}
       <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-white/8">
-        <div className="container mx-auto px-4">
-          <div className="flex overflow-x-auto gap-0 scrollbar-none">
-            {TABS.map(t => (
-              <button
+        <div className="max-w-[1330px] mx-auto px-4">
+          <div className="flex justify-center overflow-x-auto scrollbar-none">
+            {TABS.map((t, idx) => (
+              <motion.button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex items-center gap-2 px-5 py-4 text-xs sm:text-sm font-bold uppercase tracking-wider border-b-2 transition-all duration-200 flex-shrink-0 ${tab === t.id ? "border-primary text-primary" : "border-transparent text-white/40 hover:text-white/70"}`}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.07 }}
+                whileTap={{ scale: 0.95 }}
+                className={`relative flex items-center gap-2 px-5 sm:px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider border-b-2 transition-all duration-200 flex-shrink-0 ${tab === t.id ? "border-primary text-primary" : "border-transparent text-white/40 hover:text-white/70"}`}
               >
-                <t.icon className={`h-4 w-4 ${tab === t.id ? "text-primary" : t.color}`} />
+                <motion.span
+                  animate={tab === t.id ? { rotate: [0, -8, 8, 0] } : {}}
+                  transition={{ duration: 0.4 }}
+                >
+                  <t.icon className={`h-4 w-4 transition-colors ${tab === t.id ? "text-primary" : t.color}`} />
+                </motion.span>
                 {t.label}
-              </button>
+                {tab === t.id && (
+                  <motion.span
+                    layoutId="activeTab"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+                  />
+                )}
+              </motion.button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 py-8 sm:py-12 max-w-2xl">
+      {/* ── Content ────────────────────────────────────── */}
+      <div className="max-w-2xl mx-auto px-4 py-8 sm:py-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.25 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
           >
             {tab === "quiz" && (
               <div>
@@ -554,8 +660,7 @@ export default function SupporterHub() {
                     <p className="text-white/40 text-xs mt-0.5">5 new questions every day</p>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-white/30 border border-white/10 rounded-full px-3 py-1.5">
-                    <Clock className="h-3 w-3" />
-                    Resets midnight
+                    <Clock className="h-3 w-3" />Resets midnight
                   </div>
                 </div>
                 <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7">
@@ -584,8 +689,7 @@ export default function SupporterHub() {
                     <p className="text-white/40 text-xs mt-0.5">Your vote earns +10 points</p>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-primary border border-primary/20 rounded-full px-3 py-1.5 font-bold">
-                    <Users className="h-3 w-3" />
-                    Weekly
+                    <Users className="h-3 w-3" />Weekly
                   </div>
                 </div>
                 <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7">
@@ -602,8 +706,7 @@ export default function SupporterHub() {
                     <p className="text-white/40 text-xs mt-0.5">Top supporters this season</p>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-primary border border-primary/20 rounded-full px-3 py-1.5 font-bold">
-                    <Trophy className="h-3 w-3" />
-                    Season
+                    <Trophy className="h-3 w-3" />Season
                   </div>
                 </div>
                 <Leaderboard />
@@ -613,9 +716,14 @@ export default function SupporterHub() {
         </AnimatePresence>
       </div>
 
-      {/* Points guide */}
-      <div className="container mx-auto px-4 pb-12 max-w-2xl">
-        <div className="bg-card border border-white/5 rounded-2xl p-5">
+      {/* ── Points guide ────────────────────────────────── */}
+      <div className="max-w-2xl mx-auto px-4 pb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-card border border-white/5 rounded-2xl p-5"
+        >
           <h3 className="font-display text-lg text-white mb-4 flex items-center gap-2">
             <Award className="h-5 w-5 text-primary" />How to Earn Points
           </h3>
@@ -627,14 +735,22 @@ export default function SupporterHub() {
               { label: "Perfect quiz", pts: "+100" },
               { label: "Daily visit", pts: "+5" },
               { label: "Share content", pts: "+15" },
-            ].map(item => (
-              <div key={item.label} className="bg-white/3 rounded-xl p-3 text-center">
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.07 }}
+                whileHover={{ scale: 1.05, borderColor: "rgba(255,215,0,0.3)" }}
+                className="bg-white/3 border border-white/5 rounded-xl p-3 text-center cursor-default transition-colors"
+              >
                 <div className="text-primary font-display text-xl font-black">{item.pts}</div>
                 <div className="text-white/40 text-[10px] font-medium mt-0.5">{item.label}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

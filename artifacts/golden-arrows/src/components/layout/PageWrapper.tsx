@@ -5,6 +5,7 @@ interface PageWrapperProps {
   page: string;
   className?: string;
   py?: string;
+  noAds?: boolean;
 }
 
 export function PageWrapper({
@@ -12,7 +13,16 @@ export function PageWrapper({
   page,
   className = "",
   py = "py-5 sm:py-8",
+  noAds = false,
 }: PageWrapperProps) {
+  if (noAds) {
+    return (
+      <div className={`max-w-[1330px] mx-auto px-4 ${py} ${className}`}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div className={`max-w-[1330px] mx-auto px-4 ${py} ${className}`}>
       <div className="flex gap-5 items-start">

@@ -34,7 +34,7 @@ export default function Squad() {
         description="Meet the players and coaching staff representing Abafana Bes'thende in the current season."
       />
 
-      <PageWrapper page="squad">
+      <PageWrapper page="squad" noAds>
         <Tabs defaultValue="Goalkeepers" className="w-full">
           <div className="mb-8 overflow-x-auto scrollbar-none -mx-4 px-4">
             <TabsList className="bg-card border border-white/10 h-auto p-1 gap-1 inline-flex min-w-max w-full sm:w-auto sm:mx-auto sm:flex sm:justify-center">
