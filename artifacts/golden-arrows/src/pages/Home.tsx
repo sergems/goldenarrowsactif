@@ -15,7 +15,7 @@ import { format, differenceInSeconds } from "date-fns";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useMouse } from "@/hooks/useMouse";
 import { useWeather } from "@/hooks/useWeather";
-import { MapPin, Clock, ChevronRight, Trophy, Users, Zap, Target, Star, Newspaper } from "lucide-react";
+import { MapPin, Clock, ChevronRight, ChevronDown, Trophy, Users, Zap, Target, Star, Newspaper } from "lucide-react";
 import { TeamCrest } from "@/components/TeamCrest";
 import { ClubHonoursSection } from "@/components/ClubHonoursSection";
 import heroStadium from "@/assets/hero-stadium.png";
@@ -1519,6 +1519,41 @@ export default function Home() {
             </motion.span>
           </Link>
         </div>
+
+        {/* ── Living logo — journey to Club Honours begins here ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.7, type: "spring" }}
+          className="flex flex-col items-center gap-3 mt-10 mb-2"
+        >
+          <div className="relative">
+            {/* Pulsing glow ring */}
+            <motion.div
+              animate={{ scale: [1, 1.25, 1], opacity: [0.35, 0.1, 0.35] }}
+              transition={{ repeat: Infinity, duration: 2.6, ease: "easeInOut" }}
+              className="absolute inset-0 rounded-full bg-primary/30 blur-xl"
+            />
+            <img
+              src={logo}
+              alt="Golden Arrows"
+              className="relative z-10 w-20 h-20 object-contain"
+              style={{ filter: "drop-shadow(0 0 18px rgba(255,215,0,0.4))" }}
+            />
+          </div>
+          {/* Scroll cue */}
+          <motion.div
+            animate={{ y: [0, 5, 0] }}
+            transition={{ repeat: Infinity, duration: 1.7, ease: "easeInOut" }}
+            className="flex flex-col items-center gap-1"
+          >
+            <span className="text-[9px] uppercase tracking-[0.3em] font-bold text-white/20">
+              Club Honours
+            </span>
+            <ChevronDown className="h-3.5 w-3.5 text-primary/40" />
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* ── Club Honours ────────────────────────── */}

@@ -7,9 +7,10 @@ import {
   useMotionValueEvent,
   AnimatePresence,
 } from "framer-motion";
-import { Trophy, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import logo from "@assets/Lamontville_Golden_Arrows_logo_1780312879951.svg";
+import trophiesImg from "@assets/trophies-won_1780384913023.png";
 
 const HONOURS = [
   {
@@ -18,7 +19,6 @@ const HONOURS = [
     subtitle: "MTN8 Winners",
     description:
       "The oldest knock-out competition in South African football — Golden Arrows claimed it in dramatic fashion, one of the greatest achievements in the PSL era.",
-    highlight: true,
   },
   {
     title: "Nedbank Cup",
@@ -82,6 +82,12 @@ export function ClubHonoursSection() {
   const logoRotateY = useTransform(smooth, [0, 1], [0, 720]);
   const carouselRotate = useTransform(smooth, [0, 1], [0, -(N - 1) * ANGLE_PER]);
 
+  // Logo entry — animates in from below (where the squad section ended) as you scroll in
+  const logoEntryY = useTransform(smooth, [0, 0.18], [180, 0]);
+  const logoEntryX = useTransform(smooth, [0, 0.18], [80, 0]);
+  const logoEntryScale = useTransform(smooth, [0, 0.18], [0.5, 1]);
+  const logoEntryOpacity = useTransform(smooth, [0, 0.05, 0.18], [0, 0.5, 1]);
+
   useMotionValueEvent(smooth, "change", (p) => {
     setActiveIdx(Math.min(Math.round(p * (N - 1)), N - 1));
   });
@@ -92,27 +98,34 @@ export function ClubHonoursSection() {
       className="bg-card border-y border-white/5"
       style={{ height: `${(N + 2) * 100}vh`, position: "relative" }}
     >
-      {/* ── Sticky viewport — no overflow-hidden so 3D cards are never clipped ── */}
+      {/* ── Sticky viewport ── */}
       <div className="sticky top-0 h-screen flex flex-col select-none">
 
         {/* ── Main content row ── */}
-        <div className="flex-1 flex items-center gap-6 lg:gap-14 px-4 container mx-auto min-h-0 py-6">
+        <div className="flex-1 flex items-center gap-4 lg:gap-8 px-4 container mx-auto min-h-0 py-6">
 
-          {/* ── Logo column — vertically centered with the right column automatically ── */}
-          <div
-            className="hidden lg:flex flex-col items-center gap-5 flex-shrink-0 w-44"
-            style={{ perspective: "650px" }}
+          {/* ── Logo column — scroll-driven entry from squad section ── */}
+          <motion.div
+            className="hidden lg:flex flex-col items-center gap-4 flex-shrink-0 w-40"
+            style={{
+              y: logoEntryY,
+              x: logoEntryX,
+              scale: logoEntryScale,
+              opacity: logoEntryOpacity,
+            }}
           >
-            <motion.div style={{ rotateY: logoRotateY }}>
-              <img
-                src={logo}
-                alt="Golden Arrows"
-                className="w-36 h-36 object-contain"
-                style={{
-                  filter: "drop-shadow(0 0 28px rgba(255,215,0,0.4))",
-                }}
-              />
-            </motion.div>
+            <div style={{ perspective: "650px" }}>
+              <motion.div style={{ rotateY: logoRotateY }}>
+                <img
+                  src={logo}
+                  alt="Golden Arrows"
+                  className="w-32 h-32 object-contain"
+                  style={{
+                    filter: "drop-shadow(0 0 28px rgba(255,215,0,0.45))",
+                  }}
+                />
+              </motion.div>
+            </div>
             <div className="text-center">
               <p className="font-display text-[9px] uppercase tracking-[0.25em] text-white/30">
                 Lamontville
@@ -122,10 +135,10 @@ export function ClubHonoursSection() {
               </p>
               <p className="text-[9px] text-white/20 mt-1 tracking-wider">Est. 1943</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* ── Right column: header + carousel + info ── */}
-          <div className="flex-1 flex flex-col gap-4 min-w-0">
+          <div className="flex-1 flex flex-col gap-3 min-w-0">
 
             {/* Header — identical markup/style to Latest News */}
             <div>
@@ -175,47 +188,69 @@ export function ClubHonoursSection() {
                   return (
                     <div
                       key={`${honour.title}-${i}`}
-                      className="absolute inset-0 rounded-2xl border flex flex-col items-center justify-center px-4 py-5"
+                      className="absolute inset-0 rounded-2xl border overflow-hidden flex flex-col items-center justify-end"
                       style={{
                         transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
                         backfaceVisibility: "hidden",
-                        background: isActive
-                          ? "rgba(255,215,0,0.08)"
-                          : "rgba(20,28,20,0.85)",
                         borderColor: isActive
                           ? "rgba(255,215,0,0.5)"
                           : "rgba(255,255,255,0.07)",
                         boxShadow: isActive
-                          ? "0 0 32px rgba(255,215,0,0.15), inset 0 0 20px rgba(255,215,0,0.04)"
+                          ? "0 0 32px rgba(255,215,0,0.2), inset 0 0 20px rgba(255,215,0,0.06)"
                           : "none",
-                        transition: "background 0.5s, border-color 0.5s, box-shadow 0.5s",
+                        transition: "border-color 0.5s, box-shadow 0.5s",
                       }}
                     >
-                      <Trophy
-                        className="h-9 w-9 mb-3"
+                      {/* Trophy image background */}
+                      <img
+                        src={trophiesImg}
+                        alt="Trophy"
+                        className="absolute inset-0 w-full h-full object-cover"
                         style={{
-                          color: isActive ? "#FFD700" : "rgba(255,255,255,0.2)",
-                          transition: "color 0.5s",
-                          filter: isActive ? "drop-shadow(0 0 8px rgba(255,215,0,0.6))" : "none",
+                          opacity: isActive ? 0.55 : 0.2,
+                          transition: "opacity 0.5s",
+                          objectPosition: "center top",
                         }}
                       />
+                      {/* Dark gradient overlay */}
                       <div
-                        className="font-display font-bold text-[11px] text-center leading-tight uppercase tracking-wide"
+                        className="absolute inset-0"
                         style={{
-                          color: isActive ? "#FFD700" : "rgba(255,255,255,0.35)",
-                          transition: "color 0.5s",
+                          background: isActive
+                            ? "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.15) 100%)"
+                            : "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.65) 50%, rgba(10,18,10,0.55) 100%)",
+                          transition: "background 0.5s",
                         }}
-                      >
-                        {honour.title}
-                      </div>
-                      <div
-                        className="text-[9px] mt-1.5 font-bold tracking-wider"
-                        style={{
-                          color: isActive ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.15)",
-                          transition: "color 0.5s",
-                        }}
-                      >
-                        {honour.season}
+                      />
+                      {/* Gold top highlight for active */}
+                      {isActive && (
+                        <div
+                          className="absolute inset-0 pointer-events-none"
+                          style={{
+                            background: "linear-gradient(to bottom, rgba(255,215,0,0.12) 0%, transparent 40%)",
+                          }}
+                        />
+                      )}
+                      {/* Text overlay */}
+                      <div className="relative z-10 text-center px-3 pb-4">
+                        <div
+                          className="font-display font-bold text-[11px] text-center leading-tight uppercase tracking-wide"
+                          style={{
+                            color: isActive ? "#FFD700" : "rgba(255,255,255,0.45)",
+                            transition: "color 0.5s",
+                          }}
+                        >
+                          {honour.title}
+                        </div>
+                        <div
+                          className="text-[9px] mt-1 font-bold tracking-wider"
+                          style={{
+                            color: isActive ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.2)",
+                            transition: "color 0.5s",
+                          }}
+                        >
+                          {honour.season}
+                        </div>
                       </div>
                     </div>
                   );
@@ -226,8 +261,8 @@ export function ClubHonoursSection() {
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-6 bg-primary/10 blur-2xl rounded-full pointer-events-none" />
             </div>
 
-            {/* Active trophy info */}
-            <div className="px-1 w-full max-w-md">
+            {/* Active trophy info — centered below carousel */}
+            <div className="text-center w-full max-w-md mx-auto px-4">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeIdx}
@@ -236,11 +271,12 @@ export function ClubHonoursSection() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center justify-center gap-2 mb-2">
                     <span className="w-8 h-px bg-primary/40" />
                     <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">
                       {HONOURS[activeIdx].subtitle}
                     </span>
+                    <span className="w-8 h-px bg-primary/40" />
                   </div>
                   <h3
                     className="font-display font-bold text-xl sm:text-2xl text-white uppercase mb-1"
@@ -258,8 +294,8 @@ export function ClubHonoursSection() {
               </AnimatePresence>
             </div>
 
-            {/* Progress dots */}
-            <div className="flex items-center gap-2">
+            {/* Progress dots — centered */}
+            <div className="flex items-center justify-center gap-2">
               {HONOURS.map((_, i) => (
                 <div
                   key={i}
