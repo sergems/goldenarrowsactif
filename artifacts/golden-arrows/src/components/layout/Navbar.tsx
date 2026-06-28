@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useState, useRef, useEffect } from "react";
 import {
   Menu, X, ChevronDown, Home, Newspaper, CalendarDays, Users, Camera,
-  Search, Trophy, BookOpen, BarChart3, ShoppingBag, Shirt, HardHat, Tag, Star,
+  Trophy, BookOpen, BarChart3, ShoppingBag, Shirt, HardHat, Tag, Star,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGetNextFixture } from "@workspace/api-client-react";
@@ -93,7 +93,7 @@ function ShopDropdown() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="absolute top-full left-0 mt-2 w-52 bg-background border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50"
+            className="absolute top-full left-0 mt-2 w-52 bg-background/50 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50"
           >
             {SHOP_LINKS.map(({ href, label, icon: Icon }) => (
               <a
@@ -205,7 +205,7 @@ function ClubMegaMenu({ location, onNavigate }: { location: string; onNavigate?:
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.97 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="absolute top-full left-0 mt-2 w-72 bg-background border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50"
+            className="absolute top-full left-0 mt-2 w-72 bg-background/50 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50"
           >
             {/* Mega menu header */}
             <div className="px-5 py-3 border-b border-white/5 flex items-center gap-3">
@@ -261,55 +261,6 @@ function ClubMegaMenu({ location, onNavigate }: { location: string; onNavigate?:
   );
 }
 
-function SearchBar() {
-  const [expanded, setExpanded] = useState(false);
-  const [query, setQuery] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (expanded) inputRef.current?.focus();
-  }, [expanded]);
-
-  useEffect(() => {
-    function handler(e: KeyboardEvent) {
-      if (e.key === "Escape") { setExpanded(false); setQuery(""); }
-    }
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, []);
-
-  return (
-    <div className="flex items-center gap-1">
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 180, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="overflow-hidden"
-          >
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              placeholder="Search players, news…"
-              className="w-full bg-white/8 border border-white/10 rounded-lg px-3 py-1.5 text-[12px] text-white placeholder:text-white/30 outline-none focus:border-primary/50 focus:bg-white/10 transition-all"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <button
-        onClick={() => { setExpanded(v => !v); if (expanded) setQuery(""); }}
-        className={`p-2 rounded-lg transition-colors ${expanded ? "text-primary bg-primary/10" : "text-white/50 hover:text-white hover:bg-white/5"}`}
-        aria-label="Search"
-      >
-        <Search className="h-4 w-4" />
-      </button>
-    </div>
-  );
-}
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -395,9 +346,8 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Right side: search + match badge */}
+          {/* Right side: match badge */}
           <div className="absolute right-6 flex items-center gap-2">
-            <SearchBar />
             {matchToday && (
               <Link
                 href="/"
