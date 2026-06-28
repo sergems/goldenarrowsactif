@@ -27,7 +27,7 @@ const HONOURS = [
       "The oldest knock-out competition in South African football — Golden Arrows claimed it in dramatic fashion, one of the greatest achievements in the PSL era.",
     image: mtn8Img,
     imgPosition: "center center",
-    objectFit: "cover" as const,
+    objectFit: "contain" as const,
   },
   {
     title: "Nedbank Cup",
@@ -77,7 +77,7 @@ const HONOURS = [
       "A provincial honour that underscores Golden Arrows' dominance in KwaZulu-Natal football — representing the club's roots and pride in the region.",
     image: premierCupImg,
     imgPosition: "center center",
-    objectFit: "contain" as const,
+    objectFit: "cover" as const,
   },
   {
     title: "Diski Challenge",
