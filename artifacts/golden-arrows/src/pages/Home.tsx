@@ -1045,20 +1045,21 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
         </div>
 
         {/* Main grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-3 items-stretch">
 
           {/* ── Featured panel ── */}
           <AnimatePresence mode="wait">
             {featured && (
               <motion.div
                 key={featured.id}
+                className="h-full"
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.01 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <Link href={`/news/${featured.id}`}>
-                  <div className="relative rounded-xl overflow-hidden h-[260px] sm:h-[330px] bg-card border border-white/8 group cursor-pointer">
+                <Link href={`/news/${featured.id}`} className="block h-full">
+                  <div className="relative rounded-xl overflow-hidden h-full min-h-[260px] sm:min-h-[330px] bg-card border border-white/8 group cursor-pointer">
                     <motion.img
                       key={featured.imageUrl}
                       src={featured.imageUrl}
