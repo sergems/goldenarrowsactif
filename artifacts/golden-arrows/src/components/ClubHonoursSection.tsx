@@ -66,7 +66,7 @@ const HONOURS = [
 
 const N = HONOURS.length;
 const ANGLE_PER = 360 / N;
-const RADIUS = 380;
+const RADIUS = 280;
 
 export function ClubHonoursSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -92,28 +92,13 @@ export function ClubHonoursSection() {
       className="bg-card border-y border-white/5"
       style={{ height: `${(N + 2) * 100}vh`, position: "relative" }}
     >
-      {/* ── Sticky viewport ── */}
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col select-none">
+      {/* ── Sticky viewport — no overflow-hidden so 3D cards are never clipped ── */}
+      <div className="sticky top-0 h-screen flex flex-col select-none">
 
-        {/* Header */}
-        <div className="text-center pt-10 pb-2 flex-shrink-0">
-          <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-1 flex items-center justify-center gap-1.5">
-            <span className="w-3 h-px bg-primary" />
-            A Legacy of Success
-            <span className="w-3 h-px bg-primary" />
-          </p>
-          <h2
-            className="font-display text-2xl sm:text-4xl uppercase text-white"
-            style={{ letterSpacing: "0.08em" }}
-          >
-            Club <span className="text-primary">Honours</span>
-          </h2>
-        </div>
+        {/* ── Main content row ── */}
+        <div className="flex-1 flex items-center gap-6 lg:gap-14 px-4 container mx-auto min-h-0 py-6">
 
-        {/* ── Arena ── */}
-        <div className="flex-1 flex items-center justify-center gap-4 lg:gap-12 px-4 overflow-hidden min-h-0">
-
-          {/* Logo — 3D spin */}
+          {/* ── Logo column — vertically centered with the right column automatically ── */}
           <div
             className="hidden lg:flex flex-col items-center gap-5 flex-shrink-0 w-44"
             style={{ perspective: "650px" }}
@@ -139,24 +124,38 @@ export function ClubHonoursSection() {
             </div>
           </div>
 
-          {/* Carousel + info */}
-          <div className="flex-1 flex flex-col items-center gap-5 min-w-0 max-w-2xl">
+          {/* ── Right column: header + carousel + info ── */}
+          <div className="flex-1 flex flex-col gap-4 min-w-0">
+
+            {/* Header — identical markup/style to Latest News */}
+            <div>
+              <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
+                <span className="w-3 h-px bg-primary inline-block" />
+                A Legacy of Success
+              </p>
+              <h2
+                className="font-display text-xl sm:text-3xl uppercase text-white"
+                style={{ letterSpacing: "0.06em" }}
+              >
+                Club <span className="text-primary">Honours</span>
+              </h2>
+            </div>
 
             {/* 3D Carousel */}
             <div
               className="relative w-full"
               style={{
-                height: "240px",
-                perspective: "1050px",
-                perspectiveOrigin: "50% 45%",
+                height: "300px",
+                perspective: "1200px",
+                perspectiveOrigin: "50% 50%",
               }}
             >
-              {/* Ambient glow at carousel center */}
+              {/* Ambient glow */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="w-40 h-40 bg-primary/8 rounded-full blur-3xl" />
               </div>
 
-              {/* The rotating disk */}
+              {/* Rotating disk */}
               <motion.div
                 className="absolute"
                 style={{
@@ -168,7 +167,6 @@ export function ClubHonoursSection() {
                   marginLeft: -90,
                   transformStyle: "preserve-3d",
                   rotateY: carouselRotate,
-                  rotateX: "10deg",
                 }}
               >
                 {HONOURS.map((honour, i) => {
@@ -224,12 +222,12 @@ export function ClubHonoursSection() {
                 })}
               </motion.div>
 
-              {/* Ground reflection / shadow */}
+              {/* Ground shadow */}
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-6 bg-primary/10 blur-2xl rounded-full pointer-events-none" />
             </div>
 
             {/* Active trophy info */}
-            <div className="text-center px-4 w-full max-w-md">
+            <div className="px-1 w-full max-w-md">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeIdx}
@@ -238,12 +236,11 @@ export function ClubHonoursSection() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 >
-                  <div className="flex items-center justify-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mb-2">
                     <span className="w-8 h-px bg-primary/40" />
                     <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">
                       {HONOURS[activeIdx].subtitle}
                     </span>
-                    <span className="w-8 h-px bg-primary/40" />
                   </div>
                   <h3
                     className="font-display font-bold text-xl sm:text-2xl text-white uppercase mb-1"
@@ -262,7 +259,7 @@ export function ClubHonoursSection() {
             </div>
 
             {/* Progress dots */}
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center gap-2">
               {HONOURS.map((_, i) => (
                 <div
                   key={i}
@@ -289,7 +286,6 @@ export function ClubHonoursSection() {
             </motion.span>
             <span>Scroll to explore all {N} honours</span>
           </div>
-          {/* Honour counter */}
           <div className="flex items-center gap-1.5 text-[11px] font-bold text-white/25">
             <span className="text-primary font-black text-base">{activeIdx + 1}</span>
             <span>/</span>
