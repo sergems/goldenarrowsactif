@@ -145,24 +145,72 @@ export function ClubHonoursSection() {
       <div className="sticky top-0 h-screen flex flex-col select-none overflow-visible">
 
         {/* ── Main content row ── */}
-        <div className="flex-1 flex items-center gap-4 lg:gap-8 px-4 container mx-auto min-h-0 py-2">
+        <div className="flex-1 flex items-center gap-6 lg:gap-10 px-4 container mx-auto min-h-0 py-4">
 
-          {/* ── Right column: header + carousel + info ── */}
-          <div className="flex-1 flex flex-col gap-3 min-w-0">
-
+          {/* ── Left column: header + info + logo ── */}
+          <div className="hidden lg:flex flex-col justify-center gap-4 flex-shrink-0 w-56">
             {/* Header */}
             <div>
-              <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
+              <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-1 flex items-center gap-1.5">
                 <span className="w-3 h-px bg-primary inline-block" />
                 A Legacy of Success
               </p>
               <h2
-                className="font-display text-xl sm:text-3xl uppercase text-white"
+                className="font-display text-2xl sm:text-4xl uppercase text-white"
                 style={{ letterSpacing: "0.06em" }}
               >
                 Club <span className="text-primary">Honours</span>
               </h2>
             </div>
+
+            {/* Active trophy info */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIdx}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-6 h-px bg-primary/40" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+                    {HONOURS[activeIdx].subtitle}
+                  </span>
+                </div>
+                <h3 className="font-display font-bold text-lg text-white uppercase mb-1" style={{ letterSpacing: "0.04em" }}>
+                  {HONOURS[activeIdx].title}
+                </h3>
+                <div className="text-primary font-bold text-sm mb-2">
+                  {HONOURS[activeIdx].season}
+                </div>
+                <p className="text-white/40 text-[12px] leading-relaxed">
+                  {HONOURS[activeIdx].description}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Rotating logo */}
+            <motion.div
+              className="flex justify-start mt-1"
+              style={{ y: logoEntryY, scale: logoEntryScale, opacity: logoEntryOpacity }}
+            >
+              <div style={{ perspective: "650px" }}>
+                <motion.div
+                  style={{ rotateY: logoRotateY }}
+                  whileHover={{ scale: 1.55, filter: "drop-shadow(0 0 32px rgba(255,215,0,0.85))" }}
+                  transition={{ type: "spring", stiffness: 320, damping: 18 }}
+                  className="cursor-pointer"
+                >
+                  <img src={logo} alt="Golden Arrows" className="w-12 h-12 object-contain"
+                    style={{ filter: "drop-shadow(0 0 18px rgba(255,215,0,0.45))" }} />
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* ── Right column: carousel + progress dots ── */}
+          <div className="flex-1 flex flex-col gap-3 min-w-0 items-center">
 
             {/* 3D Carousel */}
             <div
@@ -290,68 +338,6 @@ export function ClubHonoursSection() {
 
               {/* Ground shadow */}
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-6 bg-primary/10 blur-2xl rounded-full pointer-events-none" />
-            </div>
-
-            {/* Active trophy info — centered below carousel */}
-            <div className="text-center w-full max-w-md mx-auto px-4">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeIdx}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                >
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <span className="w-8 h-px bg-primary/40" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">
-                      {HONOURS[activeIdx].subtitle}
-                    </span>
-                    <span className="w-8 h-px bg-primary/40" />
-                  </div>
-                  <h3
-                    className="font-display font-bold text-xl sm:text-2xl text-white uppercase mb-1"
-                    style={{ letterSpacing: "0.05em" }}
-                  >
-                    {HONOURS[activeIdx].title}
-                  </h3>
-                  <div className="text-primary font-bold text-sm mb-3">
-                    {HONOURS[activeIdx].season}
-                  </div>
-                  <p className="text-white/40 text-[13px] leading-relaxed">
-                    {HONOURS[activeIdx].description}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Rotating logo below description */}
-              <motion.div
-                className="flex justify-center mt-4"
-                style={{
-                  y: logoEntryY,
-                  scale: logoEntryScale,
-                  opacity: logoEntryOpacity,
-                }}
-              >
-                <div style={{ perspective: "650px" }}>
-                  <motion.div
-                    style={{ rotateY: logoRotateY }}
-                    whileHover={{
-                      scale: 1.55,
-                      filter: "drop-shadow(0 0 32px rgba(255,215,0,0.85)) drop-shadow(0 0 12px rgba(255,215,0,0.5))",
-                    }}
-                    transition={{ type: "spring", stiffness: 320, damping: 18 }}
-                    className="cursor-pointer"
-                  >
-                    <img
-                      src={logo}
-                      alt="Golden Arrows"
-                      className="w-14 h-14 object-contain"
-                      style={{ filter: "drop-shadow(0 0 18px rgba(255,215,0,0.45))" }}
-                    />
-                  </motion.div>
-                </div>
-              </motion.div>
             </div>
 
             {/* Progress dots */}
