@@ -26,11 +26,11 @@ export function PageWrapper({
   return (
     <div className={`max-w-[1330px] mx-auto px-4 ${py} ${className}`}>
       <div className="flex gap-5 items-start">
-        <div className="hidden xl:block w-36 flex-shrink-0">
+        <div className="hidden xl:block w-[195px] flex-shrink-0">
           <AdColumn page={page} side="left" />
         </div>
         <div className="flex-1 min-w-0">{children}</div>
-        <div className="hidden xl:block w-36 flex-shrink-0">
+        <div className="hidden xl:block w-[195px] flex-shrink-0">
           <AdColumn page={page} side="right" />
         </div>
       </div>
