@@ -5,7 +5,7 @@ import {
   Trophy, BookOpen, BarChart3, ShoppingBag, Shirt, HardHat, Tag, Star,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGetNextFixture } from "@workspace/api-client-react";
+import { useGetNextFixture, useListResults } from "@workspace/api-client-react";
 import logo from "@assets/Lamontville_Golden_Arrows_logo_1780312879951.svg";
 
 const THE_CLUB_LINKS = [
@@ -262,6 +262,153 @@ function ClubMegaMenu({ location, onNavigate }: { location: string; onNavigate?:
 }
 
 
+function formatMatchDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-ZA", {
+    weekday: "short", day: "numeric", month: "short",
+  });
+}
+
+function FixturePreviewLink({ active }: { active: boolean }) {
+  const [hovered, setHovered] = useState(false);
+  const { data: fixture } = useGetNextFixture();
+
+  return (
+    <div className="relative" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+      <Link
+        href="/fixtures"
+        className={`relative px-3 py-2 text-sm font-bold uppercase tracking-wider rounded transition-colors ${
+          active ? "text-primary" : "text-white/70 hover:text-white hover:bg-white/5"
+        }`}
+      >
+        {active && (
+          <motion.span layoutId="nav-pill" className="absolute inset-0 rounded bg-primary/10"
+            transition={{ type: "spring", stiffness: 380, damping: 30 }} />
+        )}
+        <span className="relative">Fixtures</span>
+      </Link>
+
+      <AnimatePresence>
+        {hovered && fixture && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.97 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 bg-background/50 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 pointer-events-none"
+          >
+            <div className="px-4 py-2.5 border-b border-white/5 flex items-center gap-2">
+              <CalendarDays className="h-3.5 w-3.5 text-primary" />
+              <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">Next Fixture</span>
+            </div>
+            <div className="px-4 py-4">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[13px] font-black text-white text-right flex-1 leading-tight">{fixture.homeTeam}</span>
+                <span className="text-[10px] font-bold text-white/30 bg-white/5 px-2 py-0.5 rounded flex-shrink-0">VS</span>
+                <span className="text-[13px] font-black text-white text-left flex-1 leading-tight">{fixture.awayTeam}</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <span className="text-[11px] text-white/45">{formatMatchDate(fixture.date)}</span>
+                {fixture.time && (
+                  <span className="text-[11px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                    {fixture.time.slice(0, 5)}
+                  </span>
+                )}
+              </div>
+              <div className="text-center mt-1.5">
+                <span className="text-[10px] text-white/25 uppercase tracking-wider">{fixture.competition}</span>
+              </div>
+              {fixture.venue && (
+                <div className="text-center mt-0.5">
+                  <span className="text-[10px] text-white/20">📍 {fixture.venue}</span>
+                </div>
+              )}
+            </div>
+            <div className="px-4 py-2 border-t border-white/5 text-center">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-primary/50">View all fixtures →</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function ResultPreviewLink({ active }: { active: boolean }) {
+  const [hovered, setHovered] = useState(false);
+  const { data: results } = useListResults();
+  const latest = results?.[0];
+
+  const arrowsScore = latest
+    ? (latest.homeTeam.toLowerCase().includes("arrows") ? latest.homeScore : latest.awayScore)
+    : null;
+  const oppScore = latest
+    ? (latest.homeTeam.toLowerCase().includes("arrows") ? latest.awayScore : latest.homeScore)
+    : null;
+  const won = arrowsScore != null && oppScore != null && arrowsScore > oppScore;
+  const drew = arrowsScore != null && oppScore != null && arrowsScore === oppScore;
+
+  return (
+    <div className="relative" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+      <Link
+        href="/results"
+        className={`relative px-3 py-2 text-sm font-bold uppercase tracking-wider rounded transition-colors ${
+          active ? "text-primary" : "text-white/70 hover:text-white hover:bg-white/5"
+        }`}
+      >
+        {active && (
+          <motion.span layoutId="nav-pill" className="absolute inset-0 rounded bg-primary/10"
+            transition={{ type: "spring", stiffness: 380, damping: 30 }} />
+        )}
+        <span className="relative">Results</span>
+      </Link>
+
+      <AnimatePresence>
+        {hovered && latest && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.97 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 bg-background/50 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 pointer-events-none"
+          >
+            <div className="px-4 py-2.5 border-b border-white/5 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BarChart3 className="h-3.5 w-3.5 text-primary" />
+                <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">Latest Result</span>
+              </div>
+              <span
+                className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                  won ? "bg-green-500/20 text-green-400" : drew ? "bg-yellow-500/20 text-yellow-400" : "bg-red-500/20 text-red-400"
+                }`}
+              >
+                {won ? "Win" : drew ? "Draw" : "Loss"}
+              </span>
+            </div>
+            <div className="px-4 py-4">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[13px] font-black text-white text-right flex-1 leading-tight">{latest.homeTeam}</span>
+                <span className="text-xl font-black text-primary flex-shrink-0 tabular-nums">
+                  {latest.homeScore} – {latest.awayScore}
+                </span>
+                <span className="text-[13px] font-black text-white text-left flex-1 leading-tight">{latest.awayTeam}</span>
+              </div>
+              <div className="text-center mt-3">
+                <span className="text-[11px] text-white/40">{formatMatchDate(latest.date)}</span>
+              </div>
+              <div className="text-center mt-1">
+                <span className="text-[10px] text-white/25 uppercase tracking-wider">{latest.competition}</span>
+              </div>
+            </div>
+            <div className="px-4 py-2 border-t border-white/5 text-center">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-primary/50">View all results →</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [mobileClubOpen, setMobileClubOpen] = useState(false);
@@ -325,6 +472,10 @@ export function Navbar() {
 
             {NAV_LINKS.map(link => {
               const active = location === link.href || (link.href !== "/" && location.startsWith(link.href));
+
+              if (link.href === "/fixtures") return <FixturePreviewLink key={link.href} active={active} />;
+              if (link.href === "/results") return <ResultPreviewLink key={link.href} active={active} />;
+
               return (
                 <Link
                   key={link.href}
