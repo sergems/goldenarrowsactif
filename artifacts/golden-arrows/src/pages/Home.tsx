@@ -944,10 +944,14 @@ type NewsItem = {
 };
 
 const NEWS_CATEGORIES = ["All", "Club News", "Match Report", "Transfer", "Community"];
+const AUTO_INTERVAL = 5000;
 
 function LatestNewsSection({ news }: { news: NewsItem[] }) {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const categories = useMemo(() => {
     const found = new Set(news.map(n => n.category));
@@ -959,19 +963,55 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
     [news, activeCategory]
   );
 
-  const featured = filtered[0];
-  const sideItems = filtered.slice(1, 5);
+  const displayNews = useMemo(() => filtered.slice(0, 5), [filtered]);
+  const featured = displayNews[selectedIdx] ?? displayNews[0];
+
+  // Reset index when category changes
+  useEffect(() => { setSelectedIdx(0); setProgress(0); }, [activeCategory]);
+
+  // Auto-rotate with smooth progress bar
+  useEffect(() => {
+    if (isPaused || displayNews.length <= 1) { setProgress(0); return; }
+    const tick = 40;
+    const steps = AUTO_INTERVAL / tick;
+    let current = 0;
+    if (progressRef.current) clearInterval(progressRef.current);
+    progressRef.current = setInterval(() => {
+      current++;
+      setProgress((current / steps) * 100);
+      if (current >= steps) {
+        current = 0;
+        setProgress(0);
+        setSelectedIdx(i => (i + 1) % displayNews.length);
+      }
+    }, tick);
+    return () => { if (progressRef.current) clearInterval(progressRef.current); };
+  }, [isPaused, selectedIdx, displayNews.length, activeCategory]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") setSelectedIdx(i => (i + 1) % displayNews.length);
+      if (e.key === "ArrowLeft") setSelectedIdx(i => (i - 1 + displayNews.length) % displayNews.length);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [displayNews.length]);
 
   if (!news.length) return null;
 
   return (
-    <section className="py-5 sm:py-9 relative overflow-hidden">
+    <section
+      className="py-5 sm:py-7 relative overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       {/* Gold accent line top */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
 
       <div className="container mx-auto px-4">
         {/* Header + pills row */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
           <div>
             <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
               <span className="w-3 h-px bg-primary inline-block" />
@@ -981,14 +1021,12 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
               Latest <span className="text-primary">News</span>
             </h2>
           </div>
-
-          {/* Category pills */}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 items-center">
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border transition-all duration-200 ${
+                className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border transition-all duration-200 ${
                   cat === activeCategory
                     ? "bg-primary text-black border-primary"
                     : "border-white/20 text-white/50 hover:border-primary/50 hover:text-white"
@@ -999,152 +1037,184 @@ function LatestNewsSection({ news }: { news: NewsItem[] }) {
             ))}
             <Link
               href="/news"
-              className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-white/10 text-white/30 hover:text-primary hover:border-primary/40 transition-all duration-200 flex items-center gap-1"
+              className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/10 text-white/30 hover:text-primary hover:border-primary/40 transition-all duration-200 flex items-center gap-1"
             >
               All <ChevronRight className="h-2.5 w-2.5" />
             </Link>
           </div>
         </div>
 
-        {/* Grid layout */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="grid grid-cols-1 lg:grid-cols-5 gap-3"
-          >
-            {/* ── Featured card ── */}
+        {/* Main grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-3">
+
+          {/* ── Featured panel ── */}
+          <AnimatePresence mode="wait">
             {featured && (
               <motion.div
-                layout
-                className="lg:col-span-3"
-                onHoverStart={() => setHoveredId(featured.id)}
-                onHoverEnd={() => setHoveredId(null)}
+                key={featured.id}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.01 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 <Link href={`/news/${featured.id}`}>
-                  <div className="relative rounded-2xl overflow-hidden aspect-[16/10] sm:aspect-auto sm:h-[420px] bg-card border border-white/10 group cursor-pointer">
-                    <img
+                  <div className="relative rounded-xl overflow-hidden h-[260px] sm:h-[330px] bg-card border border-white/8 group cursor-pointer">
+                    <motion.img
+                      key={featured.imageUrl}
                       src={featured.imageUrl}
                       alt={featured.title}
-                      className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      style={{ objectPosition: "center 15%" }}
+                      initial={{ scale: 1.05 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.6 }}
                     />
-                    {/* Dark gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                    {/* Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/5" />
 
-                    {/* Gold accent bar on hover */}
-                    <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-yellow-300 to-primary origin-left"
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: hoveredId === featured.id ? 1 : 0 }}
-                      transition={{ duration: 0.35 }}
-                    />
+                    {/* Auto-progress bar */}
+                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-white/10">
+                      <motion.div
+                        className="h-full bg-primary origin-left"
+                        style={{ scaleX: progress / 100, transformOrigin: "left" }}
+                        transition={{ duration: 0 }}
+                      />
+                    </div>
+
+                    {/* Position dots */}
+                    <div className="absolute top-3 right-3 flex gap-1">
+                      {displayNews.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={e => { e.preventDefault(); setSelectedIdx(i); setProgress(0); }}
+                          className={`rounded-full transition-all duration-300 ${i === selectedIdx ? "w-4 h-1.5 bg-primary" : "w-1.5 h-1.5 bg-white/30 hover:bg-white/60"}`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Nav arrows */}
+                    <button
+                      onClick={e => { e.preventDefault(); setSelectedIdx(i => (i - 1 + displayNews.length) % displayNews.length); setProgress(0); }}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-black/40 border border-white/15 flex items-center justify-center text-white/60 hover:bg-black/70 hover:text-primary hover:border-primary/50 transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <ChevronRight className="h-4 w-4 rotate-180" />
+                    </button>
+                    <button
+                      onClick={e => { e.preventDefault(); setSelectedIdx(i => (i + 1) % displayNews.length); setProgress(0); }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-black/40 border border-white/15 flex items-center justify-center text-white/60 hover:bg-black/70 hover:text-primary hover:border-primary/50 transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
 
                     {/* Content */}
-                    <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="bg-primary text-black text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded">
+                    <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="bg-primary text-black text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded">
                           {featured.category}
                         </span>
-                        <span className="relative flex h-1.5 w-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
-                        </span>
-                        <span className="text-[10px] text-white/40 font-bold uppercase tracking-wider">
+                        <span className="text-[10px] text-white/40 font-bold">
                           {format(new Date(featured.publishedAt), "MMM d, yyyy")}
                         </span>
                       </div>
-                      <h3 className="font-display text-2xl sm:text-3xl text-white line-clamp-2 group-hover:text-primary transition-colors duration-300" style={{ letterSpacing: "0.04em" }}>
+                      <h3
+                        className="font-display text-xl sm:text-2xl text-white group-hover:text-primary transition-colors duration-300 line-clamp-2"
+                        style={{ letterSpacing: "0.03em" }}
+                      >
                         {featured.title}
                       </h3>
                       {featured.excerpt && (
-                        <p className="text-white/55 text-sm mt-2 line-clamp-2 max-w-xl">{featured.excerpt}</p>
+                        <p className="text-white/50 text-[13px] mt-1.5 line-clamp-2 max-w-lg">{featured.excerpt}</p>
                       )}
-                      <div className="mt-4 flex items-center gap-2 text-primary text-xs font-bold uppercase tracking-wider">
-                        <span>Read Full Story</span>
-                        <motion.div
-                          animate={{ x: hoveredId === featured.id ? 4 : 0 }}
-                          transition={{ duration: 0.2 }}
+                      <div className="mt-3 flex items-center gap-1.5 text-primary text-[11px] font-bold uppercase tracking-widest">
+                        Read Full Story
+                        <motion.span
+                          className="inline-flex"
+                          animate={{ x: [0, 4, 0] }}
+                          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
                         >
                           <ChevronRight className="h-3.5 w-3.5" />
-                        </motion.div>
+                        </motion.span>
                       </div>
                     </div>
                   </div>
                 </Link>
               </motion.div>
             )}
+          </AnimatePresence>
 
-            {/* ── Side list ── */}
-            <div className="lg:col-span-2 flex flex-col gap-2.5">
-              {sideItems.map((item, i) => (
+          {/* ── Side list ── */}
+          <div className="flex flex-col gap-1.5">
+            {displayNews.map((item, i) => {
+              const isSelected = i === selectedIdx;
+              return (
                 <motion.div
                   key={item.id}
-                  layout
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, x: 16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.3 }}
-                  onHoverStart={() => setHoveredId(item.id)}
-                  onHoverEnd={() => setHoveredId(null)}
-                  className="group"
+                  transition={{ delay: i * 0.05, duration: 0.25 }}
+                  onMouseEnter={() => { setSelectedIdx(i); setProgress(0); }}
+                  className="group cursor-pointer"
                 >
                   <Link href={`/news/${item.id}`}>
-                    <div className={`flex gap-3 p-3 rounded-xl border transition-all duration-200 cursor-pointer ${
-                      hoveredId === item.id
-                        ? "border-primary/40 bg-black/30"
-                        : "border-white/8 bg-card/60 hover:border-white/20"
+                    <div className={`flex gap-2.5 p-2.5 rounded-lg border transition-all duration-200 ${
+                      isSelected
+                        ? "border-primary/50 bg-primary/5"
+                        : "border-white/6 bg-card/40 hover:border-white/15 hover:bg-white/3"
                     }`}>
-                      {/* Thumbnail */}
-                      <div className="relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-background">
+                      {/* Number badge */}
+                      <div className={`flex-shrink-0 self-center w-5 text-center text-[10px] font-black transition-colors duration-200 ${isSelected ? "text-primary" : "text-white/20 group-hover:text-white/40"}`}>
+                        {i + 1}
+                      </div>
+
+                      {/* Thumbnail — face focus */}
+                      <div className="relative flex-shrink-0 w-14 h-14 rounded-md overflow-hidden bg-background">
                         <img
                           src={item.imageUrl}
                           alt={item.title}
-                          className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                          className={`w-full h-full object-cover transition-all duration-500 ${isSelected ? "scale-110" : "scale-100 group-hover:scale-105"}`}
+                          style={{ objectPosition: "center 15%" }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                        {isSelected && (
+                          <motion.div
+                            className="absolute inset-0 border-2 border-primary rounded-md"
+                            layoutId="activeBorder"
+                          />
+                        )}
                       </div>
 
                       {/* Text */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5 mb-1.5">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-primary">{item.category}</span>
-                          <span className="text-[8px] text-white/25 font-bold uppercase tracking-wider">
-                            · {format(new Date(item.publishedAt), "MMM d")}
+                      <div className="flex-1 min-w-0 self-center">
+                        <div className="flex items-center gap-1 mb-0.5">
+                          <span className={`text-[8px] font-black uppercase tracking-widest transition-colors duration-200 ${isSelected ? "text-primary" : "text-white/40 group-hover:text-primary/70"}`}>
+                            {item.category}
                           </span>
+                          <span className="text-[8px] text-white/20">· {format(new Date(item.publishedAt), "MMM d")}</span>
                         </div>
-                        <h4 className="font-display text-[15px] text-white line-clamp-2 group-hover:text-primary transition-colors duration-200 leading-snug" style={{ letterSpacing: "0.03em" }}>
+                        <h4 className={`font-display text-[13px] leading-snug line-clamp-2 transition-colors duration-200 ${isSelected ? "text-primary" : "text-white/80 group-hover:text-white"}`} style={{ letterSpacing: "0.02em" }}>
                           {item.title}
                         </h4>
-                        <div className="mt-1.5 flex items-center gap-1 text-primary/70 text-[9px] font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                          Read More
-                          <motion.div
-                            animate={{ x: hoveredId === item.id ? 3 : 0 }}
-                            transition={{ duration: 0.15 }}
-                          >
-                            <ChevronRight className="h-2.5 w-2.5" />
-                          </motion.div>
-                        </div>
+                      </div>
+
+                      {/* Arrow indicator */}
+                      <div className={`flex-shrink-0 self-center transition-all duration-200 ${isSelected ? "opacity-100 text-primary" : "opacity-0 group-hover:opacity-60 text-white"}`}>
+                        <ChevronRight className="h-3.5 w-3.5" />
                       </div>
                     </div>
                   </Link>
                 </motion.div>
-              ))}
+              );
+            })}
 
-              {/* View all button */}
-              <Link
-                href="/news"
-                className="mt-auto flex items-center justify-center gap-2 py-3 rounded-xl border border-white/10 text-white/40 text-xs font-bold uppercase tracking-widest hover:border-primary hover:text-primary transition-all duration-200 group"
-              >
-                View All News
-                <motion.div className="group-hover:translate-x-1 transition-transform duration-200">
-                  <ChevronRight className="h-3 w-3" />
-                </motion.div>
-              </Link>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+            {/* View all */}
+            <Link
+              href="/news"
+              className="mt-auto flex items-center justify-center gap-2 py-2.5 rounded-lg border border-white/8 text-white/35 text-[11px] font-bold uppercase tracking-widest hover:border-primary hover:text-primary transition-all duration-200 group"
+            >
+              View All News
+              <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform duration-200" />
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );
