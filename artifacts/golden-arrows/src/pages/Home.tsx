@@ -658,24 +658,21 @@ function ClubStats({ results, players }: {
 
   return (
     <section className="relative overflow-hidden">
-      {/* Dark scoreboard panel */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60" />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-
-      <div className="container mx-auto px-4 relative py-5 sm:py-7">
-        {/* Header row */}
-        <div className="flex items-center justify-between mb-4">
+      {/* ── Section banner ── */}
+      <div className="border-b border-white/8 py-4 sm:py-5 relative overflow-hidden" style={{ background: "hsl(139 55% 18%)" }}>
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%)", backgroundSize: "8px 8px" }} />
+        <div className="max-w-[1330px] mx-auto px-4 relative flex items-center justify-between gap-4">
           <div>
-            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center gap-1.5">
-              <span className="w-3 h-px bg-primary inline-block" />
+            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-1.5 flex items-center gap-2">
+              <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
               By The Numbers
+              <span className="w-4 h-px bg-primary inline-block flex-shrink-0 opacity-80" />
             </p>
-            <h2 className="font-display text-xl sm:text-3xl uppercase text-white" style={{ letterSpacing: "0.06em" }}>
+            <h2 className="font-display text-2xl sm:text-4xl uppercase font-black" style={{ letterSpacing: "0.06em" }}>
               Club <span className="text-primary">Statistics</span>
             </h2>
           </div>
-          <div className="hidden sm:flex items-center gap-1.5 text-[9px] text-white/25 uppercase tracking-widest font-bold">
+          <div className="hidden sm:flex items-center gap-1.5 text-[9px] text-white/40 uppercase tracking-widest font-bold flex-shrink-0">
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
@@ -683,7 +680,13 @@ function ClubStats({ results, players }: {
             Hover to explore
           </div>
         </div>
+      </div>
 
+      {/* Dark scoreboard panel */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+      <div className="container mx-auto px-4 relative py-5 sm:py-7">
         {/* Stats grid — dark cells with gold dividers */}
         <div className="grid grid-cols-3 lg:grid-cols-6 rounded-xl overflow-hidden border border-white/10 divide-x divide-white/8">
           {stats.map((s, i) => (
