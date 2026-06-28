@@ -13,7 +13,10 @@ import logo from "@assets/Lamontville_Golden_Arrows_logo_1780312879951.svg";
 import mtn8Img from "@assets/MTN_8_LOGO_1782640838208.jpg";
 import diskiShieldImg from "@assets/multichoice_diski_shield_1782640838209.jpg";
 import nfdImg from "@assets/ndf_logo_1782640838211.png";
-import trophiesImg from "@assets/trophies-won_1780384913023.png";
+import nedbankImg from "@assets/Nedbank_cup_logo_1782642949619.png";
+import nslImg from "@assets/National_Soccer_League_(South_Africa)_1782642949618.svg";
+import carlingKnockoutImg from "@assets/Knockout-Cup-Logo_1782642949617.png";
+import premierCupImg from "@assets/premier_cup_1782642949619.jpg";
 
 const HONOURS = [
   {
@@ -24,6 +27,7 @@ const HONOURS = [
       "The oldest knock-out competition in South African football — Golden Arrows claimed it in dramatic fashion, one of the greatest achievements in the PSL era.",
     image: mtn8Img,
     imgPosition: "center center",
+    objectFit: "cover" as const,
   },
   {
     title: "Nedbank Cup",
@@ -31,8 +35,9 @@ const HONOURS = [
     subtitle: "Nedbank Cup Winners",
     description:
       "A historic cup run that silenced critics and ended with Abafana Bes'thende lifting one of South Africa's most prestigious knockout trophies.",
-    image: trophiesImg,
-    imgPosition: "center top",
+    image: nedbankImg,
+    imgPosition: "center center",
+    objectFit: "contain" as const,
   },
   {
     title: "NSL Championship",
@@ -40,8 +45,9 @@ const HONOURS = [
     subtitle: "League Champions",
     description:
       "Golden Arrows topped the NSL table in dominant fashion, cementing their status as one of South African football's elite clubs.",
-    image: trophiesImg,
+    image: nslImg,
     imgPosition: "center center",
+    objectFit: "contain" as const,
   },
   {
     title: "NSL Championship",
@@ -49,17 +55,29 @@ const HONOURS = [
     subtitle: "League Champions",
     description:
       "The 2012/13 title confirmed Arrows as one of the most consistent clubs of the era — a second NSL crown to add to the cabinet.",
-    image: trophiesImg,
-    imgPosition: "center bottom",
+    image: nslImg,
+    imgPosition: "center center",
+    objectFit: "contain" as const,
   },
   {
-    title: "Telkom Knockout",
+    title: "Carling Knockout",
     season: "2021/22",
-    subtitle: "TKO Winners",
+    subtitle: "Carling Black Label Knockout Winners",
     description:
-      "A statement of the modern era — Golden Arrows lifted the Telkom Knockout in a memorable campaign that showcased the club's cup-fighting spirit.",
-    image: trophiesImg,
-    imgPosition: "left center",
+      "A statement of the modern era — Golden Arrows lifted the Carling Black Label Knockout in a memorable campaign that showcased the club's cup-fighting spirit.",
+    image: carlingKnockoutImg,
+    imgPosition: "center center",
+    objectFit: "cover" as const,
+  },
+  {
+    title: "KZN Premier's Cup",
+    season: "Multiple",
+    subtitle: "KZN Premier's Cup Winners",
+    description:
+      "A provincial honour that underscores Golden Arrows' dominance in KwaZulu-Natal football — representing the club's roots and pride in the region.",
+    image: premierCupImg,
+    imgPosition: "center center",
+    objectFit: "contain" as const,
   },
   {
     title: "Diski Challenge",
@@ -69,6 +87,7 @@ const HONOURS = [
       "Back-to-back Diski Challenge titles proved the depth of the Arrows academy, producing the next generation of Durban football talent.",
     image: diskiShieldImg,
     imgPosition: "center center",
+    objectFit: "cover" as const,
   },
   {
     title: "National First Division",
@@ -78,6 +97,7 @@ const HONOURS = [
       "Promotion back to the top flight in emphatic style — winning the NFD title without question and returning Arrows to where they belong.",
     image: nfdImg,
     imgPosition: "center center",
+    objectFit: "cover" as const,
   },
 ];
 
@@ -222,16 +242,19 @@ export function ClubHonoursSection() {
                           ? "0 0 36px rgba(255,215,0,0.25), inset 0 0 24px rgba(255,215,0,0.07)"
                           : "none",
                         transition: "border-color 0.5s, box-shadow 0.5s",
+                        backgroundColor: honour.objectFit === "contain" ? "hsl(140 10% 6%)" : undefined,
                       }}
                     >
-                      {/* Trophy image — fills entire card */}
+                      {/* Trophy image */}
                       <img
                         src={honour.image}
                         alt={honour.title}
-                        className="absolute inset-0 w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full"
                         style={{
+                          objectFit: honour.objectFit,
                           objectPosition: honour.imgPosition,
-                          opacity: isActive ? 0.85 : 0.3,
+                          padding: honour.objectFit === "contain" ? "16px" : undefined,
+                          opacity: isActive ? (honour.objectFit === "contain" ? 0.95 : 0.85) : 0.3,
                           transition: "opacity 0.5s",
                         }}
                       />
