@@ -3,8 +3,9 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useGetNextFixture, useListPlayers } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import {
-  Trophy, Star, Zap, CheckCircle, XCircle, Clock, Users,
-  Target, Award, BarChart2, Crown, ChevronLeft, X
+  Trophy, Star, CheckCircle, XCircle, Clock, Users,
+  Award, ChevronLeft, X, Gamepad2, Brain, Crosshair,
+  PieChart, Medal, Sparkle, Bolt
 } from "lucide-react";
 
 // Feature components
@@ -122,7 +123,7 @@ function DailyQuiz() {
         </div>
         <p className="text-white/50 text-sm mb-5">{score === 5 ? "Perfect score! You're a true Arrow!" : score >= 3 ? "Great work, supporter!" : "Keep learning about your club!"}</p>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-5 py-2.5 text-primary text-sm font-bold">
-          <Zap className="h-4 w-4" />+{score * 20} Supporter Points earned
+          <Bolt className="h-4 w-4" />+{score * 20} Supporter Points earned
         </motion.div>
         <p className="text-white/30 text-xs mt-4">Come back tomorrow for new questions!</p>
       </motion.div>
@@ -210,7 +211,7 @@ function ScorePredictor() {
         {scorer && <p className="text-white/40 text-sm">First scorer: <span className="text-primary font-bold">{scorer}</span></p>}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
           className="inline-flex items-center gap-2 bg-primary/15 border border-primary/30 rounded-full px-4 py-2 text-primary text-sm font-bold mt-4">
-          <Zap className="h-4 w-4" />+50 Points for predicting
+          <Bolt className="h-4 w-4" />+50 Points for predicting
         </motion.div>
       </motion.div>
     );
@@ -343,7 +344,7 @@ function Leaderboard() {
             <div className={`font-display text-xl w-7 text-center flex-shrink-0 ${i === 0 ? "text-primary" : "text-white/25"}`}>{i + 1}</div>
             <div className="flex-1 min-w-0">
               <div className={`font-bold text-sm truncate ${i === 0 ? "text-primary" : "text-white"}`}>{user.badge} {user.name}</div>
-              <div className="text-[10px] text-white/30 flex items-center gap-1 mt-0.5"><Zap className="h-2.5 w-2.5" />{user.streak} day streak</div>
+              <div className="text-[10px] text-white/30 flex items-center gap-1 mt-0.5"><Bolt className="h-2.5 w-2.5" />{user.streak} day streak</div>
             </div>
             <div className={`font-display text-lg font-black flex-shrink-0 ${i === 0 ? "text-primary" : "text-white/70"}`}>{user.points.toLocaleString()}</div>
           </motion.div>
@@ -385,10 +386,11 @@ const FEATURES: Feature[] = [
 
 // ─── Hub Tabs ─────────────────────────────────────────────────────────────────
 const HUB_TABS = [
-  { id: "quiz", label: "Daily Quiz", icon: Zap, color: "text-yellow-400" },
-  { id: "predict", label: "Predict", icon: Target, color: "text-blue-400" },
-  { id: "polls", label: "Fan Polls", icon: BarChart2, color: "text-green-400" },
-  { id: "leaderboard", label: "Leaderboard", icon: Crown, color: "text-primary" },
+  { id: "activities", label: "Activities", icon: Gamepad2, color: "text-purple-400" },
+  { id: "quiz", label: "Daily Quiz", icon: Brain, color: "text-yellow-400" },
+  { id: "predict", label: "Predict", icon: Crosshair, color: "text-blue-400" },
+  { id: "polls", label: "Fan Polls", icon: PieChart, color: "text-green-400" },
+  { id: "leaderboard", label: "Leaderboard", icon: Medal, color: "text-primary" },
 ];
 
 const TAG_COLORS: Record<string, string> = {
@@ -406,7 +408,7 @@ const TAG_COLORS: Record<string, string> = {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function SupporterHub() {
   const [activeFeature, setActiveFeature] = useState<Feature | null>(null);
-  const [hubTab, setHubTab] = useState("quiz");
+  const [hubTab, setHubTab] = useState("activities");
   const today = format(new Date(), "EEEE, MMMM d");
   const myPoints = parseInt(typeof window !== "undefined" ? localStorage.getItem("supporter-points") || "0" : "0");
 
@@ -418,7 +420,7 @@ export default function SupporterHub() {
     <div className="min-h-screen">
 
       {/* ── Hero ───────────────────────────────────────────── */}
-      <div className="relative overflow-hidden border-b border-white/8 py-6 sm:py-10"
+      <div className="relative overflow-hidden border-b border-white/8 py-6 sm:py-8"
         style={{ background: "linear-gradient(135deg, hsl(139 55% 12%) 0%, hsl(139 55% 18%) 60%, hsl(51 80% 14%) 100%)" }}>
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)", backgroundSize: "8px 8px" }} />
         <motion.div className="absolute top-4 right-20 text-6xl opacity-[0.05] select-none pointer-events-none" animate={{ y: [0, -10, 0], rotate: [0, 20, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>⚽</motion.div>
@@ -429,47 +431,47 @@ export default function SupporterHub() {
             <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-2 flex items-center justify-center gap-2">
               <span className="w-4 h-px bg-primary opacity-80 inline-block" />{today}<span className="w-4 h-px bg-primary opacity-80 inline-block" />
             </p>
-            <h1 className="font-display text-4xl sm:text-6xl uppercase font-black mb-2" style={{ letterSpacing: "0.06em" }}>
+            <h1 className="font-display text-4xl sm:text-5xl uppercase font-black mb-2" style={{ letterSpacing: "0.06em" }}>
               Fan <span className="text-primary">Zone</span>
             </h1>
             <p className="text-white/50 text-sm max-w-lg mx-auto">
-              Your interactive Golden Arrows entertainment hub — design kits, play games, earn achievements & more.
+              Design kits, play games, predict results, earn achievements & more.
             </p>
 
             <div className="flex items-center justify-center gap-3 mt-4">
               {myPoints > 0 && (
                 <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
-                  className="inline-flex items-center gap-2 bg-primary/15 border border-primary/25 rounded-full px-4 py-1.5 text-primary text-xs font-bold">
-                  <Star className="h-3.5 w-3.5" />{myPoints.toLocaleString()} Points
+                  className="inline-flex items-center gap-1.5 bg-primary/15 border border-primary/25 rounded-full px-4 py-1.5 text-primary text-xs font-bold">
+                  <Star className="h-3 w-3" />{myPoints.toLocaleString()} pts
                 </motion.div>
               )}
               {achievementCount > 0 && (
-                <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.4, type: "spring", stiffness: 300 }}
-                  className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/25 rounded-full px-4 py-1.5 text-yellow-400 text-xs font-bold"
-                  onClick={() => setActiveFeature(FEATURES.find(f => f.id === "achievements") || null)}
-                  style={{ cursor: "pointer" }}>
-                  <Trophy className="h-3.5 w-3.5" />{achievementCount} Achievements
-                </motion.div>
+                <motion.button initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.4, type: "spring", stiffness: 300 }}
+                  onClick={() => { setActiveFeature(FEATURES.find(f => f.id === "achievements") || null); }}
+                  className="inline-flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/25 rounded-full px-4 py-1.5 text-yellow-400 text-xs font-bold hover:bg-yellow-500/15 transition-colors">
+                  <Trophy className="h-3 w-3" />{achievementCount} achievements
+                </motion.button>
               )}
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* ── Feature overlay ─────────────────────────────────── */}
+      {/* ── Feature overlay (fullscreen) ─────────────────────────────────── */}
       <AnimatePresence>
         {activeFeature && (
           <motion.div
             key={activeFeature.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
             className="fixed inset-0 z-50 flex flex-col"
             style={{ background: "hsl(140 10% 4%)" }}
           >
             {/* Feature header */}
             <div className="flex-shrink-0 border-b border-white/8 px-4 py-3 flex items-center gap-3"
-              style={{ background: `${activeFeature.color}18` }}>
+              style={{ background: `${activeFeature.color}15` }}>
               <motion.button
                 onClick={() => setActiveFeature(null)}
                 whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
@@ -479,17 +481,14 @@ export default function SupporterHub() {
               </motion.button>
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <span className="text-2xl">{activeFeature.emoji}</span>
-                <div>
-                  <h2 className="font-display text-lg text-white uppercase" style={{ letterSpacing: "0.04em" }}>{activeFeature.title}</h2>
-                </div>
+                <h2 className="font-display text-lg text-white uppercase" style={{ letterSpacing: "0.04em" }}>{activeFeature.title}</h2>
               </div>
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${TAG_COLORS[activeFeature.tag]}`}>{activeFeature.tag}</span>
             </div>
-
             {/* Feature content */}
             <div className="flex-1 overflow-y-auto">
               <div className="max-w-2xl mx-auto px-4 py-6">
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
                   <activeFeature.component />
                 </motion.div>
               </div>
@@ -498,153 +497,164 @@ export default function SupporterHub() {
         )}
       </AnimatePresence>
 
-      {/* ── Features Grid ───────────────────────────────────── */}
-      <div className="max-w-[1330px] mx-auto px-4 py-8 sm:py-10">
-        <div className="mb-6">
-          <h2 className="font-display text-2xl text-white uppercase" style={{ letterSpacing: "0.04em" }}>
-            Interactive <span className="text-primary">Features</span>
-          </h2>
-          <p className="text-white/40 text-sm mt-0.5">{FEATURES.length} activities — tap any card to open</p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-          {FEATURES.map((feature, i) => (
-            <motion.button
-              key={feature.id}
-              onClick={() => setActiveFeature(feature)}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05, type: "spring", stiffness: 200, damping: 20 }}
-              whileHover={{ y: -4, boxShadow: `0 12px 36px ${feature.color}30` }}
-              whileTap={{ scale: 0.97 }}
-              className="relative text-left p-4 rounded-2xl border border-white/8 bg-white/3 hover:bg-white/6 transition-all group overflow-hidden"
-            >
-              {/* Color accent */}
-              <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl opacity-60 group-hover:opacity-100 transition-opacity" style={{ background: feature.color }} />
-
-              <div className="flex items-start justify-between mb-3">
-                <motion.span
-                  className="text-3xl"
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: i * 0.2 }}
-                >
-                  {feature.emoji}
-                </motion.span>
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${TAG_COLORS[feature.tag]}`}>
-                  {feature.tag}
-                </span>
-              </div>
-
-              <h3 className="font-display text-base text-white mb-1 group-hover:text-primary transition-colors" style={{ letterSpacing: "0.03em" }}>
-                {feature.title}
-              </h3>
-              <p className="text-white/40 text-xs leading-relaxed">
-                {feature.description}
-              </p>
-
-              <div className="mt-3 flex items-center gap-1 text-white/20 group-hover:text-primary/60 transition-colors text-xs font-bold">
-                Play now →
-              </div>
-            </motion.button>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Trivia Hub ──────────────────────────────────────── */}
-      <div className="border-t border-white/8 bg-white/[0.01]">
-        <div className="max-w-[1330px] mx-auto px-4 pt-8 pb-2">
-          <h2 className="font-display text-2xl text-white uppercase mb-1" style={{ letterSpacing: "0.04em" }}>
-            Trivia <span className="text-primary">Hub</span>
-          </h2>
-          <p className="text-white/40 text-sm">Daily quizzes, predictions, polls & the leaderboard</p>
-        </div>
-
-        {/* Tabs */}
-        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-white/8">
-          <div className="max-w-[1330px] mx-auto px-4">
-            <div className="flex justify-start overflow-x-auto scrollbar-none">
-              {HUB_TABS.map((t, idx) => (
-                <motion.button key={t.id} onClick={() => setHubTab(t.id)}
-                  initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.07 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`relative flex items-center gap-2 px-5 sm:px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider border-b-2 transition-all duration-200 flex-shrink-0 ${hubTab === t.id ? "border-primary text-primary" : "border-transparent text-white/40 hover:text-white/70"}`}>
-                  <motion.span animate={hubTab === t.id ? { rotate: [0, -8, 8, 0] } : {}} transition={{ duration: 0.4 }}>
-                    <t.icon className={`h-4 w-4 transition-colors ${hubTab === t.id ? "text-primary" : t.color}`} />
-                  </motion.span>
-                  {t.label}
-                  {hubTab === t.id && <motion.span layoutId="activeHubTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />}
-                </motion.button>
-              ))}
-            </div>
+      {/* ── Unified tab bar (sticky) ─────────────────────────── */}
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md border-b border-white/8">
+        <div className="max-w-[1330px] mx-auto px-4">
+          <div className="flex justify-start overflow-x-auto scrollbar-none">
+            {HUB_TABS.map((t, idx) => (
+              <motion.button key={t.id} onClick={() => setHubTab(t.id)}
+                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06 }}
+                whileTap={{ scale: 0.95 }}
+                className={`relative flex items-center gap-2 px-4 sm:px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider border-b-2 transition-all duration-200 flex-shrink-0 ${
+                  hubTab === t.id ? "border-primary text-primary" : "border-transparent text-white/40 hover:text-white/70 hover:border-white/20"
+                }`}>
+                <t.icon className={`h-4 w-4 transition-colors ${hubTab === t.id ? "text-primary" : t.color}`} />
+                {t.label}
+                {hubTab === t.id && (
+                  <motion.span layoutId="activeHubTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                )}
+              </motion.button>
+            ))}
           </div>
         </div>
-
-        {/* Tab Content */}
-        <div className="max-w-2xl mx-auto px-4 py-8 sm:py-10">
-          <AnimatePresence mode="wait">
-            <motion.div key={hubTab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.22, ease: "easeOut" }}>
-              {hubTab === "quiz" && (
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div><h2 className="font-display text-2xl uppercase text-white">Daily Quiz</h2><p className="text-white/40 text-xs mt-0.5">5 new questions every day</p></div>
-                    <div className="flex items-center gap-2 text-xs text-white/30 border border-white/10 rounded-full px-3 py-1.5"><Clock className="h-3 w-3" />Resets midnight</div>
-                  </div>
-                  <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7"><DailyQuiz /></div>
-                </div>
-              )}
-              {hubTab === "predict" && (
-                <div>
-                  <div className="mb-5"><h2 className="font-display text-2xl uppercase text-white">Score Prediction</h2><p className="text-white/40 text-xs mt-0.5">Predict the next result and earn points</p></div>
-                  <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7"><ScorePredictor /></div>
-                </div>
-              )}
-              {hubTab === "polls" && (
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div><h2 className="font-display text-2xl uppercase text-white">Fan Polls</h2><p className="text-white/40 text-xs mt-0.5">Your vote earns +10 points</p></div>
-                    <div className="flex items-center gap-1.5 text-xs text-primary border border-primary/20 rounded-full px-3 py-1.5 font-bold"><Users className="h-3 w-3" />Weekly</div>
-                  </div>
-                  <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7"><FanPolls /></div>
-                </div>
-              )}
-              {hubTab === "leaderboard" && (
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div><h2 className="font-display text-2xl uppercase text-white">Leaderboard</h2><p className="text-white/40 text-xs mt-0.5">Top supporters this season</p></div>
-                    <div className="flex items-center gap-1.5 text-xs text-primary border border-primary/20 rounded-full px-3 py-1.5 font-bold"><Trophy className="h-3 w-3" />Season</div>
-                  </div>
-                  <Leaderboard />
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Points guide */}
-        <div className="max-w-2xl mx-auto px-4 pb-12">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="bg-card border border-white/5 rounded-2xl p-5">
-            <h3 className="font-display text-lg text-white mb-4 flex items-center gap-2"><Award className="h-5 w-5 text-primary" />How to Earn Points</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {[
-                { label: "Correct quiz answer", pts: "+20" },
-                { label: "Score prediction", pts: "+50" },
-                { label: "Fan poll vote", pts: "+10" },
-                { label: "Perfect quiz", pts: "+100" },
-                { label: "Penalty Shootout", pts: "+50" },
-                { label: "Guess a player", pts: "+100" },
-              ].map((item, i) => (
-                <motion.div key={item.label} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}
-                  whileHover={{ scale: 1.05, borderColor: "rgba(255,215,0,0.3)" }}
-                  className="bg-white/3 border border-white/5 rounded-xl p-3 text-center cursor-default transition-colors">
-                  <div className="text-primary font-display text-xl font-black">{item.pts}</div>
-                  <div className="text-white/40 text-[10px] font-medium mt-0.5">{item.label}</div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
       </div>
+
+      {/* ── Tab content ─────────────────────────────────────── */}
+      <AnimatePresence mode="wait">
+        <motion.div key={hubTab} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2, ease: "easeOut" }}>
+
+          {/* ACTIVITIES */}
+          {hubTab === "activities" && (
+            <div className="max-w-[1330px] mx-auto px-4 py-7">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h2 className="font-display text-2xl text-white uppercase flex items-center gap-2" style={{ letterSpacing: "0.04em" }}>
+                    <Sparkle className="h-5 w-5 text-primary" />
+                    Interactive <span className="text-primary ml-1">Activities</span>
+                  </h2>
+                  <p className="text-white/40 text-sm mt-0.5">{FEATURES.length} experiences — tap any card to open</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                {FEATURES.map((feature, i) => (
+                  <motion.button
+                    key={feature.id}
+                    onClick={() => setActiveFeature(feature)}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04, type: "spring", stiffness: 220, damping: 22 }}
+                    whileHover={{ y: -3, boxShadow: `0 10px 30px ${feature.color}28` }}
+                    whileTap={{ scale: 0.96 }}
+                    className="relative text-left p-4 rounded-2xl border border-white/8 bg-white/3 hover:bg-white/6 transition-all group overflow-hidden"
+                  >
+                    <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl opacity-50 group-hover:opacity-100 transition-opacity" style={{ background: feature.color }} />
+                    <div className="flex items-start justify-between mb-3">
+                      <span className="text-2xl">{feature.emoji}</span>
+                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${TAG_COLORS[feature.tag]}`}>{feature.tag}</span>
+                    </div>
+                    <h3 className="font-display text-sm text-white mb-1 group-hover:text-primary transition-colors leading-tight" style={{ letterSpacing: "0.02em" }}>
+                      {feature.title}
+                    </h3>
+                    <p className="text-white/35 text-[11px] leading-relaxed line-clamp-2">{feature.description}</p>
+                    <div className="mt-2.5 text-white/20 group-hover:text-primary/60 transition-colors text-[10px] font-bold">Open →</div>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* DAILY QUIZ */}
+          {hubTab === "quiz" && (
+            <div className="max-w-2xl mx-auto px-4 py-7">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h2 className="font-display text-2xl uppercase text-white flex items-center gap-2">
+                    <Brain className="h-5 w-5 text-yellow-400" />Daily Quiz
+                  </h2>
+                  <p className="text-white/40 text-xs mt-0.5">5 new questions every day</p>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-white/30 border border-white/10 rounded-full px-3 py-1.5">
+                  <Clock className="h-3 w-3" />Resets midnight
+                </div>
+              </div>
+              <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7"><DailyQuiz /></div>
+            </div>
+          )}
+
+          {/* PREDICT */}
+          {hubTab === "predict" && (
+            <div className="max-w-2xl mx-auto px-4 py-7">
+              <div className="mb-5">
+                <h2 className="font-display text-2xl uppercase text-white flex items-center gap-2">
+                  <Crosshair className="h-5 w-5 text-blue-400" />Score Prediction
+                </h2>
+                <p className="text-white/40 text-xs mt-0.5">Predict the next result and earn points</p>
+              </div>
+              <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7"><ScorePredictor /></div>
+            </div>
+          )}
+
+          {/* POLLS */}
+          {hubTab === "polls" && (
+            <div className="max-w-2xl mx-auto px-4 py-7">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h2 className="font-display text-2xl uppercase text-white flex items-center gap-2">
+                    <PieChart className="h-5 w-5 text-green-400" />Fan Polls
+                  </h2>
+                  <p className="text-white/40 text-xs mt-0.5">Your vote earns +10 points</p>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-primary border border-primary/20 rounded-full px-3 py-1.5 font-bold">
+                  <Users className="h-3 w-3" />Weekly
+                </div>
+              </div>
+              <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7"><FanPolls /></div>
+            </div>
+          )}
+
+          {/* LEADERBOARD */}
+          {hubTab === "leaderboard" && (
+            <div className="max-w-2xl mx-auto px-4 py-7">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h2 className="font-display text-2xl uppercase text-white flex items-center gap-2">
+                    <Medal className="h-5 w-5 text-primary" />Leaderboard
+                  </h2>
+                  <p className="text-white/40 text-xs mt-0.5">Top supporters this season</p>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-primary border border-primary/20 rounded-full px-3 py-1.5 font-bold">
+                  <Trophy className="h-3 w-3" />Season
+                </div>
+              </div>
+              <Leaderboard />
+              {/* Points guide */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-6 bg-card border border-white/5 rounded-2xl p-5">
+                <h3 className="font-display text-base text-white mb-4 flex items-center gap-2">
+                  <Award className="h-4 w-4 text-primary" />How to Earn Points
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {[
+                    { label: "Correct quiz answer", pts: "+20" },
+                    { label: "Score prediction", pts: "+50" },
+                    { label: "Fan poll vote", pts: "+10" },
+                    { label: "Perfect quiz", pts: "+100" },
+                    { label: "Penalty Shootout", pts: "+50" },
+                    { label: "Guess a player", pts: "+100" },
+                  ].map((item, i) => (
+                    <motion.div key={item.label}
+                      initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
+                      className="bg-white/3 border border-white/5 rounded-xl p-3 text-center">
+                      <div className="text-primary font-display text-lg font-black">{item.pts}</div>
+                      <div className="text-white/40 text-[10px] font-medium mt-0.5">{item.label}</div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
