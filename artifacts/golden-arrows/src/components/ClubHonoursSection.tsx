@@ -315,7 +315,7 @@ export function ClubHonoursSection() {
 
               {/* Rotating logo below description */}
               <motion.div
-                className="flex flex-col items-center gap-2 mt-4"
+                className="flex justify-center mt-4"
                 style={{
                   y: logoEntryY,
                   scale: logoEntryScale,
@@ -331,11 +331,6 @@ export function ClubHonoursSection() {
                       style={{ filter: "drop-shadow(0 0 18px rgba(255,215,0,0.45))" }}
                     />
                   </motion.div>
-                </div>
-                <div className="text-center">
-                  <p className="font-display text-[8px] uppercase tracking-[0.25em] text-white/30">Lamontville</p>
-                  <p className="font-display text-[9px] uppercase tracking-widest text-primary font-bold">Golden Arrows FC</p>
-                  <p className="text-[8px] text-white/20 tracking-wider">Est. 1943</p>
                 </div>
               </motion.div>
             </div>
