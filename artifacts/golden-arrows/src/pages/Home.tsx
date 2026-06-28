@@ -17,9 +17,9 @@ import { useMouse } from "@/hooks/useMouse";
 import { useWeather } from "@/hooks/useWeather";
 import { MapPin, Clock, ChevronRight, Trophy, Users, Zap, Target, Star, Newspaper } from "lucide-react";
 import { TeamCrest } from "@/components/TeamCrest";
+import { ClubHonoursSection } from "@/components/ClubHonoursSection";
 import heroStadium from "@/assets/hero-stadium.png";
 import playerPlaceholder from "@/assets/player-placeholder.png";
-import trophiesImg from "@assets/trophies-won_1780384913023.png";
 import sponsor10bet from "@assets/10bet-202425-side-banner_1780384942810.jpg";
 import sponsorAquelle from "@assets/aquelle-viv-sidelogo-2425_1780384942808.jpg";
 import sponsorDurban from "@assets/durban-tourism-sidelogo-2425_1780384942809.jpg";
@@ -1521,57 +1521,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Trophy Cabinet ────────────────────────── */}
-      <section className="bg-card border-y border-white/5 py-5 sm:py-10 overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-4 sm:mb-8">
-            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-0.5 flex items-center justify-center gap-1.5">
-              <span className="w-3 h-px bg-primary inline-block" />
-              A Legacy of Success
-            </p>
-            <h2 className="font-display text-xl sm:text-3xl uppercase text-white" style={{ letterSpacing: "0.08em" }}>
-              Club <span className="text-primary">Honours</span>
-            </h2>
-          </div>
-          <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
-            <motion.div
-              className="trophy-shimmer relative flex-1 flex justify-center"
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <img src={trophiesImg} alt="Trophies" className="max-w-full w-full max-w-2xl object-contain drop-shadow-2xl" />
-            </motion.div>
-
-            <div className="flex-shrink-0 grid grid-cols-2 gap-4 max-w-xs w-full">
-              {[
-                { title: "NSL Championship", years: ["2003/04", "2012/13"] },
-                { title: "Nedbank Cup", years: ["2013"] },
-                { title: "MTN8", years: ["2011"] },
-                { title: "Telkom KO", years: ["2021/22"] },
-              ].map((honor, i) => (
-                <motion.div
-                  key={honor.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.12 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="bg-background border border-white/8 hover:border-primary/30 rounded-xl p-4 text-center transition-all duration-300 cursor-default"
-                >
-                  <Trophy className="h-6 w-6 text-primary mx-auto mb-2" />
-                  <div className="text-xs font-bold text-white/80 mb-1 leading-tight">{honor.title}</div>
-                  {honor.years.map(y => (
-                    <div key={y} className="text-[10px] text-primary font-bold">{y}</div>
-                  ))}
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ── Club Honours ────────────────────────── */}
+      <ClubHonoursSection />
 
       {/* ── Sponsor Carousel ──────────────────────── */}
       <section className="bg-white py-8 sm:py-12 overflow-hidden">
