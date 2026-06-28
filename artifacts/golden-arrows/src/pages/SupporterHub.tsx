@@ -1,11 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useGetNextFixture, useListPlayers } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import {
-  Trophy, Star, CheckCircle, XCircle, Clock, Users,
-  Award, ChevronLeft, X, Gamepad2, Brain, Crosshair,
-  PieChart, Medal, Sparkle, Bolt
+  Trophy, Star, CheckCircle, XCircle, Bolt, ChevronLeft,
+  ChevronRight, Zap, Crown, Target, Flame, Users, Award,
+  Gamepad2, Palette, Music, Shield, BarChart3, Brain,
 } from "lucide-react";
 
 // Feature components
@@ -25,7 +25,6 @@ import FanProfile from "./fan-zone/FanProfile";
 import FanOfTheMonth from "./fan-zone/FanOfTheMonth";
 
 // ─── Quiz questions pool ──────────────────────────────────────────────────────
-
 const QUESTIONS = [
   { q: "What year was Lamontville Golden Arrows FC founded?", options: ["1943", "1953", "1963", "1973"], a: 0 },
   { q: "Which city is Lamontville Golden Arrows based in?", options: ["Johannesburg", "Cape Town", "Durban", "Pretoria"], a: 2 },
@@ -228,7 +227,7 @@ function ScorePredictor() {
           <div className="font-display text-base sm:text-xl text-white mb-3" style={{ letterSpacing: "0.04em" }}>{fixture.homeTeam}</div>
           <div className="flex items-center justify-center gap-2">
             <motion.button onClick={() => setHome(h => Math.max(0, h - 1))} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors">−</motion.button>
-            <motion.span key={home} initial={{ scale: 1.4, color: "hsl(51 100% 50%)" }} animate={{ scale: 1, color: "hsl(51 100% 50%)" }} transition={{ duration: 0.2 }} className="font-display text-4xl text-primary w-12 text-center inline-block">{home}</motion.span>
+            <motion.span key={home} initial={{ scale: 1.4 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }} className="font-display text-4xl text-primary w-12 text-center inline-block">{home}</motion.span>
             <motion.button onClick={() => setHome(h => Math.min(9, h + 1))} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors">+</motion.button>
           </div>
         </div>
@@ -237,7 +236,7 @@ function ScorePredictor() {
           <div className="font-display text-base sm:text-xl text-white mb-3" style={{ letterSpacing: "0.04em" }}>{fixture.awayTeam}</div>
           <div className="flex items-center justify-center gap-2">
             <motion.button onClick={() => setAway(a => Math.max(0, a - 1))} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors">−</motion.button>
-            <motion.span key={away} initial={{ scale: 1.4, color: "hsl(51 100% 50%)" }} animate={{ scale: 1, color: "hsl(51 100% 50%)" }} transition={{ duration: 0.2 }} className="font-display text-4xl text-primary w-12 text-center inline-block">{away}</motion.span>
+            <motion.span key={away} initial={{ scale: 1.4 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }} className="font-display text-4xl text-primary w-12 text-center inline-block">{away}</motion.span>
             <motion.button onClick={() => setAway(a => Math.min(9, a + 1))} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="w-9 h-9 rounded-full bg-white/8 border border-white/15 text-white hover:bg-white/15 font-bold transition-colors">+</motion.button>
           </div>
         </div>
@@ -356,108 +355,734 @@ function Leaderboard() {
 }
 
 // ─── Feature definitions ──────────────────────────────────────────────────────
-
 interface Feature {
   id: string;
   title: string;
-  emoji: string;
+  category: "CREATE" | "PLAY" | "COMPETE" | "COMMUNITY";
   description: string;
-  color: string;
-  tag: string;
+  accentColor: string;
+  btnLabel: string;
+  previewEmoji: string;
   component: React.ComponentType;
 }
 
 const FEATURES: Feature[] = [
-  { id: "kit", title: "Kit Designer", emoji: "🎽", description: "Design your own Golden Arrows jersey with custom colours & patterns", color: "#1B5E20", tag: "CREATE", component: KitDesigner },
-  { id: "boot", title: "Boot Designer", emoji: "👟", description: "Build custom football boots from scratch", color: "#744210", tag: "CREATE", component: BootDesigner },
-  { id: "dream-xi", title: "Dream XI Builder", emoji: "📋", description: "Pick your formation & build the perfect squad on the pitch", color: "#2B6CB0", tag: "BUILD", component: DreamXI },
-  { id: "penalty", title: "Penalty Shootout", emoji: "⚽", description: "5 penalties — pick your spot and beat the keeper!", color: "#553C9A", tag: "GAME", component: PenaltyShootout },
-  { id: "crossbar", title: "Crossbar Challenge", emoji: "🥅", description: "Charge the power meter and try to hit the crossbar", color: "#276749", tag: "GAME", component: CrossbarChallenge },
-  { id: "memory", title: "Memory Game", emoji: "🧠", description: "Flip cards and match jersey pairs before time runs out", color: "#9B2C2C", tag: "GAME", component: MemoryGame },
-  { id: "wordsearch", title: "Word Search", emoji: "🔍", description: "Find football words hidden in the grid — race the clock!", color: "#B7791F", tag: "PUZZLE", component: WordSearch },
-  { id: "guess", title: "Guess The Player", emoji: "👤", description: "Can you identify a blurred Golden Arrows player from hints?", color: "#276749", tag: "QUIZ", component: GuessThePlayer },
-  { id: "wheel", title: "Wheel of Fortune", emoji: "🎡", description: "Spin to win points, wallpapers, club facts & more", color: "#FFD700", tag: "SPIN", component: WheelOfFortune },
-  { id: "badge", title: "Fan Badge Creator", emoji: "🎖️", description: "Design your own supporter shield badge and download it", color: "#702459", tag: "CREATE", component: FanBadgeCreator },
-  { id: "chant", title: "Chant Mixer", emoji: "🎵", description: "Mix crowd chants and drums to create your own match day atmosphere", color: "#234E52", tag: "SOUND", component: ChantMixer },
-  { id: "achievements", title: "Achievements", emoji: "🏆", description: "View your unlocked badges and track your fan journey", color: "#B7791F", tag: "PROFILE", component: Achievements },
-  { id: "profile", title: "Fan Profile", emoji: "👑", description: "Your fan stats, rank, points and overall progress", color: "#1B5E20", tag: "PROFILE", component: FanProfile },
-  { id: "fotm", title: "Fan of the Month", emoji: "🗳️", description: "Nominate & vote for the most dedicated Golden Arrows supporter each month", color: "#B7791F", tag: "VOTE", component: FanOfTheMonth },
+  // CREATE
+  { id: "kit", title: "Kit Designer", category: "CREATE", description: "Design your own Golden Arrows jersey with custom colours & patterns", accentColor: "#1B5E20", btnLabel: "Start Designing", previewEmoji: "🎽", component: KitDesigner },
+  { id: "boot", title: "Boot Designer", category: "CREATE", description: "Build custom football boots from scratch", accentColor: "#B45309", btnLabel: "Start Designing", previewEmoji: "👟", component: BootDesigner },
+  { id: "badge", title: "Badge Creator", category: "CREATE", description: "Design your own supporter shield badge and download it", accentColor: "#7C3AED", btnLabel: "Start Designing", previewEmoji: "🎖️", component: FanBadgeCreator },
+  { id: "chant", title: "Chant Mixer", category: "CREATE", description: "Mix crowd chants and drums to create your own match day atmosphere", accentColor: "#0E7490", btnLabel: "Start Mixing", previewEmoji: "🎵", component: ChantMixer },
+  // PLAY
+  { id: "penalty", title: "Penalty Shootout", category: "PLAY", description: "5 penalties — pick your spot and beat the keeper!", accentColor: "#7C3AED", btnLabel: "Kick Off", previewEmoji: "⚽", component: PenaltyShootout },
+  { id: "crossbar", title: "Crossbar Challenge", category: "PLAY", description: "Charge the power meter and try to hit the crossbar", accentColor: "#064E3B", btnLabel: "Kick Off", previewEmoji: "🥅", component: CrossbarChallenge },
+  { id: "memory", title: "Memory Game", category: "PLAY", description: "Flip cards and match jersey pairs before time runs out", accentColor: "#991B1B", btnLabel: "Play Now", previewEmoji: "🧠", component: MemoryGame },
+  { id: "wordsearch", title: "Word Search", category: "PLAY", description: "Find football words hidden in the grid — race the clock!", accentColor: "#92400E", btnLabel: "Play Now", previewEmoji: "🔍", component: WordSearch },
+  { id: "guess", title: "Guess The Player", category: "PLAY", description: "Can you identify a blurred Golden Arrows player from hints?", accentColor: "#065F46", btnLabel: "Guess Now", previewEmoji: "👤", component: GuessThePlayer },
+  { id: "wheel", title: "Wheel of Fortune", category: "PLAY", description: "Spin to win points, wallpapers, club facts & more", accentColor: "#B45309", btnLabel: "Spin Now", previewEmoji: "🎡", component: WheelOfFortune },
+  // COMPETE
+  { id: "quiz", title: "Daily Quiz", category: "COMPETE", description: "5 questions about Golden Arrows. New questions every day!", accentColor: "#1D4ED8", btnLabel: "Play Now", previewEmoji: "🧩", component: DailyQuiz },
+  { id: "predict", title: "Score Predictions", category: "COMPETE", description: "Predict the next match result and earn 50 bonus points", accentColor: "#0369A1", btnLabel: "Predict Now", previewEmoji: "🎯", component: ScorePredictor },
+  { id: "leaderboard", title: "Leaderboard", category: "COMPETE", description: "See the top Golden Arrows fans ranked by points and streaks", accentColor: "#B45309", btnLabel: "View Rankings", previewEmoji: "🏆", component: Leaderboard },
+  { id: "achievements", title: "Achievements", category: "COMPETE", description: "View your unlocked badges and track your fan journey", accentColor: "#B45309", btnLabel: "View All", previewEmoji: "🎖️", component: Achievements },
+  // COMMUNITY
+  { id: "dream-xi", title: "Dream XI Builder", category: "COMMUNITY", description: "Pick your formation & build the perfect squad on the pitch", accentColor: "#1D4ED8", btnLabel: "Build Team", previewEmoji: "📋", component: DreamXI },
+  { id: "polls", title: "Fan Polls", category: "COMMUNITY", description: "Have your say — vote in the latest fan polls", accentColor: "#065F46", btnLabel: "Vote Now", previewEmoji: "📊", component: FanPolls },
+  { id: "fotm", title: "Fan of the Month", category: "COMMUNITY", description: "Nominate & vote for the most dedicated Golden Arrows supporter", accentColor: "#92400E", btnLabel: "Nominate", previewEmoji: "🗳️", component: FanOfTheMonth },
+  { id: "profile", title: "Fan Profile", category: "COMMUNITY", description: "Your fan stats, rank, points and overall progress", accentColor: "#1B5E20", btnLabel: "View Profile", previewEmoji: "👑", component: FanProfile },
 ];
 
-// ─── Hub Tabs ─────────────────────────────────────────────────────────────────
-const HUB_TABS = [
-  { id: "activities", label: "Activities", icon: Gamepad2, color: "text-purple-400" },
-  { id: "quiz", label: "Daily Quiz", icon: Brain, color: "text-yellow-400" },
-  { id: "predict", label: "Predict", icon: Crosshair, color: "text-blue-400" },
-  { id: "polls", label: "Fan Polls", icon: PieChart, color: "text-green-400" },
-  { id: "leaderboard", label: "Leaderboard", icon: Medal, color: "text-primary" },
+const CATEGORIES = [
+  { id: "CREATE" as const, label: "Create", icon: Palette, color: "#1B5E20", gradient: "from-green-900/40 to-green-950/10", accent: "text-green-400", border: "border-green-500/20" },
+  { id: "PLAY" as const, label: "Play", icon: Gamepad2, color: "#7C3AED", gradient: "from-purple-900/40 to-purple-950/10", accent: "text-purple-400", border: "border-purple-500/20" },
+  { id: "COMPETE" as const, label: "Compete", icon: Trophy, color: "#B45309", gradient: "from-amber-900/40 to-amber-950/10", accent: "text-amber-400", border: "border-amber-500/20" },
+  { id: "COMMUNITY" as const, label: "Community", icon: Users, color: "#0E7490", gradient: "from-cyan-900/40 to-cyan-950/10", accent: "text-cyan-400", border: "border-cyan-500/20" },
 ];
 
-const TAG_COLORS: Record<string, string> = {
-  CREATE: "bg-green-500/15 text-green-400 border-green-500/25",
-  BUILD: "bg-blue-500/15 text-blue-400 border-blue-500/25",
-  GAME: "bg-purple-500/15 text-purple-400 border-purple-500/25",
-  PUZZLE: "bg-yellow-500/15 text-yellow-400 border-yellow-500/25",
-  QUIZ: "bg-orange-500/15 text-orange-400 border-orange-500/25",
-  SPIN: "bg-primary/15 text-primary border-primary/25",
-  SOUND: "bg-teal-500/15 text-teal-400 border-teal-500/25",
-  PROFILE: "bg-pink-500/15 text-pink-400 border-pink-500/25",
-  VOTE: "bg-amber-500/15 text-amber-400 border-amber-500/25",
-};
+const CAROUSEL_IDS = ["kit", "penalty", "dream-xi", "boot", "wheel", "guess"];
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
-export default function SupporterHub() {
-  const [activeFeature, setActiveFeature] = useState<Feature | null>(null);
-  const [hubTab, setHubTab] = useState("activities");
-  const today = format(new Date(), "EEEE, MMMM d");
+// ─── Animated Card Previews ───────────────────────────────────────────────────
+function CardPreview({ id, accentColor }: { id: string; accentColor: string }) {
+  switch (id) {
+    case "kit":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center">
+          <motion.div
+            animate={{ rotateY: [0, 20, 0, -20, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="relative"
+          >
+            <div className="text-5xl">🎽</div>
+            <motion.div
+              className="absolute inset-0 rounded-full opacity-30"
+              animate={{ scale: [1, 1.4, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              style={{ background: `radial-gradient(circle, ${accentColor}, transparent)` }}
+            />
+          </motion.div>
+        </div>
+      );
+    case "boot":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center">
+          <motion.div
+            animate={{ rotate: [0, 15, 0, -15, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="text-5xl">👟</div>
+          </motion.div>
+          <motion.div
+            className="absolute bottom-2 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full"
+            style={{ background: accentColor }}
+            animate={{ scaleX: [1, 1.3, 1], opacity: [0.4, 0.7, 0.4] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+        </div>
+      );
+    case "penalty":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+          <div className="absolute bottom-3 w-14 h-8 border-2 rounded-t-sm opacity-40" style={{ borderColor: accentColor }} />
+          <motion.div
+            animate={{ x: [-8, 8, -8], y: [0, -3, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-5 text-2xl"
+          >⚽</motion.div>
+          <motion.div
+            animate={{ x: [0, -10, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            className="absolute bottom-4 text-3xl"
+          >🧤</motion.div>
+        </div>
+      );
+    case "crossbar":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+          <div className="absolute top-4 w-14 h-1 rounded opacity-50" style={{ background: accentColor }} />
+          <div className="absolute top-4 w-0.5 h-8 left-6 opacity-30" style={{ background: accentColor }} />
+          <div className="absolute top-4 w-0.5 h-8 right-6 opacity-30" style={{ background: accentColor }} />
+          <motion.div
+            animate={{ y: [-20, 0, -20], rotate: [0, 360, 720] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="text-2xl mt-4"
+          >⚽</motion.div>
+        </div>
+      );
+    case "memory":
+      return (
+        <div className="grid grid-cols-3 gap-1 p-2 w-full h-full">
+          {[0,1,2,3,4,5].map(i => (
+            <motion.div
+              key={i}
+              className="rounded aspect-square border flex items-center justify-center text-sm"
+              style={{ borderColor: `${accentColor}60`, background: `${accentColor}15` }}
+              animate={{ rotateY: [0, 180, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.25, ease: "easeInOut" }}
+            >
+              {i % 2 === 0 ? "🎽" : ""}
+            </motion.div>
+          ))}
+        </div>
+      );
+    case "wordsearch":
+      return (
+        <div className="grid grid-cols-5 gap-px p-2 w-full h-full text-[9px] font-mono font-bold">
+          {"GOALARROWSGOALKICK".split("").slice(0, 20).map((c, i) => (
+            <motion.div
+              key={i}
+              className="flex items-center justify-center rounded"
+              animate={{ backgroundColor: [
+                `${accentColor}00`,
+                i % 3 === 0 ? `${accentColor}50` : `${accentColor}00`,
+                `${accentColor}00`
+              ]}}
+              transition={{ duration: 2, repeat: Infinity, delay: i * 0.1 }}
+              style={{ color: i % 3 === 0 ? "#FFD700" : "rgba(255,255,255,0.4)" }}
+            >{c}</motion.div>
+          ))}
+        </div>
+      );
+    case "guess":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center">
+          <motion.div
+            animate={{ filter: ["blur(8px)", "blur(4px)", "blur(8px)"] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="text-5xl"
+          >👤</motion.div>
+          <motion.div
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[9px] font-bold uppercase tracking-widest"
+            style={{ color: accentColor }}
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >Who am I?</motion.div>
+        </div>
+      );
+    case "wheel":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            className="relative w-14 h-14"
+          >
+            {[0,1,2,3,4,5].map(i => (
+              <div key={i}
+                className="absolute inset-0 border-2 rounded-full opacity-60"
+                style={{
+                  borderColor: i % 2 === 0 ? "#FFD700" : accentColor,
+                  transform: `scale(${1 - i * 0.12})`,
+                  opacity: 1 - i * 0.12,
+                }}
+              />
+            ))}
+            <div className="absolute inset-0 flex items-center justify-center text-xl">🎡</div>
+          </motion.div>
+        </div>
+      );
+    case "badge":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center">
+          <motion.div
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <div className="text-5xl">🛡️</div>
+          </motion.div>
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            animate={{ opacity: [0, 0.3, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            style={{ background: `radial-gradient(circle, ${accentColor}, transparent 70%)` }}
+          />
+        </div>
+      );
+    case "quiz":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center">
+          <motion.div
+            animate={{ scale: [1, 1.15, 1], rotate: [0, -5, 5, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity }}
+            className="text-5xl"
+          >🧩</motion.div>
+          <motion.div
+            className="absolute top-3 right-3 w-3 h-3 rounded-full"
+            animate={{ scale: [0, 1, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
+            style={{ background: "#FFD700" }}
+          />
+        </div>
+      );
+    case "predict":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center gap-2">
+          <motion.div className="font-display text-2xl text-white" animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }}>2</motion.div>
+          <div className="text-white/40 font-bold">–</div>
+          <motion.div className="font-display text-2xl" style={{ color: accentColor }} animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}>1</motion.div>
+        </div>
+      );
+    case "dream-xi":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center p-2">
+          <div className="w-full h-full rounded border opacity-30" style={{ borderColor: accentColor, background: `${accentColor}10` }}>
+            {[[1],[3],[3],[3],[1]].map((row, ri) => (
+              <div key={ri} className="flex justify-around items-center" style={{ height: "20%" }}>
+                {row.map((_, ci) => (
+                  <motion.div key={ci}
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: ri === 0 ? "#FFD700" : accentColor }}
+                    animate={{ scale: [1, 1.5, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity, delay: ri * 0.2 + ci * 0.1 }}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    case "polls":
+      return (
+        <div className="p-2 space-y-1.5 w-full">
+          {[70, 45, 25].map((pct, i) => (
+            <div key={i} className="space-y-0.5">
+              <div className="h-2.5 rounded-full overflow-hidden" style={{ background: `${accentColor}20` }}>
+                <motion.div className="h-full rounded-full" style={{ background: accentColor }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${pct}%` }}
+                  transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse", delay: i * 0.3 }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    case "leaderboard":
+      return (
+        <div className="p-2 space-y-1 w-full">
+          {["💎 2840", "🥇 2610", "🥈 2445"].map((entry, i) => (
+            <motion.div key={i}
+              className="flex items-center gap-1.5 text-[10px] font-bold px-2 py-1 rounded"
+              style={{ background: i === 0 ? `${accentColor}30` : `${accentColor}10`, color: i === 0 ? "#FFD700" : "rgba(255,255,255,0.5)" }}
+              animate={{ x: [0, i === 0 ? 3 : 0, 0] }}
+              transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+            >
+              <span>{i + 1}.</span><span className="flex-1">{entry.split(" ")[0]}</span><span>{entry.split(" ")[1]}</span>
+            </motion.div>
+          ))}
+        </div>
+      );
+    case "achievements":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center gap-1 flex-wrap p-2">
+          {["🏆","⭐","🎯","🎖️","🔥"].map((em, i) => (
+            <motion.div key={i} className="text-xl"
+              animate={{ scale: [0.9, 1.1, 0.9], rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+            >{em}</motion.div>
+          ))}
+        </div>
+      );
+    case "fotm":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center">
+          <motion.div animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+            <div className="text-5xl">👑</div>
+          </motion.div>
+          <motion.div className="absolute text-xl" style={{ top: "15%", right: "20%" }}
+            animate={{ opacity: [0, 1, 0], scale: [0.5, 1, 0.5] }}
+            transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}>⭐</motion.div>
+          <motion.div className="absolute text-xl" style={{ top: "20%", left: "18%" }}
+            animate={{ opacity: [0, 1, 0], scale: [0.5, 1, 0.5] }}
+            transition={{ duration: 1.5, repeat: Infinity, delay: 1 }}>⭐</motion.div>
+        </div>
+      );
+    case "profile":
+      return (
+        <div className="relative w-full h-full flex flex-col items-center justify-center gap-1">
+          <motion.div className="text-3xl" animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>👑</motion.div>
+          <div className="w-3/4 h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
+            <motion.div className="h-full rounded-full" style={{ background: "#FFD700" }}
+              animate={{ width: ["40%", "75%", "40%"] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            />
+          </div>
+          <div className="text-[9px] font-bold" style={{ color: "#FFD700" }}>SUPPORTER LVL 7</div>
+        </div>
+      );
+    case "chant":
+      return (
+        <div className="relative w-full h-full flex items-center justify-center gap-1">
+          {[1, 0.6, 1, 0.7, 0.9, 0.5, 1].map((h, i) => (
+            <motion.div key={i}
+              className="w-1.5 rounded-full"
+              style={{ background: accentColor, height: "40px", transformOrigin: "bottom" }}
+              animate={{ scaleY: [h * 0.3, h, h * 0.3] }}
+              transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.1 }}
+            />
+          ))}
+        </div>
+      );
+    default:
+      return <div className="text-4xl flex items-center justify-center w-full h-full">⚽</div>;
+  }
+}
+
+// ─── Particle Background ──────────────────────────────────────────────────────
+function StadiumBackground() {
+  const particles = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 3 + 1,
+    duration: Math.random() * 8 + 6,
+    delay: Math.random() * 4,
+  }));
+
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+      {/* Base dark gradient */}
+      <div className="absolute inset-0" style={{
+        background: "radial-gradient(ellipse at 20% 50%, hsl(125 55% 8%) 0%, hsl(140 10% 3%) 60%)"
+      }} />
+      {/* Stadium light beams */}
+      <motion.div className="absolute top-0 left-1/4 w-96 h-[600px] opacity-[0.04]"
+        style={{ background: "linear-gradient(180deg, #FFD700 0%, transparent 100%)", transformOrigin: "top center" }}
+        animate={{ rotate: [-8, 8, -8] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div className="absolute top-0 right-1/4 w-96 h-[600px] opacity-[0.03]"
+        style={{ background: "linear-gradient(180deg, #FFD700 0%, transparent 100%)", transformOrigin: "top center" }}
+        animate={{ rotate: [6, -6, 6] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+      />
+      {/* Pitch texture overlay */}
+      <div className="absolute inset-0 opacity-[0.02]"
+        style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,1) 40px, rgba(255,255,255,1) 41px)", backgroundSize: "100% 82px" }}
+      />
+      {/* Floating particles */}
+      {particles.map(p => (
+        <motion.div key={p.id}
+          className="absolute rounded-full"
+          style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, background: p.id % 3 === 0 ? "#FFD700" : "#1B5E20", opacity: 0.4 }}
+          animate={{ y: [-20, 20, -20], x: [-10, 10, -10], opacity: [0.1, 0.4, 0.1] }}
+          transition={{ duration: p.duration, repeat: Infinity, delay: p.delay, ease: "easeInOut" }}
+        />
+      ))}
+      {/* Ambient green glow */}
+      <div className="absolute bottom-0 left-0 right-0 h-64 opacity-10"
+        style={{ background: "linear-gradient(0deg, hsl(125 55% 24%) 0%, transparent 100%)" }}
+      />
+    </div>
+  );
+}
+
+// ─── Hero Section ─────────────────────────────────────────────────────────────
+function HeroSection({ onOpen }: { onOpen: (f: Feature) => void }) {
   const myPoints = parseInt(typeof window !== "undefined" ? localStorage.getItem("supporter-points") || "0" : "0");
-
   const achievementCount = (() => {
     try { return Object.values(JSON.parse(localStorage.getItem("achievements") || "{}")).filter(Boolean).length; } catch { return 0; }
   })();
+  const today = format(new Date(), "EEEE, MMMM d");
+  const quizDone = !!localStorage.getItem(`quiz-${Math.floor(Date.now() / 86400000)}`);
+  const level = Math.max(1, Math.floor(myPoints / 500) + 1);
+  const xpInLevel = myPoints % 500;
+  const xpPct = (xpInLevel / 500) * 100;
+  const coins = Math.floor(myPoints / 10);
 
   return (
-    <div className="min-h-screen">
+    <div className="relative overflow-hidden border-b border-white/5">
+      {/* Background */}
+      <div className="absolute inset-0"
+        style={{ background: "linear-gradient(135deg, hsl(125 55% 8%) 0%, hsl(140 12% 6%) 50%, hsl(51 60% 8%) 100%)" }}
+      />
+      {/* Animated top border */}
+      <motion.div className="absolute top-0 left-0 right-0 h-0.5"
+        style={{ background: "linear-gradient(90deg, transparent, #FFD700, #1B5E20, #FFD700, transparent)" }}
+        animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
+        transition={{ duration: 4, repeat: Infinity }}
+      />
 
-      {/* ── Hero ───────────────────────────────────────────── */}
-      <div className="relative overflow-hidden border-b border-white/8 py-6 sm:py-8"
-        style={{ background: "linear-gradient(135deg, hsl(139 55% 12%) 0%, hsl(139 55% 18%) 60%, hsl(51 80% 14%) 100%)" }}>
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)", backgroundSize: "8px 8px" }} />
-        <motion.div className="absolute top-4 right-20 text-6xl opacity-[0.05] select-none pointer-events-none" animate={{ y: [0, -10, 0], rotate: [0, 20, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}>⚽</motion.div>
-        <motion.div className="absolute bottom-3 left-28 text-4xl opacity-[0.05] select-none pointer-events-none" animate={{ y: [0, 8, 0], rotate: [0, -15, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}>⚽</motion.div>
+      <div className="relative max-w-[1330px] mx-auto px-4 py-10 sm:py-14">
+        <div className="grid lg:grid-cols-3 gap-6 items-center">
+          {/* Left: Welcome */}
+          <div className="lg:col-span-2">
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-3 flex items-center gap-2">
+                <motion.span className="w-6 h-px bg-primary inline-block" animate={{ scaleX: [1, 1.5, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+                {today}
+                <motion.span className="w-6 h-px bg-primary inline-block" animate={{ scaleX: [1, 1.5, 1] }} transition={{ duration: 2, repeat: Infinity, delay: 0.5 }} />
+              </p>
 
-        <div className="max-w-[1330px] mx-auto px-4 relative">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="text-center">
-            <p className="text-primary font-bold uppercase tracking-[0.3em] text-[9px] mb-2 flex items-center justify-center gap-2">
-              <span className="w-4 h-px bg-primary opacity-80 inline-block" />{today}<span className="w-4 h-px bg-primary opacity-80 inline-block" />
-            </p>
-            <h1 className="font-display text-4xl sm:text-5xl uppercase font-black mb-2" style={{ letterSpacing: "0.06em" }}>
-              Fan <span className="text-primary">Zone</span>
-            </h1>
-            <p className="text-white/50 text-sm max-w-lg mx-auto">
-              Design kits, play games, predict results, earn achievements & more.
-            </p>
+              <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl uppercase font-black mb-2 leading-none" style={{ letterSpacing: "0.04em" }}>
+                Welcome to
+                <br />
+                <span className="text-primary">Fan Zone</span>
+              </h1>
 
-            <div className="flex items-center justify-center gap-3 mt-4">
-              {myPoints > 0 && (
-                <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
-                  className="inline-flex items-center gap-1.5 bg-primary/15 border border-primary/25 rounded-full px-4 py-1.5 text-primary text-xs font-bold">
-                  <Star className="h-3 w-3" />{myPoints.toLocaleString()} pts
+              <p className="text-white/40 text-sm mb-6 max-w-md">
+                Design. Play. Compete. Connect with the Abafana Bes'thende community.
+              </p>
+
+              {/* Stats row */}
+              <div className="flex flex-wrap gap-3 mb-6">
+                <motion.div whileHover={{ scale: 1.05, y: -2 }}
+                  className="flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl px-4 py-2.5">
+                  <Zap className="h-4 w-4 text-primary" />
+                  <div>
+                    <div className="font-display text-lg text-primary leading-none">{myPoints.toLocaleString()}</div>
+                    <div className="text-[9px] text-white/40 uppercase tracking-wider">Points</div>
+                  </div>
                 </motion.div>
-              )}
-              {achievementCount > 0 && (
-                <motion.button initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.4, type: "spring", stiffness: 300 }}
-                  onClick={() => { setActiveFeature(FEATURES.find(f => f.id === "achievements") || null); }}
-                  className="inline-flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/25 rounded-full px-4 py-1.5 text-yellow-400 text-xs font-bold hover:bg-yellow-500/15 transition-colors">
-                  <Trophy className="h-3 w-3" />{achievementCount} achievements
-                </motion.button>
-              )}
+                <motion.div whileHover={{ scale: 1.05, y: -2 }}
+                  className="flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl px-4 py-2.5">
+                  <Crown className="h-4 w-4 text-amber-400" />
+                  <div>
+                    <div className="font-display text-lg text-white leading-none">Lv {level}</div>
+                    <div className="text-[9px] text-white/40 uppercase tracking-wider">Supporter</div>
+                  </div>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05, y: -2 }}
+                  className="flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl px-4 py-2.5">
+                  <Star className="h-4 w-4 text-yellow-500" />
+                  <div>
+                    <div className="font-display text-lg text-white leading-none">{coins.toLocaleString()}</div>
+                    <div className="text-[9px] text-white/40 uppercase tracking-wider">Coins</div>
+                  </div>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05, y: -2 }}
+                  className="flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl px-4 py-2.5">
+                  <Trophy className="h-4 w-4 text-amber-400" />
+                  <div>
+                    <div className="font-display text-lg text-white leading-none">{achievementCount}</div>
+                    <div className="text-[9px] text-white/40 uppercase tracking-wider">Achievements</div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* XP Bar */}
+              <div className="max-w-md">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider">XP Progress — Level {level}</span>
+                  <span className="text-[10px] font-bold text-primary">{xpInLevel} / 500 XP</span>
+                </div>
+                <div className="h-2.5 bg-white/8 rounded-full overflow-hidden relative">
+                  <motion.div className="h-full rounded-full relative overflow-hidden"
+                    style={{ background: "linear-gradient(90deg, #1B5E20, #FFD700)" }}
+                    initial={{ width: 0 }} animate={{ width: `${xpPct}%` }} transition={{ duration: 1.2, ease: "easeOut" }}>
+                    <motion.div className="absolute inset-0 opacity-50"
+                      style={{ background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)", backgroundSize: "200% 100%" }}
+                      animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    />
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right: Daily Challenge */}
+          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
+            className="relative rounded-2xl overflow-hidden border border-white/10 backdrop-blur-sm p-5"
+            style={{ background: "linear-gradient(135deg, rgba(27,94,32,0.3) 0%, rgba(0,0,0,0.4) 100%)" }}>
+            {/* Glow */}
+            <motion.div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-20"
+              style={{ background: "#FFD700" }} animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 3, repeat: Infinity }}
+            />
+            <div className="relative">
+              <div className="flex items-center gap-2 mb-3">
+                <motion.div animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+                  <Flame className="h-5 w-5 text-orange-400" />
+                </motion.div>
+                <span className="text-orange-400 font-bold text-xs uppercase tracking-widest">Daily Challenge</span>
+                <motion.div className="ml-auto w-2 h-2 rounded-full bg-green-400"
+                  animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }} transition={{ duration: 1.5, repeat: Infinity }}
+                />
+              </div>
+
+              <div className="space-y-2.5 mb-4">
+                {[
+                  { label: "Daily Quiz", done: quizDone, pts: "+100 XP" },
+                  { label: "Score Prediction", done: false, pts: "+50 XP" },
+                  { label: "Vote in a Poll", done: false, pts: "+10 XP" },
+                ].map((task, i) => (
+                  <div key={i} className="flex items-center gap-2.5">
+                    <motion.div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${task.done ? "bg-green-500 border-green-500" : "border-white/20"}`}
+                      animate={task.done ? {} : { borderColor: ["rgba(255,255,255,0.2)", "rgba(255,215,0,0.4)", "rgba(255,255,255,0.2)"] }}
+                      transition={{ duration: 2, repeat: Infinity }}>
+                      {task.done && <CheckCircle className="h-3 w-3 text-white" />}
+                    </motion.div>
+                    <span className={`text-sm flex-1 ${task.done ? "line-through text-white/30" : "text-white/70"}`}>{task.label}</span>
+                    <span className="text-[10px] font-bold text-primary">{task.pts}</span>
+                  </div>
+                ))}
+              </div>
+
+              <motion.button
+                onClick={() => { const f = FEATURES.find(f => f.id === "quiz"); if (f) onOpen(f); }}
+                whileHover={{ scale: 1.03, boxShadow: "0 0 20px rgba(255,215,0,0.3)" }}
+                whileTap={{ scale: 0.97 }}
+                className="w-full py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider text-black relative overflow-hidden"
+                style={{ background: "linear-gradient(90deg, #FFD700, #B8860B)" }}>
+                <motion.div className="absolute inset-0"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)" }}
+                  animate={{ x: ["-100%", "200%"] }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                />
+                <span className="relative">Continue Playing →</span>
+              </motion.button>
             </div>
           </motion.div>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* ── Feature overlay (fullscreen) ─────────────────────────────────── */}
+// ─── Featured Carousel ────────────────────────────────────────────────────────
+function FeaturedCarousel({ onOpen }: { onOpen: (f: Feature) => void }) {
+  const [active, setActive] = useState(0);
+  const featured = CAROUSEL_IDS.map(id => FEATURES.find(f => f.id === id)!).filter(Boolean);
+
+  useEffect(() => {
+    const t = setInterval(() => setActive(a => (a + 1) % featured.length), 6000);
+    return () => clearInterval(t);
+  }, [featured.length]);
+
+  return (
+    <div className="relative py-8 border-b border-white/5">
+      <div className="max-w-[1330px] mx-auto px-4">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="font-display text-2xl uppercase font-black text-white" style={{ letterSpacing: "0.06em" }}>
+              Featured <span className="text-primary">Activities</span>
+            </h2>
+            <p className="text-white/30 text-xs mt-0.5 uppercase tracking-widest">Today's top picks</p>
+          </div>
+          <div className="flex gap-1.5">
+            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+              onClick={() => setActive(a => (a - 1 + featured.length) % featured.length)}
+              className="w-8 h-8 rounded-full border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-colors">
+              <ChevronLeft className="h-4 w-4" />
+            </motion.button>
+            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+              onClick={() => setActive(a => (a + 1) % featured.length)}
+              className="w-8 h-8 rounded-full border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 transition-colors">
+              <ChevronRight className="h-4 w-4" />
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Carousel track */}
+        <div className="relative overflow-hidden rounded-2xl">
+          <AnimatePresence mode="wait">
+            <motion.div key={active}
+              initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -60 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="relative h-52 sm:h-64 rounded-2xl overflow-hidden border border-white/10 cursor-pointer"
+              style={{ background: `linear-gradient(135deg, ${featured[active].accentColor}40 0%, ${featured[active].accentColor}15 50%, transparent 100%)` }}
+              onClick={() => onOpen(featured[active])}
+              whileHover={{ scale: 1.01 }}>
+              {/* BG glow */}
+              <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full opacity-15 blur-2xl"
+                style={{ background: featured[active].accentColor }} />
+              <motion.div className="absolute top-0 left-0 right-0 h-0.5"
+                style={{ background: `linear-gradient(90deg, transparent, ${featured[active].accentColor}, transparent)` }}
+              />
+
+              <div className="absolute inset-0 flex items-center">
+                {/* Text */}
+                <div className="flex-1 p-8">
+                  <div className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 rounded-full px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white/60 mb-4">
+                    <Zap className="h-2.5 w-2.5 text-primary" />Featured
+                  </div>
+                  <h3 className="font-display text-3xl sm:text-4xl uppercase font-black text-white mb-2" style={{ letterSpacing: "0.04em" }}>
+                    {featured[active].title}
+                  </h3>
+                  <p className="text-white/50 text-sm mb-5 max-w-xs">{featured[active].description}</p>
+                  <motion.div
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider text-black relative overflow-hidden"
+                    style={{ background: "linear-gradient(90deg, #FFD700, #B8860B)" }}
+                    whileHover={{ scale: 1.05, boxShadow: "0 0 24px rgba(255,215,0,0.4)" }}
+                    whileTap={{ scale: 0.97 }}>
+                    <motion.div className="absolute inset-0"
+                      style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)" }}
+                      animate={{ x: ["-100%", "200%"] }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    />
+                    <span className="relative">{featured[active].btnLabel}</span>
+                  </motion.div>
+                </div>
+                {/* Preview */}
+                <div className="w-36 h-36 sm:w-48 sm:h-48 flex-shrink-0 mr-6">
+                  <CardPreview id={featured[active].id} accentColor={featured[active].accentColor} />
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Dots */}
+        <div className="flex justify-center gap-1.5 mt-4">
+          {featured.map((_, i) => (
+            <motion.button key={i} onClick={() => setActive(i)}
+              className="h-1.5 rounded-full transition-all duration-300"
+              style={{ width: i === active ? 24 : 6, background: i === active ? "#FFD700" : "rgba(255,255,255,0.2)" }}
+              whileHover={{ scale: 1.2 }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Activity Card ────────────────────────────────────────────────────────────
+function ActivityCard({ feature, onOpen, delay = 0 }: { feature: Feature; onOpen: () => void; delay?: number }) {
+  return (
+    <motion.button
+      onClick={onOpen}
+      initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+      transition={{ delay, type: "spring", stiffness: 200, damping: 22 }}
+      whileHover={{ y: -6, scale: 1.02, boxShadow: `0 20px 50px ${feature.accentColor}50` }}
+      whileTap={{ scale: 0.97 }}
+      className="relative text-left rounded-2xl overflow-hidden border transition-all duration-300 group flex flex-col"
+      style={{
+        background: `linear-gradient(135deg, ${feature.accentColor}28 0%, ${feature.accentColor}10 60%, ${feature.accentColor}05 100%)`,
+        borderColor: `${feature.accentColor}45`,
+      }}>
+      {/* Top accent bar */}
+      <div className="h-0.5 w-full" style={{ background: `linear-gradient(90deg, ${feature.accentColor}, transparent)` }} />
+
+      {/* Animated preview */}
+      <div className="relative h-28 overflow-hidden">
+        <div className="absolute inset-0 opacity-20"
+          style={{ background: `radial-gradient(ellipse at center, ${feature.accentColor} 0%, transparent 70%)` }}
+        />
+        <CardPreview id={feature.id} accentColor={feature.accentColor} />
+        {/* Glow blob */}
+        <motion.div className="absolute -top-6 -right-6 w-16 h-16 rounded-full opacity-25 blur-xl pointer-events-none"
+          style={{ background: feature.accentColor }}
+          animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 3, repeat: Infinity }}
+        />
+      </div>
+
+      {/* Content */}
+      <div className="p-3.5 flex-1 flex flex-col">
+        <h3 className="font-display text-sm uppercase font-black text-white mb-1" style={{ letterSpacing: "0.04em" }}>
+          {feature.title}
+        </h3>
+        <p className="text-white/40 text-[11px] leading-relaxed flex-1">{feature.description}</p>
+        <motion.div
+          className="mt-3 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider relative overflow-hidden rounded-lg px-3 py-2"
+          style={{ background: `${feature.accentColor}30`, color: "#FFD700" }}
+          whileHover={{ background: `${feature.accentColor}50` }}>
+          <motion.div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)" }}
+            animate={{ x: ["-100%", "200%"] }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+          />
+          <span className="relative">{feature.btnLabel} →</span>
+        </motion.div>
+      </div>
+    </motion.button>
+  );
+}
+
+// ─── Category Section ─────────────────────────────────────────────────────────
+function CategorySection({ cat, features, onOpen }: {
+  cat: typeof CATEGORIES[number];
+  features: Feature[];
+  onOpen: (f: Feature) => void;
+}) {
+  const Icon = cat.icon;
+  return (
+    <div className="mb-12">
+      <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+        className="flex items-center gap-3 mb-5">
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center border"
+          style={{ background: `${cat.color}20`, borderColor: `${cat.color}40` }}>
+          <Icon className={`h-4.5 w-4.5 ${cat.accent}`} />
+        </div>
+        <div>
+          <h2 className="font-display text-xl uppercase font-black text-white" style={{ letterSpacing: "0.06em" }}>
+            {cat.label}
+          </h2>
+        </div>
+        <div className="flex-1 h-px ml-2" style={{ background: `linear-gradient(90deg, ${cat.color}40, transparent)` }} />
+      </motion.div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        {features.map((f, i) => (
+          <ActivityCard key={f.id} feature={f} onOpen={() => onOpen(f)} delay={i * 0.06} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Page ────────────────────────────────────────────────────────────────
+export default function SupporterHub() {
+  const [activeFeature, setActiveFeature] = useState<Feature | null>(null);
+
+  return (
+    <div className="relative min-h-screen">
+      <StadiumBackground />
+
+      {/* Feature overlay (fullscreen) */}
       <AnimatePresence>
         {activeFeature && (
           <motion.div
@@ -467,24 +1092,31 @@ export default function SupporterHub() {
             exit={{ opacity: 0, y: 24 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
             className="fixed inset-0 z-50 flex flex-col"
-            style={{ background: "hsl(140 10% 4%)" }}
-          >
+            style={{ background: "hsl(140 10% 4%)" }}>
             {/* Feature header */}
             <div className="flex-shrink-0 border-b border-white/8 px-4 py-3 flex items-center gap-3"
-              style={{ background: `${activeFeature.color}15` }}>
+              style={{ background: `${activeFeature.accentColor}18` }}>
               <motion.button
                 onClick={() => setActiveFeature(null)}
                 whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 text-white/50 hover:text-white text-sm transition-colors border border-white/10 rounded-xl px-3 py-2"
-              >
-                <ChevronLeft className="h-4 w-4" /> Back
+                className="flex items-center gap-1.5 text-white/50 hover:text-white text-sm transition-colors border border-white/10 rounded-xl px-3 py-2">
+                <ChevronLeft className="h-4 w-4" /> Back to Fan Zone
               </motion.button>
               <div className="flex items-center gap-2 flex-1 min-w-0">
-                <span className="text-2xl">{activeFeature.emoji}</span>
+                <span className="text-2xl">{activeFeature.previewEmoji}</span>
                 <h2 className="font-display text-lg text-white uppercase" style={{ letterSpacing: "0.04em" }}>{activeFeature.title}</h2>
               </div>
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${TAG_COLORS[activeFeature.tag]}`}>{activeFeature.tag}</span>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border"
+                style={{ background: `${activeFeature.accentColor}20`, color: "#FFD700", borderColor: `${activeFeature.accentColor}40` }}>
+                {activeFeature.category}
+              </span>
             </div>
+            {/* Animated top accent */}
+            <motion.div className="h-0.5 flex-shrink-0"
+              style={{ background: `linear-gradient(90deg, ${activeFeature.accentColor}, #FFD700, ${activeFeature.accentColor})` }}
+              animate={{ backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            />
             {/* Feature content */}
             <div className="flex-1 overflow-y-auto">
               <div className="max-w-2xl mx-auto px-4 py-6">
@@ -497,180 +1129,20 @@ export default function SupporterHub() {
         )}
       </AnimatePresence>
 
-      {/* ── Unified tab bar (sticky) ─────────────────────────── */}
-      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md border-b border-white/8 py-3">
-        <div className="max-w-[1330px] mx-auto px-4 flex justify-center">
-          <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-2xl p-1 overflow-x-auto scrollbar-none">
-            {HUB_TABS.map((t, idx) => (
-              <motion.button key={t.id} onClick={() => setHubTab(t.id)}
-                initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`relative flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-200 flex-shrink-0 ${
-                  hubTab === t.id
-                    ? "bg-primary text-black shadow-lg"
-                    : "text-white/50 hover:text-white hover:bg-white/8"
-                }`}>
-                <t.icon className={`h-3.5 w-3.5 flex-shrink-0 ${hubTab === t.id ? "text-black" : t.color}`} />
-                {t.label}
-              </motion.button>
-            ))}
-          </div>
+      {/* Page content */}
+      <div className="relative" style={{ zIndex: 1 }}>
+        <HeroSection onOpen={setActiveFeature} />
+        <FeaturedCarousel onOpen={setActiveFeature} />
+
+        <div className="max-w-[1330px] mx-auto px-4 py-10">
+          {CATEGORIES.map(cat => {
+            const catFeatures = FEATURES.filter(f => f.category === cat.id);
+            return (
+              <CategorySection key={cat.id} cat={cat} features={catFeatures} onOpen={setActiveFeature} />
+            );
+          })}
         </div>
       </div>
-
-      {/* ── Tab content ─────────────────────────────────────── */}
-      <AnimatePresence mode="wait">
-        <motion.div key={hubTab} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2, ease: "easeOut" }}>
-
-          {/* ACTIVITIES */}
-          {hubTab === "activities" && (
-            <div className="max-w-[1330px] mx-auto px-4 py-7">
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <h2 className="font-display text-2xl text-white uppercase flex items-center gap-2" style={{ letterSpacing: "0.04em" }}>
-                    <Sparkle className="h-5 w-5 text-primary" />
-                    Interactive <span className="text-primary ml-1">Activities</span>
-                  </h2>
-                  <p className="text-white/40 text-sm mt-0.5">{FEATURES.length} experiences — tap any card to open</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                {FEATURES.map((feature, i) => (
-                  <motion.button
-                    key={feature.id}
-                    onClick={() => setActiveFeature(feature)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.04, type: "spring", stiffness: 220, damping: 22 }}
-                    whileHover={{ y: -4, scale: 1.02, boxShadow: `0 16px 40px ${feature.color}55` }}
-                    whileTap={{ scale: 0.96 }}
-                    className="relative text-left p-4 rounded-2xl overflow-hidden transition-all group"
-                    style={{
-                      background: `linear-gradient(135deg, ${feature.color}30 0%, ${feature.color}18 60%, ${feature.color}08 100%)`,
-                      border: `1.5px solid ${feature.color}50`,
-                    }}
-                  >
-                    {/* Glow blob */}
-                    <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full opacity-20 blur-xl pointer-events-none" style={{ background: feature.color }} />
-
-                    {/* Top colour bar */}
-                    <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" style={{ background: `linear-gradient(90deg, ${feature.color}, ${feature.color}80)` }} />
-
-                    <div className="flex items-start justify-between mb-3 mt-1">
-                      <motion.span
-                        className="text-2xl drop-shadow-lg"
-                        animate={{ scale: [1, 1.08, 1] }}
-                        transition={{ duration: 3, repeat: Infinity, delay: i * 0.15 }}
-                      >
-                        {feature.emoji}
-                      </motion.span>
-                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${TAG_COLORS[feature.tag]}`}>{feature.tag}</span>
-                    </div>
-                    <h3 className="font-display text-sm text-white mb-1 group-hover:text-white transition-colors leading-tight font-black" style={{ letterSpacing: "0.03em" }}>
-                      {feature.title}
-                    </h3>
-                    <p className="text-white/55 text-[11px] leading-relaxed line-clamp-2">{feature.description}</p>
-                    <div className="mt-2.5 text-xs font-bold transition-colors" style={{ color: `${feature.color}cc` }}>
-                      Open →
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* DAILY QUIZ */}
-          {hubTab === "quiz" && (
-            <div className="max-w-2xl mx-auto px-4 py-7">
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <h2 className="font-display text-2xl uppercase text-white flex items-center gap-2">
-                    <Brain className="h-5 w-5 text-yellow-400" />Daily Quiz
-                  </h2>
-                  <p className="text-white/40 text-xs mt-0.5">5 new questions every day</p>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-white/30 border border-white/10 rounded-full px-3 py-1.5">
-                  <Clock className="h-3 w-3" />Resets midnight
-                </div>
-              </div>
-              <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7"><DailyQuiz /></div>
-            </div>
-          )}
-
-          {/* PREDICT */}
-          {hubTab === "predict" && (
-            <div className="max-w-2xl mx-auto px-4 py-7">
-              <div className="mb-5">
-                <h2 className="font-display text-2xl uppercase text-white flex items-center gap-2">
-                  <Crosshair className="h-5 w-5 text-blue-400" />Score Prediction
-                </h2>
-                <p className="text-white/40 text-xs mt-0.5">Predict the next result and earn points</p>
-              </div>
-              <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7"><ScorePredictor /></div>
-            </div>
-          )}
-
-          {/* POLLS */}
-          {hubTab === "polls" && (
-            <div className="max-w-2xl mx-auto px-4 py-7">
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <h2 className="font-display text-2xl uppercase text-white flex items-center gap-2">
-                    <PieChart className="h-5 w-5 text-green-400" />Fan Polls
-                  </h2>
-                  <p className="text-white/40 text-xs mt-0.5">Your vote earns +10 points</p>
-                </div>
-                <div className="flex items-center gap-1.5 text-xs text-primary border border-primary/20 rounded-full px-3 py-1.5 font-bold">
-                  <Users className="h-3 w-3" />Weekly
-                </div>
-              </div>
-              <div className="bg-card border border-white/8 rounded-2xl p-5 sm:p-7"><FanPolls /></div>
-            </div>
-          )}
-
-          {/* LEADERBOARD */}
-          {hubTab === "leaderboard" && (
-            <div className="max-w-2xl mx-auto px-4 py-7">
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <h2 className="font-display text-2xl uppercase text-white flex items-center gap-2">
-                    <Medal className="h-5 w-5 text-primary" />Leaderboard
-                  </h2>
-                  <p className="text-white/40 text-xs mt-0.5">Top supporters this season</p>
-                </div>
-                <div className="flex items-center gap-1.5 text-xs text-primary border border-primary/20 rounded-full px-3 py-1.5 font-bold">
-                  <Trophy className="h-3 w-3" />Season
-                </div>
-              </div>
-              <Leaderboard />
-              {/* Points guide */}
-              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-6 bg-card border border-white/5 rounded-2xl p-5">
-                <h3 className="font-display text-base text-white mb-4 flex items-center gap-2">
-                  <Award className="h-4 w-4 text-primary" />How to Earn Points
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {[
-                    { label: "Correct quiz answer", pts: "+20" },
-                    { label: "Score prediction", pts: "+50" },
-                    { label: "Fan poll vote", pts: "+10" },
-                    { label: "Perfect quiz", pts: "+100" },
-                    { label: "Penalty Shootout", pts: "+50" },
-                    { label: "Guess a player", pts: "+100" },
-                  ].map((item, i) => (
-                    <motion.div key={item.label}
-                      initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-                      className="bg-white/3 border border-white/5 rounded-xl p-3 text-center">
-                      <div className="text-primary font-display text-lg font-black">{item.pts}</div>
-                      <div className="text-white/40 text-[10px] font-medium mt-0.5">{item.label}</div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-          )}
-
-        </motion.div>
-      </AnimatePresence>
     </div>
   );
 }

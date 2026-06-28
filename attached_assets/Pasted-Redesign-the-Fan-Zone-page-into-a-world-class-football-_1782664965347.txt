@@ -1,0 +1,309 @@
+Redesign the Fan Zone page into a world-class football gaming portal inspired by EA Sports FC Ultimate Team, FIFA menus, PlayStation UI and modern football club fan experiences.
+
+DO NOT remove any existing features.
+
+Instead, completely redesign the UI while keeping all functionality.
+
+GOAL
+
+The page must feel alive from the moment it loads.
+
+It should not look like a dashboard of cards.
+
+It should feel like entering a football game.
+
+------------------------------------
+LAYOUT
+------------------------------------
+
+Create sections:
+
+1. Hero Experience
+
+Large animated hero.
+
+Display:
+
+Welcome to Fan Zone
+
+Daily Challenge
+
+Supporter Level
+
+XP Progress
+
+Coins
+
+Achievements
+
+Featured Fan Creation
+
+Continue Playing button.
+
+------------------------------------
+
+2. Featured Activity Carousel
+
+Large animated cards.
+
+Auto-scroll every 6 seconds.
+
+Highlight:
+
+Kit Designer
+
+Penalty Shootout
+
+Dream XI
+
+Boot Designer
+
+Wheel of Fortune
+
+------------------------------------
+
+3. Activities
+
+Group activities into categories.
+
+🎨 CREATE
+
+Kit Designer
+
+Boot Designer
+
+Badge Creator
+
+Fan Art
+
+⚽ PLAY
+
+Penalty
+
+Crossbar
+
+Memory
+
+Word Search
+
+Guess Player
+
+🏆 COMPETE
+
+Quiz
+
+Predictions
+
+Leaderboard
+
+Achievements
+
+👥 COMMUNITY
+
+Fan of Month
+
+Polls
+
+Top Fans
+
+Dream XI
+
+------------------------------------
+
+ACTIVITY CARDS
+
+Every activity must have its own animated preview.
+
+Kit Designer
+
+Rotating jersey.
+
+Boot Designer
+
+Rotating football boot.
+
+Penalty
+
+Goalkeeper diving.
+
+Crossbar
+
+Animated football bouncing.
+
+Dream XI
+
+Mini football pitch.
+
+Wheel
+
+Spinning wheel.
+
+Guess Player
+
+Blurred face revealing.
+
+Memory
+
+Cards flipping.
+
+Word Search
+
+Letters highlighting.
+
+Badges
+
+Badge glowing.
+
+No static icons.
+
+------------------------------------
+
+ANIMATIONS
+
+Use Framer Motion.
+
+Floating cards.
+
+Hover lift.
+
+Glow effects.
+
+Particles.
+
+Moving stadium lights.
+
+Animated backgrounds.
+
+Shimmer buttons.
+
+Pulse notifications.
+
+Confetti for rewards.
+
+Animated gold borders.
+
+Smooth transitions.
+
+------------------------------------
+
+VISUAL STYLE
+
+Premium.
+
+Dark football theme.
+
+Glassmorphism.
+
+Gold highlights.
+
+Green accents.
+
+Large typography.
+
+Depth.
+
+Soft shadows.
+
+Gradient overlays.
+
+Pitch textures.
+
+Crowd atmosphere.
+
+------------------------------------
+
+ENGAGEMENT
+
+Show:
+
+Continue where you left off.
+
+High Scores.
+
+Games Played.
+
+Recent Achievements.
+
+Saved Kits.
+
+Saved Boots.
+
+Daily Login Reward.
+
+Weekly Missions.
+
+XP Progress.
+
+Supporter Rank.
+
+------------------------------------
+
+COMMUNITY
+
+Display:
+
+Recent Fan Designs.
+
+Most Popular Kit.
+
+Top Dream XI.
+
+Top Fans.
+
+Latest Poll.
+
+Live Activity Feed.
+
+------------------------------------
+
+BUTTONS
+
+Replace every "Open →"
+
+with contextual actions.
+
+Examples:
+
+Play Now
+
+Start Designing
+
+Build Team
+
+Guess Now
+
+Spin Now
+
+Kick Off
+
+Continue
+
+Resume
+
+------------------------------------
+
+BACKGROUND
+
+Animated stadium lights.
+
+Floating particles.
+
+Moving flags.
+
+Subtle smoke.
+
+Pitch texture.
+
+------------------------------------
+
+MICROINTERACTIONS
+
+Every button animates.
+
+Every card reacts.
+
+Every hover feels premium.
+
+Everything should feel like a AAA football game menu.
+
+The Fan Zone should become the most engaging page on the entire Golden Arrows website and encourage visitors to spend significant time interacting with games, designing kits, competing, and returning daily.
