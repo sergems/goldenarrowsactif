@@ -5,7 +5,7 @@ import {
   Trophy, BookOpen, BarChart3, ShoppingBag, Shirt, HardHat, Tag, Star,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGetNextFixture, useListResults } from "@workspace/api-client-react";
+import { useGetNextFixture, useListResults, useListPlayers } from "@workspace/api-client-react";
 import logo from "@assets/Lamontville_Golden_Arrows_logo_1780312879951.svg";
 
 const THE_CLUB_LINKS = [
@@ -409,6 +409,103 @@ function ResultPreviewLink({ active }: { active: boolean }) {
   );
 }
 
+function SquadPreviewLink({ active }: { active: boolean }) {
+  const [hovered, setHovered] = useState(false);
+  const [featuredIdx, setFeaturedIdx] = useState(0);
+  const { data: players } = useListPlayers();
+
+  const withPhoto = players?.filter(p => p.photoUrl) ?? [];
+
+  function handleMouseEnter() {
+    if (withPhoto.length > 0) {
+      setFeaturedIdx(Math.floor(Math.random() * withPhoto.length));
+    }
+    setHovered(true);
+  }
+
+  const player = withPhoto[featuredIdx];
+
+  const positionColor: Record<string, string> = {
+    Goalkeeper: "text-yellow-400 bg-yellow-400/10",
+    Defender: "text-blue-400 bg-blue-400/10",
+    Midfielder: "text-green-400 bg-green-400/10",
+    Forward: "text-red-400 bg-red-400/10",
+  };
+  const posKey = Object.keys(positionColor).find(k =>
+    player?.position?.toLowerCase().includes(k.toLowerCase())
+  ) ?? "Midfielder";
+  const pillClass = positionColor[posKey] ?? "text-primary bg-primary/10";
+
+  return (
+    <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={() => setHovered(false)}>
+      <Link
+        href="/squad"
+        className={`relative px-3 py-2 text-sm font-bold uppercase tracking-wider rounded transition-colors ${
+          active ? "text-primary" : "text-white/70 hover:text-white hover:bg-white/5"
+        }`}
+      >
+        {active && (
+          <motion.span layoutId="nav-pill" className="absolute inset-0 rounded bg-primary/10"
+            transition={{ type: "spring", stiffness: 380, damping: 30 }} />
+        )}
+        <span className="relative">Squad</span>
+      </Link>
+
+      <AnimatePresence>
+        {hovered && player && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.97 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-56 bg-background/50 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 pointer-events-none"
+          >
+            {/* Player photo */}
+            <div className="relative h-40 w-full overflow-hidden bg-secondary/20">
+              <img
+                src={player.photoUrl!}
+                alt={player.name}
+                className="w-full h-full object-cover object-top"
+              />
+              {/* gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              {/* Shirt number badge */}
+              <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                <span className="text-black font-black text-sm">{player.number}</span>
+              </div>
+              {/* Name + position over image */}
+              <div className="absolute bottom-0 left-0 right-0 px-3 pb-3">
+                <div className="font-black text-white text-sm leading-tight uppercase">{player.name}</div>
+                <span className={`text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded mt-1 inline-block ${pillClass}`}>
+                  {player.position}
+                </span>
+              </div>
+            </div>
+
+            {/* Stats row */}
+            <div className="flex items-center divide-x divide-white/10">
+              {[
+                { label: "Apps", value: player.appearances },
+                { label: "Goals", value: player.goals },
+                { label: "Assists", value: player.assists },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex-1 py-3 text-center">
+                  <div className="text-base font-black text-white tabular-nums">{value}</div>
+                  <div className="text-[9px] font-bold uppercase tracking-wider text-white/30">{label}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="px-4 py-2 border-t border-white/5 text-center">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-primary/50">View full squad →</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [mobileClubOpen, setMobileClubOpen] = useState(false);
@@ -473,6 +570,7 @@ export function Navbar() {
             {NAV_LINKS.map(link => {
               const active = location === link.href || (link.href !== "/" && location.startsWith(link.href));
 
+              if (link.href === "/squad") return <SquadPreviewLink key={link.href} active={active} />;
               if (link.href === "/fixtures") return <FixturePreviewLink key={link.href} active={active} />;
               if (link.href === "/results") return <ResultPreviewLink key={link.href} active={active} />;
 
