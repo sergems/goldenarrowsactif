@@ -94,7 +94,7 @@ export default function Gallery() {
         {!isLoading && (!items || items.length === 0) && (
           <div className="text-center text-muted-foreground py-20">No media available in this category.</div>
         )}
-      </div>
+      </PageWrapper>
 
       {/* ── From Our Social Media Family ─────────────── */}
       <section className="bg-card border-t border-white/5 py-8 sm:py-14">

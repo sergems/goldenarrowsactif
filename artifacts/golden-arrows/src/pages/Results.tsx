@@ -101,8 +101,6 @@ export default function Results() {
             {!isLoading && (!results || results.length === 0) && (
               <div className="text-center text-muted-foreground py-20">No results available.</div>
             )}
-          </div>
-
       </PageWrapper>
     </div>
   );
