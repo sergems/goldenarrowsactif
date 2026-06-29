@@ -1523,7 +1523,7 @@ function GoldenFacts() {
 export default function Home() {
   const { data: news } = useListNews({ limit: 6 });
   const { data: nextFixture } = useGetNextFixture();
-  const { data: recentResults } = useListResults({ limit: 7 });
+  const { data: recentResults } = useListResults({ limit: 10 });
   const { data: tableData } = useGetLeagueTable();
   const { data: players } = useListPlayers();
   const { data: allFixtures } = useListFixtures();
@@ -1616,11 +1616,6 @@ export default function Home() {
             </div>
           </div>
         </motion.section>
-      )}
-
-      {/* ── Match Mood ────────────────────────────── */}
-      {recentResults && recentResults.length > 0 && (
-        <MatchMoodWidget result={recentResults[0]} />
       )}
 
       {/* ── Club Statistics ───────────────────────── */}

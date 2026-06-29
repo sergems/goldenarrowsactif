@@ -332,7 +332,7 @@ export default function ClubTrophy() {
       {/* ── Category Tabs ─────────────────────────────────────────────────── */}
       <div className="border-b border-black/15 sticky top-0 z-30" style={{ background: "rgba(0,107,63,0.97)", backdropFilter: "blur(14px)" }}>
         <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-center gap-1 overflow-x-auto py-2.5 no-scrollbar">
+          <div className="flex items-center justify-center gap-1 overflow-x-auto py-2.5 no-scrollbar">
             {CATEGORY_TABS.map(tab => (
               <motion.button
                 key={tab.id}
